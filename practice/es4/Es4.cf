@@ -1,0 +1,7 @@
+Int.    Exp1 ::=  Integer ;
+Float.  Exp1 ::=  Double ;
+Tree.   Exp2 ::=  Exp1 "<" [Exp2] ">" ;
+ETree.  Exp2 ::=  Exp1 ;
+
+coercions Exp 2 ;
+separator Exp2 "," ;
