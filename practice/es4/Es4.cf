@@ -1,7 +1,0 @@
-Tree.   Exp ::=  Exp1 "<" [Exp2] ">" ;
-Leaf.   Exp ::=  Exp1 ;
-
-Int.    Exp2 ::=  Integer ;
-Float.  Exp2 ::=  Double ;
-coercions Exp 2 ;
-separator Exp2 "," ;
