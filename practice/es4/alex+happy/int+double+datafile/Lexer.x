@@ -21,15 +21,14 @@ $int = [0-9]
 
 $white+ ;
 
---Leggo un intero, compreso con notazione esponenziale intera
+--Leggo un intero
 
-(\-)? $int+ (e (\-)? $int+)?{\x -> Int x}
+(\-)? $int+ {\x -> Int x}
 
---Leggo un numero in virgola mobile, compreso con notazione esponenziale
---e discrimino se è un intero elevato ad un frazionale oppure se ha la virgola
+--Leggo un numero in virgola mobile, compresa la notazione esponenziale
 
 (\-)? $int+ \. $int+ (e (\-)? $int+)? {\x -> Double x}
-(\-)? $int+ e (\-) $int+ \. $int+ {\x -> Double x}
+(\-)? $int+ e (\-)? $int+ (\. $int+)? {\x -> Double x} -- 10e2 non è un Int per haskell...
 
 --Tokens per delimitare i figli
 
