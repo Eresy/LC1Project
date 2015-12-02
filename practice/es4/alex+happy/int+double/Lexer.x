@@ -7,8 +7,8 @@ module Lexer where
 --Uso il wrapper basic, quello posn può essere usato per segnalare la pos. di errori (o indentazioni particolari)
 %wrapper "basic"
 
-$lett = [a-zA-Z]
-$int = [0-9]
+$l = [a-zA-Z]
+$d = [0-9]
 
 :-
 
@@ -16,13 +16,13 @@ $int = [0-9]
 $white+ ;
 
 --Prendo il resto dei caratteri non usati e lo ignoro; questo per non avere lexical errors
---.#[$lett $int \< \> \. \- e \,]	;
+--.#[$lett $d \< \> \. \- e \,]       ;
 
 --Leggo un Int, una serie di numeri da 0 a 9
-$int+ {\x -> (Int (read x))}
+$d+ {\x -> (d (read x))}
 
 --Leggo un Double, serie di numeri separata da punto con o senza notazione espon.
-$int+ \. $int+ (e (\-)? $int+)? {\x -> Double (read x)}
+$d+ \. $d+ (e (\-)? $d+)? {\x -> Double (read x)}
 
 --Tokens per delimitare i figli
 \< {\x -> TreeOpen}

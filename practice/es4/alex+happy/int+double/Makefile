@@ -1,19 +1,23 @@
+ALEX = alex -g
+HAPPY= happy -gca
+GHC  = ghc --make
 
-Main : Lexer.hs ParserI.hs ParserD.hs
-	ghc --make Main.hs
 
-Lexer.hs : 
-	alex Lexer.x
+generatedHS = $(patsubst %.y,%.hs,$(wildcard *.y)) $(patsubst %.x,%.hs,$(wildcard *.x))
 
-ParserI.hs :
-	happy ParserI.y
+.PHONY : all
 
-ParserD.hs :
-	happy ParserD.y
+all:  $(generatedHS) 
+	ghc --make Main.hs -o Main
 	
+%.hs: %.x
+	$(ALEX)  $<
+%.hs: %.y
+	$(HAPPY) $<
+
 clean :
-	rm *.o *.hi
+	rm -f *.o *.hi
 	
-reset :
-	rm *.o *.hi Lexer.hs ParserI.hs ParserD.hs Main
+distclean : clean
+	rm -f [PL]*.hs Main
 	

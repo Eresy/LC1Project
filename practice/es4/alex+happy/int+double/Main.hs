@@ -27,4 +27,4 @@ parse a@(x:_) = case x of
 --nella versione precedente usavo show al posto di print e printavo gli show, ma mi davano fastidio le \"\"
 --Si dovrà usare annotate discriminando se è Left o Right...complicazione, ma non ho idea per ora di come semplificare
 
-annotate :: Either IntTree DoubleTree -> 
+--annotate :: Either IntTree DoubleTree -> 

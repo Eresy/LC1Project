@@ -23,7 +23,8 @@ parse (Parser f) = f
 next :: Parser Char
 next = Parser (\cs -> case cs of
                       "" -> []
-                      (c:cs) -> [(c,cs)])
+                      (c:cs) -> [(c,cs)]
+              )
 --end example
 
 --we made the type constructor Parser in an istance of the 

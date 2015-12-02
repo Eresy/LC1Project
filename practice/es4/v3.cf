@@ -1,0 +1,7 @@
+ITree.   Exp ::=  Integer "<" [Exp] ">" ;
+ILeaf.   Exp ::=  Integer ;
+
+FTree.   Exp ::=  Double "<" [Exp] ">" ;
+FLeaf.   Exp ::=  Double ;
+
+separator Exp "," ;

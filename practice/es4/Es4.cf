@@ -1,7 +1,7 @@
-Int.    Exp1 ::=  Integer ;
-Float.  Exp1 ::=  Double ;
-Tree.   Exp2 ::=  Exp1 "<" [Exp2] ">" ;
-ETree.  Exp2 ::=  Exp1 ;
+Tree.   Exp ::=  Exp1 "<" [Exp2] ">" ;
+Leaf.   Exp ::=  Exp1 ;
 
+Int.    Exp2 ::=  Integer ;
+Float.  Exp2 ::=  Double ;
 coercions Exp 2 ;
 separator Exp2 "," ;
