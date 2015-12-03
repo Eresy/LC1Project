@@ -3,7 +3,7 @@ module Main (main) where
 
 --Importo tutto quello che sta` in parsers/lexer
 import Lexer (alexScanTokens, Token(..))
-import ParserI (parseIntTree, IntTree(..))
+import ParserI (parseIntTree, IntTree(..), parseError)
 import ParserD (parseDoubleTree, DoubleTree(..))
 
 --data Either a b = Left a | Right b
@@ -23,8 +23,7 @@ parse :: [Token] -> Either IntTree DoubleTree
 parse a@(x:_) = case x of
   (Int _) -> Left (parseIntTree a)
   (Double _) -> Right (parseDoubleTree a)
-
+  _ -> parseError a
 --nella versione precedente usavo show al posto di print e printavo gli show, ma mi davano fastidio le \"\"
 --Si dovrà usare annotate discriminando se è Left o Right...complicazione, ma non ho idea per ora di come semplificare
 
---annotate :: Either IntTree DoubleTree -> 
