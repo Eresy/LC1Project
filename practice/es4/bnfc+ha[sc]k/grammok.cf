@@ -1,0 +1,7 @@
+Tree.   ExpT ::=  Integer "<" [ExpT] ">" ;
+Leaf.   ExpT ::=  Integer ;
+
+FTree.   ExpT ::=  Double "<" [ExpT] ">" ;
+FLeaf.   ExpT ::=  Double ;
+
+separator ExpT "," ;
