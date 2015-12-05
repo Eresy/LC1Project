@@ -1,0 +1,22 @@
+
+
+	{ w € Sigma* | x palindroma } = e U L1 U L2 U L3 U L4 U L5
+	
+	L1 = { w € Sigma* | x palindroma V x inizia con [}
+	
+	L2 = { w € Sigma* | x palindroma V x inizia con ]}
+	
+	L3 = { w € Sigma* | x palindroma V x inizia con ,}
+	
+	L4 = { w € Sigma* | x palindroma V x inizia con a}
+	
+	L5 = { w € Sigma* | x palindroma V x inizia con b}
+	
+	{ w € Sigma* | x palindroma } / L(G) = (e U L1 U L2 U L3 U L4 U L5) / L(G)
+										 = (e U L1 U L2 U L3 U L4 U L5) - ((e U L1 U L2 U L3 U L4 U L5) inters L(G)
+										 = (e U L1 U L2 U L3 U L4 U L5) - (e int L(G)) U (L1 int L(G)) U (L2 int L(G)) U (L3 int L(G)) U (L4 int L(G)) U (L5 int L(G))
+										 = (e U L1 U L2 U L3 U L4 U L5) - O U O U O U O U {a} U {b}
+										 = { w € Sigma* | x palindroma } - {a, b}
+										 
+										 O = insieme vuoto
+	U1 / U2 = U1 - (U1 intersezione U2)
