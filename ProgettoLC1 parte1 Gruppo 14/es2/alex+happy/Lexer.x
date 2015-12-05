@@ -14,9 +14,6 @@ $int = [0-9]
 
 :-
 
--- Toss out line comments from example file
-"#"[.]* ;
-
 --Ignoro i whitespace
 $white+ ;
 
