@@ -44,12 +44,14 @@ MoreChD		:	MoreChD sep TreeD { $3 : $1 } | { [] } --Produzione SX per risparmiar
 
 {
 
+detWeight :: Ord x => [Tree x] -> Integer
+detWeight a = (getWeight (foldl1 (max) a)) + 1
+ where getWeight (Node x _ _) = x
+       getWeight (Leaf _ _) = 0
+
 main = do
  x <- getContents
  print (parseDoubleTree (alexScanTokens x))
-
-detWeight :: [Tree x] -> Integer
-detWeight a = (foldl1 (>) ) + 1
 
 --E` molto bare, non serve tanto se il lexer non e` posn, però deve esserci per compilare bene
 

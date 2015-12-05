@@ -1,9 +1,9 @@
 
 module Data where
 
-data Tree x = Node Integer x [Tree x] | Leaf Integer x deriving (Show)
+data Tree x =  Leaf Integer x | Node Integer x [Tree x] deriving (Show, Eq, Ord)
 
-data Tokens = Int String |
+data Token = Int String |
               Double String |
               ListOpen |
               ListClose |

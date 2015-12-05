@@ -3,7 +3,7 @@
 
 module Lexer(alexScanTokens) where
 
-import Data (Tokens(..))
+import Data (Token(..))
 
 }
 
