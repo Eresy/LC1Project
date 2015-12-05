@@ -2,6 +2,14 @@ boundedMaximum 3 [Void, Node 3 Void Void, Node 5 (Node 2 Void Void) Void, Node 1
 
 boundedMaximum 7 [Void, Node 3 Void Void, Node 5 (Node 2 Void Void) Void, Node 15 (Node 13 (Node 7 Void Void) (Node 14 Void Void)) (Node 17 Void Void), Node 8 (Node 6 Void Void) (Node 14 (Node 10 (Node 9 Void Void) (Node 11 Void Void)) (Node 15 Void Void)), Node 10 (Node 5 (Node 3 (Node 1 Void Void) (Node 4 Void Void)) Void) (Node 15 Void (Node 18 (Node 16 Void Void) (Node 19 Void Void))), Node 7 (Node 3 (Node 1 Void Void) (Node 5 Void Void)) (Node 11 (Node 9 Void Void) (Node 13 Void Void))]
 
+boundedMaximum 5 [Void, Node 3 Void Void, Node 5 (Node 2 Void Void) Void, Node 15 (Node 13 (Node 7 Void Void) (Node 14 Void Void)) (Node 17 Void Void), Node 8 (Node 6 Void Void) (Node 14 (Node 10 (Node 9 Void Void) (Node 11 Void Void)) (Node 15 Void Void)), Node 10 (Node 5 (Node 3 (Node 1 Void Void) (Node 4 Void Void)) Void) (Node 15 Void (Node 18 (Node 16 Void Void) (Node 19 Void Void))), Node 7 (Node 3 (Node 1 Void Void) (Node 5 Void Void)) (Node 11 (Node 9 Void Void) (Node 13 Void Void))]
+
+boundedMaximum 1 [Void, Node 3 Void Void, Node 5 (Node 2 Void Void) Void, Node 15 (Node 13 (Node 7 Void Void) (Node 14 Void Void)) (Node 17 Void Void), Node 8 (Node 6 Void Void) (Node 14 (Node 10 (Node 9 Void Void) (Node 11 Void Void)) (Node 15 Void Void)), Node 10 (Node 5 (Node 3 (Node 1 Void Void) (Node 4 Void Void)) Void) (Node 15 Void (Node 18 (Node 16 Void Void) (Node 19 Void Void))), Node 7 (Node 3 (Node 1 Void Void) (Node 5 Void Void)) (Node 11 (Node 9 Void Void) (Node 13 Void Void))]
+
+boundedMaximum 17 [Void, Node 3 Void Void, Node 5 (Node 2 Void Void) Void, Node 15 (Node 13 (Node 7 Void Void) (Node 14 Void Void)) (Node 17 Void Void), Node 8 (Node 6 Void Void) (Node 14 (Node 10 (Node 9 Void Void) (Node 11 Void Void)) (Node 15 Void Void)), Node 10 (Node 5 (Node 3 (Node 1 Void Void) (Node 4 Void Void)) Void) (Node 15 Void (Node 18 (Node 16 Void Void) (Node 19 Void Void))), Node 7 (Node 3 (Node 1 Void Void) (Node 5 Void Void)) (Node 11 (Node 9 Void Void) (Node 13 Void Void))]
+
+boundedMaximum 22 [Void, Node 3 Void Void, Node 5 (Node 2 Void Void) Void, Node 15 (Node 13 (Node 7 Void Void) (Node 14 Void Void)) (Node 17 Void Void), Node 8 (Node 6 Void Void) (Node 14 (Node 10 (Node 9 Void Void) (Node 11 Void Void)) (Node 15 Void Void)), Node 10 (Node 5 (Node 3 (Node 1 Void Void) (Node 4 Void Void)) Void) (Node 15 Void (Node 18 (Node 16 Void Void) (Node 19 Void Void))), Node 7 (Node 3 (Node 1 Void Void) (Node 5 Void Void)) (Node 11 (Node 9 Void Void) (Node 13 Void Void))]
+
 
 
 # List of Trees
