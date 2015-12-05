@@ -1,7 +1,7 @@
 {
 --Parser per la grammatica ad alberi di Int
 
-module ParserI (main) where
+module ParserI where
 
 --Importo dal lexer di Alex la funzione di scan, poi i token e il tipo 
 --di sintassi astratta. Nota bene come prendo anche i costruttori del datatype dei token
@@ -49,42 +49,11 @@ detWeight a = (getWeight (foldl1 (max) a)) + 1
  where getWeight (Node x _ _) = x
        getWeight (Leaf _ _) = 0
 
---Determina se l'albero passato è simmetrico
-isSymm :: Tree x -> Bool
-isSymm x = case x of
- (Leaf _ _) -> True
- a@(Node _ _ xs) -> isEq a (trasp a)
- 
---Funzione per l'equivalenza strutturale di alberi qualsiasi
-isEq :: Tree x -> Tree x -> Bool
-isEq (Leaf _ _) (Leaf _ _) = True
-isEq (Node _ _ _) (Leaf _ _) = False
-isEq (Leaf _ _) (Node _ _ _) = False
-isEq (Node _ _ x) (Node _ _ y) 
- | length x == length y = foldl1 (&&) (zipWith (isEq) x y)
- | otherwise = False
- 
---Calcola la trasposizione dell'albero
-trasp :: Tree x -> Tree x
-trasp a@(Leaf _ _ ) = a
-trasp (Node a b c) =  (Node a b (reverse (map (trasp) c)))
-
-test = isSymm . parseIntTree . alexScanTokens
 parse = parseIntTree . alexScanTokens
-
-printTests x = do
- let parsedStr = (parse x)
- putStr "Albero: "
- print parsedStr
- putStr "Invertito: "
- print (trasp parsedStr)
- putStr "E` simmetrico: "
- print (isSymm parsedStr)
- putStr "\n"
 
 main = do
  x <- getContents
- mapM_ (printTests) (lines x)
+ mapM_ (print . parse) (lines x)
 
 --E` molto bare, non serve tanto se il lexer non e` posn, però deve esserci per compilare bene
 

@@ -42,7 +42,7 @@ Num			:	int                         { (read $1 :: Double) }
             |   double                      { (read $1 :: Double) } --Un Int può essere rappresentato anche con un Double!
 ChildsD		:	open TreeD MoreChD close    { $2 : $3 }
 MoreChD		:	sep TreeD MoreChD           { $2 : $3 } 
-            |   {-empty-}                   { [] } --Produzione SX per risparmiare spazio stack
+            |   {-empty-}                   { [] }
 
 {
 
