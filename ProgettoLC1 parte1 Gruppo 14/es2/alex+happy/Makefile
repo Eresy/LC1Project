@@ -1,15 +1,23 @@
-all: Lexer.hs ParserI.hs ParserD.hs
-	ghc -w -main-is ParserI --make ParserI.hs
-	ghc -w -main-is ParserD --make ParserD.hs
-	ghc -w -main-is TestSymm --make TestSymm.hs
+ALEX = alex -g
+HAPPY= happy --gca
+GHC  = ghc
 
-Lexer.hs : 
+generatedHS = $(patsubst %.y,%.hs,$(wildcard *.y)) $(patsubst %.x,%.hs,$(wildcard *.x))
+
+all: Lexer.hs ParserI.hs ParserD.hs
+	ghc -w -main-is $@ --make $<
+#	ghc -w -main-is ParserD --make ParserD.hs
+#	ghc -w -main-is TestSymm --make TestSymm.hs
+%.hs: %.x
+	$(ALEX)  $<
+%.hs: %.y
+	$(HAPPY) $<
+
+
+%.hs : %.x
 	alex Lexer.x
 
-ParserI.hs :
-	happy ParserI.y
-
-ParserD.hs :
+%.hs : %.y
 	happy ParserD.y
 	
 clean :
