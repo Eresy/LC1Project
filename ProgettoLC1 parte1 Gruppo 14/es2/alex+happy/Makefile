@@ -5,12 +5,12 @@ GHC  = ghc
 SRC= $(patsubst %.y,%.hs,$(wildcard *.y)) $(patsubst %.x,%.hs,$(wildcard *.x))
 
 
+all: $(SRC) 
+	$(GHC) -w -main-is ParserI --make ParserI.hs
+	$(GHC) -w -main-is ParserD --make ParserD.hs
+	$(GHC) -w -main-is TestSymm --make TestSymm.hs
 
-.PHONY: all
-all: %.hs
-#	@echo $(SRC)
-#	@echo $<
-	ghc -w -main-is $@ --make $(SRC)
+demo: TestSymm
 
 
 %.hs: %.x
@@ -18,10 +18,12 @@ all: %.hs
 %.hs: %.y
 	$(HAPPY) $<
 
-.PHONY: clean
 clean :
+	echo cleaning
 	-rm -f *.o *.hi
-	
-.PHONY: distclean
+
 distclean : clean
-	-rm -f [LP]*.hs ParserD ParserI TestSymm
+	echo cleaning all
+	-rm -f $(SRC) ParserD ParserI TestSymm
+
+.PHONY: all clean distclean demo
