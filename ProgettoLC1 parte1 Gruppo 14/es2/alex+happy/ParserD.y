@@ -16,7 +16,7 @@ import Data (Token(..), Tree(..))
 
 %name parseDoubleTree
 %tokentype { Token }
-%error { parseError }
+%error     { parseError }
 
 --Definisco alias per i costruttori del datatype def. prima
 
@@ -27,7 +27,7 @@ import Data (Token(..), Tree(..))
 	close	{ ListClose }
 	sep		{ Separator }
 
-%% --Begin BNF :D
+%% --Begin BNF 
 
 --Lista di produzioni che definiscono la mia grammatica, dove i terminali
 --sono i token ricevuti e le produzioni sono definite da variabili a sx. Una funzione
@@ -36,11 +36,13 @@ import Data (Token(..), Tree(..))
 --restituisce il primo dato nel costruttore del token oppure, se una produzione,
 --un dato composito (tipo lista) creato dalle produzioni consecutive.
 
-TreeD		:	Num ChildsD { Node (detWeight $2) $1 $2 }
-TreeD		:	Num	{ Leaf 0 $1 }
-Num			:	int { (read $1 :: Double) } | double { (read $1 :: Double) } --Un Int può essere rappresentato anche con un Double!
-ChildsD		:	open TreeD MoreChD close { $2 : $3 }
-MoreChD		:	MoreChD sep TreeD { $3 : $1 } | { [] } --Produzione SX per risparmiare spazio stack
+TreeD		:	Num ChildsD                 { Node (detWeight $2) $1 $2 }
+TreeD		:	Num	                        { Leaf 0 $1 }
+Num			:	int                         { (read $1 :: Double) } 
+            |   double                      { (read $1 :: Double) } --Un Int può essere rappresentato anche con un Double!
+ChildsD		:	open TreeD MoreChD close    { $2 : $3 }
+MoreChD		:	MoreChD sep TreeD           { $3 : $1 } 
+            |   {-empty-}                   { [] } --Produzione SX per risparmiare spazio stack
 
 {
 
