@@ -16,7 +16,7 @@ boundedMaximum n (x:xs) = (maxNT n x) ++ ( boundedMaximum n xs)
         foldBST f list = [ foldl1 f list ]
         getmin n Void  = []
         getmin n (Node m l r) | n <= m = getmin n l
-                              | n >= m = [m] ++ (getmin n l) 
+                              | n >= m = [m] ++ (getmin n l) ++ (getmin n r) 
 
 main = do
   putStrLn "Imporre il massimo"

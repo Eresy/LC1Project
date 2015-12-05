@@ -1,27 +1,27 @@
 ALEX = alex -g
-HAPPY= happy --gca
+HAPPY= happy -gca
 GHC  = ghc
 
-generatedHS = $(patsubst %.y,%.hs,$(wildcard *.y)) $(patsubst %.x,%.hs,$(wildcard *.x))
+SRC= $(patsubst %.y,%.hs,$(wildcard *.y)) $(patsubst %.x,%.hs,$(wildcard *.x))
 
-all: Lexer.hs ParserI.hs ParserD.hs
-	ghc -w -main-is $@ --make $<
-#	ghc -w -main-is ParserD --make ParserD.hs
-#	ghc -w -main-is TestSymm --make TestSymm.hs
+
+
+.PHONY: all
+all: %.hs
+#	@echo $(SRC)
+#	@echo $<
+	ghc -w -main-is $@ --make $(SRC)
+
+
 %.hs: %.x
 	$(ALEX)  $<
 %.hs: %.y
 	$(HAPPY) $<
 
-
-%.hs : %.x
-	alex Lexer.x
-
-%.hs : %.y
-	happy ParserD.y
-	
+.PHONY: clean
 clean :
 	-rm -f *.o *.hi
 	
+.PHONY: distclean
 distclean : clean
-	-rm -f Lexer.hs ParserI.hs ParserD.hs ParserD ParserI
+	-rm -f [LP]*.hs ParserD ParserI TestSymm
