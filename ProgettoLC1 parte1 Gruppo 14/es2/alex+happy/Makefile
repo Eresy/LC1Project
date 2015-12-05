@@ -1,5 +1,4 @@
-
-make : Lexer.hs ParserI.hs ParserD.hs
+all: Lexer.hs ParserI.hs ParserD.hs
 	ghc -w -main-is ParserI --make ParserI.hs
 	ghc -w -main-is ParserD --make ParserD.hs
 
@@ -15,5 +14,5 @@ ParserD.hs :
 clean :
 	-rm -f *.o *.hi
 	
-reset :
-	-rm -f *.o *.hi Lexer.hs ParserI.hs ParserD.hs ParserD ParserI
+distclean : clean
+	-rm -f Lexer.hs ParserI.hs ParserD.hs ParserD ParserI
