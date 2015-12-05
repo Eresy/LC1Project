@@ -69,15 +69,12 @@ trasp :: Tree x -> Tree x
 trasp a@(Leaf _ _ ) = a
 trasp (Node a b c) =  (Node a b (reverse (map (trasp) c)))
 
-test = do
- x <- getContents
- print (parseIntTree (alexScanTokens x))
- putStr "isSymm: "
- print (isSymm (parseIntTree (alexScanTokens x)))
+test = isSymm . parseIntTree . alexScanTokens
 
 main = do
  x <- getContents
  print (parseIntTree (alexScanTokens x))
+ print (test x)
 
 --E` molto bare, non serve tanto se il lexer non e` posn, però deve esserci per compilare bene
 
