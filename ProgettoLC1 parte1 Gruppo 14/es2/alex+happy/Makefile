@@ -10,8 +10,8 @@ all: $(SRC)
 	$(GHC) -w -main-is ParserD --make ParserD.hs
 	$(GHC) -w -main-is TestSymm --make TestSymm.hs
 
-demo: TestSymm
-
+demo: all
+	cat ./examples.txt | ./TestSymm
 
 %.hs: %.x
 	$(ALEX)  $<
