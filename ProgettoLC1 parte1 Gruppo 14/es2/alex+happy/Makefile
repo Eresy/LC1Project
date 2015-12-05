@@ -4,13 +4,17 @@ GHC  = ghc
 
 SRC= $(patsubst %.y,%.hs,$(wildcard *.y)) $(patsubst %.x,%.hs,$(wildcard *.x))
 
+LIST= ParserD ParserI TestSymm
 
-all: $(SRC) 
-	$(GHC) -w -main-is ParserI --make ParserI.hs
-	$(GHC) -w -main-is ParserD --make ParserD.hs
+all: $(SRC)
+	for i in $(LIST); do \
+	$(GHC) -w -main-is $$i  $$i.hs; \
+	done
+
+testsymm: Lexer.hs ParserI.hs TestSymm.hs
 	$(GHC) -w -main-is TestSymm --make TestSymm.hs
 
-demo: all
+demo: testsymm
 	cat ./examples.txt | ./TestSymm
 
 %.hs: %.x
