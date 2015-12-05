@@ -74,8 +74,11 @@ parse = parseIntTree . alexScanTokens
 
 main = do
  x <- getContents
+ putStrLn "Albero: " 
  print (parseIntTree (alexScanTokens x))
+ putStrLn "Albero Inverso: "
  print (trasp (parse x))
+ putStr "isSymm: "
  print (test x)
 
 --E` molto bare, non serve tanto se il lexer non e` posn, però deve esserci per compilare bene
