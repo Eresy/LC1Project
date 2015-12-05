@@ -1,0 +1,66 @@
+%listfiles%prints on standard output the list of files used by this document
+\documentclass[a4paper, oneside, 11pt]{article}
+%
+% useful packages
+\usepackage[dvips]{graphicx}
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+% 
+%\begin{figure}
+%\centering
+%\includegraphics[width=\textwidth]{filename.eps}
+%\caption{.}
+%\label{labelname}
+%\end{figure}
+%
+% to built tables longer than one page (here needed to print all the data)
+\usepackage{longtable}
+%
+% to print numerical values in a format suitable for scientific papers
+\usepackage{sistyle}
+%\SIstyle{USA}
+%\SI{0.01}{m}
+%
+% fancy footnotes
+\usepackage[perpage, symbol*, stable, multiple]{footmisc}
+\makeatletter
+\renewcommand\@makefnmark{\@textsuperscript{\normalfont (\@thefnmark)}}
+\makeatother
+%
+% fancy captions 
+\usepackage[format=default, labelsep=period, font=small, labelfont=sc]{caption}[2004/07/16]
+\captionsetup[table]{position=top}
+%
+% useful general commands
+\newcommand*{\eqname}[0]{Eq.}
+\newcommand*{\eqspace}[0]{\:}
+\providecommand{\eqref}[1]{(\ref{#1})}
+%
+% redefines the maketitle
+\makeatletter
+\renewcommand\and{\\}
+\renewcommand\maketitle{% 
+\bigskip\bigskip\bigskip\bigskip%
+\begin{center}\bfseries\large%
+Progetto di Linguaggi e Compilatori 1 -- Parte 1 \\ A.A. 2015/16\\%
+\end{center}%
+\bigskip%
+\begin{center}\bfseries\LARGE \@title  \end{center}%
+\bigskip%
+\begin{center}\bfseries\large \@author \end{center}%
+\bigskip\bigskip}
+\makeatother
+%
+% the paths where looking for figures
+\graphicspath{{./}, {eps/}}
+%
+%
+\begin{document}
+\title{Gruppo 14}
+\author{Marco Bucchiarone \and Emanuele Tonetti \and Francesco Zilli}
+\maketitle
+\section{es1:assunzioni}
+\section{es2}
+
+\end{document}
