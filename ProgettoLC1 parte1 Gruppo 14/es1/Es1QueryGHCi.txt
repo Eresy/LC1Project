@@ -1,0 +1,52 @@
+boundedMaximum 3 [Void, Node 3 Void Void, Node 5 (Node 2 Void Void) Void, Node 15 (Node 13 (Node 7 Void Void) (Node 14 Void Void)) (Node 17 Void Void), Node 8 (Node 6 Void Void) (Node 14 (Node 10 (Node 9 Void Void) (Node 11 Void Void)) (Node 15 Void Void)), Node 10 (Node 5 (Node 3 (Node 1 Void Void) (Node 4 Void Void)) Void) (Node 15 Void (Node 18 (Node 16 Void Void) (Node 19 Void Void))), Node 7 (Node 3 (Node 1 Void Void) (Node 5 Void Void)) (Node 11 (Node 9 Void Void) (Node 13 Void Void))]
+
+boundedMaximum 7 [Void, Node 3 Void Void, Node 5 (Node 2 Void Void) Void, Node 15 (Node 13 (Node 7 Void Void) (Node 14 Void Void)) (Node 17 Void Void), Node 8 (Node 6 Void Void) (Node 14 (Node 10 (Node 9 Void Void) (Node 11 Void Void)) (Node 15 Void Void)), Node 10 (Node 5 (Node 3 (Node 1 Void Void) (Node 4 Void Void)) Void) (Node 15 Void (Node 18 (Node 16 Void Void) (Node 19 Void Void))), Node 7 (Node 3 (Node 1 Void Void) (Node 5 Void Void)) (Node 11 (Node 9 Void Void) (Node 13 Void Void))]
+
+
+
+# List of Trees
+[Void, Node 3 Void Void, Node 5 (Node 2 Void Void) Void, Node 15 (Node 13 (Node 7 Void Void) (Node 14 Void Void)) (Node 17 Void Void), Node 8 (Node 6 Void Void) (Node 14 (Node 10 (Node 9 Void Void) (Node 11 Void Void)) (Node 15 Void Void)), Node 10 (Node 5 (Node 3 (Node 1 Void Void) (Node 4 Void Void)) Void) (Node 15 Void (Node 18 (Node 16 Void Void) (Node 19 Void Void))), Node 7 (Node 3 (Node 1 Void Void) (Node 5 Void Void)) (Node 11 (Node 9 Void Void) (Node 13 Void Void))]
+
+
+# TREES:
+#  Node 15 (Node 13 (Node 7 Void Void) (Node 14 Void Void)) (Node 17 Void Void)
+#
+#      15
+#     /  \
+#    13  17
+#   /  \
+#  7   14
+#
+#
+#
+#  Node 8 (Node 6 Void Void) (Node 14 (Node 10 (Node 9 Void Void) (Node 11 Void Void)) (Node 15 Void Void))
+#
+#        8
+#       / \
+#      6   14
+#         /  \
+#        10   15
+#       /  \
+#      9    11
+#
+#
+#
+#  Node 10 (Node 5 (Node 3 (Node 1 Void Void) (Node 4 Void Void)) Void) (Node 15 Void (Node 18 (Node 16 Void Void) (Node 19 Void Void)))
+#
+#         10
+#        /  \
+#       5    15
+#      /       \
+#     3        18
+#    / \      /  \
+#   1   4    16   19
+#
+#
+#
+#  Node 7 (Node 3 (Node 1 Void Void) (Node 5 Void Void)) (Node 11 (Node 9 Void Void) (Node 13 Void Void))
+#
+#         7
+#       /   \
+#      3     11
+#     / \    / \
+#    1   5  9  13
