@@ -39,8 +39,8 @@ TreeD		:	Num ChildsD               { Node (detWeight $2) $1 $2 }
 TreeD		:	Num	                      { Leaf 0 $1 }
 Num			:	int                       { (read $1 :: Int) }
 ChildsD		:	open TreeD MoreChD close  { $2 : $3 }
-MoreChD		:	MoreChD sep TreeD         { $3 : $1 } 
-            |   {-empty-}                 { [] } --Produzione SX per risparmiare spazio stack
+MoreChD		:	sep TreeD MoreChD         { $2 : $3 } 
+            |   {-empty-}                 { [] }
 
 {
 
@@ -70,10 +70,12 @@ trasp a@(Leaf _ _ ) = a
 trasp (Node a b c) =  (Node a b (reverse (map (trasp) c)))
 
 test = isSymm . parseIntTree . alexScanTokens
+parse = parseIntTree . alexScanTokens
 
 main = do
  x <- getContents
  print (parseIntTree (alexScanTokens x))
+ print (trasp (parse x))
  print (test x)
 
 --E` molto bare, non serve tanto se il lexer non e` posn, però deve esserci per compilare bene
