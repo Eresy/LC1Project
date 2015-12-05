@@ -51,9 +51,11 @@ detWeight a = (getWeight (foldl1 (max) a)) + 1
  where getWeight (Node x _ _) = x
        getWeight (Leaf _ _) = 0
 
+parse = parseDoubleTree . alexScanTokens
+
 main = do
  x <- getContents
- print (parseDoubleTree (alexScanTokens x))
+ mapM_ (print . parse) (lines x)
 
 --E` molto bare, non serve tanto se il lexer non e` posn, però deve esserci per compilare bene
 
