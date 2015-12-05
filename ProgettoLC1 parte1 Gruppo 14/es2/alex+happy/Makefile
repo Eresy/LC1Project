@@ -2,6 +2,7 @@
 make : Lexer.hs ParserI.hs ParserD.hs
 	ghc -w -main-is ParserI --make ParserI.hs
 	ghc -w -main-is ParserD --make ParserD.hs
+	ghc -w -main-is TestSymm --make TestSymm.hs
 
 Lexer.hs : 
 	alex Lexer.x
