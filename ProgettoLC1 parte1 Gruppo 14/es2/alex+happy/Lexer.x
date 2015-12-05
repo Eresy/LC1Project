@@ -14,17 +14,17 @@ $int = [0-9]
 
 :-
 
+-- Toss out line comments from example file
+"#"[.]* ;
+
 --Ignoro i whitespace
-
 $white+ ;
-
---Leggo un intero
 
 (\-)? $int+ {\x -> Int x}
 
---Leggo un numero in virgola mobile, compresa la notazione esponenziale
 
 (\-)? $int+ \. $int+ (e (\-)? $int+)? {\x -> Double x}
+-- Haskell considera 10e3 un double
 (\-)? $int+ e (\-)? $int+ (\. $int+)? {\x -> Double x}
 
 --Tokens per delimitare i figli
@@ -32,6 +32,8 @@ $white+ ;
 \[ {\x -> ListOpen}
 \] {\x -> ListClose}
 \, {\x -> Separator}
+
+. ;
 
 {
 
