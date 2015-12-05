@@ -1,5 +1,4 @@
-module Main where 
-
+module BoundMax where 
 import System.Environment
 
 data BST a = Void | Node a (BST a) (BST a)
@@ -17,12 +16,3 @@ boundedMaximum n (x:xs) = (maxNT n x) ++ ( boundedMaximum n xs)
         getmin n Void  = []
         getmin n (Node m l r) | n <= m = getmin n l
                               | n >= m = [m] ++ (getmin n l) 
-
-main = do
-  putStrLn "Imporre il massimo"
-  mas <- getLine
-  putStrLn "Su quale lista di BST?"
-  lista <- getLine
-  let n = read mas
-      bst = read lista::[BST Int]
-  print $ boundedMaximum n bst
