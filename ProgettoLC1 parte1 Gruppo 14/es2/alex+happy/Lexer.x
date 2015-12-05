@@ -25,7 +25,7 @@ $white+ ;
 --Leggo un numero in virgola mobile, compresa la notazione esponenziale
 
 (\-)? $int+ \. $int+ (e (\-)? $int+)? {\x -> Double x}
-(\-)? $int+ e (\-)? $int+ (\. $int+)? {\x -> Double x} -- 10e2 non è un Int per haskell...
+(\-)? $int+ e (\-)? $int+ (\. $int+)? {\x -> Double x}
 
 --Tokens per delimitare i figli
 

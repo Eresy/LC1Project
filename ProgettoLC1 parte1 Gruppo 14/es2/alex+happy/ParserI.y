@@ -72,14 +72,10 @@ trasp (Node a b c) =  (Node a b (reverse (map (trasp) c)))
 test = isSymm . parseIntTree . alexScanTokens
 parse = parseIntTree . alexScanTokens
 
+
 main = do
  x <- getContents
- putStrLn "Albero: " 
- print (parseIntTree (alexScanTokens x))
- putStrLn "Albero Inverso: "
- print (trasp (parse x))
- putStr "isSymm: "
- print (test x)
+ mapM_ (print . parse) (lines x)
 
 --E` molto bare, non serve tanto se il lexer non e` posn, però deve esserci per compilare bene
 
