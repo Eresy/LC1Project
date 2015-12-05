@@ -18,5 +18,13 @@ boundedMaximum n (x:xs) = (maxNT n x) ++ ( boundedMaximum n xs)
         getmin n (Node m l r) | n <= m = getmin n l
                               | n >= m = [m] ++ (getmin n l) 
 
-main = do args <- getArgs
-          mapM_ putStrLn args
+main = do
+  putStrLn "imporre il massimo"
+  mas <- getLine
+  putStrLn "su quale lista di BST?"
+  lista <- getLine
+  let n = read mas
+      bst = read lista::[BST Int]
+  print mas
+  print lista
+  print $ boundedMaximum n bst
