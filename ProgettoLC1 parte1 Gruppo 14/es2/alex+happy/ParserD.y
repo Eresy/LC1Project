@@ -57,7 +57,7 @@ main = do
  x <- getContents
  mapM_ (print . parse) (lines x)
 
---E` molto bare, non serve tanto se il lexer non e` posn, però deve esserci per compilare bene
+
 
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
