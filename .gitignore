@@ -37,3 +37,4 @@ ehthumbs.db
 Thumbs.db
 # Vim swaps#
 *.swp
+*.aux
