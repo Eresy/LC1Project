@@ -109,10 +109,6 @@ che con semplici passaggi si vede essere uguale ad
 ovvero
 \[\mathcal{P}\setminus\{x\in\Sigma^{\ast}\mid x=a \vee x=b\}.\]
 
-
-
-\newpage
-
 \subparagraph*{Parte C:}
 La funzione \texttt{isSymm} si basa sull'idea che una foglia \`e sempre simmetrica a se stessa, mentre un nodo lo \`e solamente se equivale al suo albero trasposto. Per questo calcolo vengono utilizzate due sotto-funzioni:
 \begin{description}
@@ -122,13 +118,7 @@ La funzione \texttt{isSymm} si basa sull'idea che una foglia \`e sempre simmetri
 \par
 Tutto il codice relativo \`e fornito nel file \texttt{Symm.hs}.
 \par
-
 \subparagraph*{Parte D:}
 La funzione isSymm \`e combinata al parser per interi nel file \texttt{TestSymm.hs} che ne importa i rispettivi moduli. Eseguendo il file compilato, con relativi parametri, vengono stampati a video l'albero, il rispettivo albero trasposto ed il risultato della funzione isSymm che indicher\`a se l'albero \`e effettivamente simmetrico.
 \`E possibile fornire in input il file \texttt{examples.txt} per effettuare svariati test case (eseguire l'automatizzazione di questo processo con il comando texttt{make demo} per veloce riscontro).
-
-
-\newpage
-
-
 \end{document}
