@@ -91,8 +91,30 @@ Siccome il linguaggio \(\mathcal{L}(G)\) generato dalla grammatica ammette come 
 \[\mathcal{P}\setminus\{x\in\Sigma^{\ast}\mid x=a \vee x=b\}.\]
 \par
 Dimostrazione:
+\\
+\[\mathcal{P}= \epsilon \cup \mathcal{L}_{1} \cup \mathcal{L}_{2} \cup \mathcal{L}_{3} \cup \mathcal{L}_{4} \cup \mathcal{L}_{5}\]
+dove
+\[\mathcal{L}_{1} = \{ x \in \mathcal{P} \mid x\ inizia\ con\ {[}\ \} \]
+\[\mathcal{L}_{2} = \{ x \in \mathcal{P} \mid x\ inizia\ con\ {]}\ \} \]
+\[\mathcal{L}_{3} = \{ x \in \mathcal{P} \mid x\ inizia\ con\ {,}\ \} \]
+\[\mathcal{L}_{4} = \{ x \in \mathcal{P} \mid x\ inizia\ con\ {a}\ \} \]
+\[\mathcal{L}_{5} = \{ x \in \mathcal{P} \mid x\ inizia\ con\ {b}\ \} \]
+quindi
+\[\mathcal{P}\setminus\mathcal{L}(G) = (\epsilon \cup \mathcal{L}_{1} \cup \mathcal{L}_{2} \cup \mathcal{L}_{3} \cup \mathcal{L}_{4} \cup \mathcal{L}_{5} )\setminus \mathcal{L}(G) \]
+equivalente a
+\[\mathcal{P}\setminus\mathcal{L}(G) = (\epsilon \cup \mathcal{L}_{1} \cup \mathcal{L}_{2} \cup \mathcal{L}_{3} \cup \mathcal{L}_{4} \cup \mathcal{L}_{5} )\setminus \mathcal{L}(G) - %
+( (\epsilon \cup \mathcal{L}_{1} \cup \mathcal{L}_{2} \cup \mathcal{L}_{3} \cup \mathcal{L}_{4} \cup \mathcal{L}_{5} )\cap \mathcal{L}(G) \]
 
 
+\newpage
+{ w € Sigma* | x palindroma } / L(G) = (e U L1 U L2 U L3 U L4 U L5) / L(G)
+					 = (e U L1 U L2 U L3 U L4 U L5) - ((e U L1 U L2 U L3 U L4 U L5) inters L(G)
+					 = (e U L1 U L2 U L3 U L4 U L5) - (e int L(G)) U (L1 int L(G)) U (L2 int L(G)) U (L3 int L(G)) U (L4 int L(G)) U (L5 int L(G))
+					 = (e U L1 U L2 U L3 U L4 U L5) - O U O U O U O U {a} U {b}
+					 = { w € Sigma* | x palindroma } - {a, b}
+									 
+O = insieme vuoto
+U1 / U2 = U1 - (U1 intersezione U2)
 \newpage
 In entrambi i parser \`e implementata, come codice aggiuntivo, la funzione detWeight che determina per ogni singolo nodo il rispettivo peso (sommando 1 al peso massimo di eventuali figli), il quale sarà fornito nel risultato.
 
