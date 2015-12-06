@@ -62,7 +62,7 @@ Progetto di Linguaggi e Compilatori 1 -- Parte 1 \\ A.A. 2015/16\\%
 \maketitle
 %
 \section*{Esercizio 1}
-La funzione Haskell \texttt{boundedMaximum(n [BST t])} data una lista di BST \texttt{t} trova, se esiste  \[max_{n}{t}=max(\forall x \in t \mid  x<n ).\]
+La funzione Haskell \texttt{boundedMaximum(n [BST t])} data una lista di BST \textit{t} trova, se esiste  \[max_{n}{t}=max(\forall x \in t \mid  x<n ).\]
 La soluzione all'esercizio \`e implementata nel modulo BoundMax (\texttt{BoundMax.hs}) che viene importato nel \texttt{Main}.
 Nel \texttt{Main} la funzione viene chiamata fornendole gli argomenti inseriti a tastiera a runtime (usando le funzioni importate tramite \texttt{System.Environment}).
 \par
@@ -70,15 +70,12 @@ La \texttt{boundedMaximum} viene costruita sulla \texttt{foldl1}: \texttt{MaxNT}
 Il modulo \texttt{BoundMax} \`e testabile nell'interprete di GHC tramite i test case forniti nel file \texttt{queryEs1.txt}, il quale comprende anche una rappresentazione grafica di alcuni degli alberi usati per una maggiore leggibilit\`a.
 %
 \section*{Esercizio 2}
-\subsubsection*{Parte a}
-\paragraph*{Parte A}
-\subparagraph*{Parte A}
-\newpage
+\subparagraph*{Parte A:}
 Dalla sintassi concreta per alberi pesati con numero arbitrario di figli fornita \`e stata costruita la sintassi astratta \textit{polimorfa}.
 L'implementazione proposta \`e suddivisa tra i seguenti file, di cui si da una breve descrizione:
 \begin{description}
 	\item[Data.hs] contiene la definizione dei tipi di dato per la sintassi astratta polimorfa  e per i token
-	\item[Lexer.x] analizzatore lessico-grafico che produce token per dati di tipo \texttt{Int} e \texttt{Double};
+	\item[Lexer.x] lexer che produce token per i soli elementi dell'alfabeto usati dalla sintassi concreta comprese le rappresentazioni dei dati di tipo \texttt{Int} e \texttt{Double} ignorando elementi estranei all'alfabeto;
 	\item[ParserI.y] parser dedicato alla restituzione di alberi pesati di numeri soli \texttt{Int};
 	\item[ParserD.y] parser dedicato alla restituzione di alberi pesati di numeri \texttt{Double};
 %	\item[Symm.hs] 
@@ -86,6 +83,9 @@ L'implementazione proposta \`e suddivisa tra i seguenti file, di cui si da una b
 \end{description}	
 \par
 In entrambi i parser \`e fornita, nella sezione di codice opzionale, la funzione \texttt{detWeight} che calcola il peso dei nodi individuali; il peso viene definito ricorsivamente come la distanza massima di una foglia dal nodo considerato, incrementato di 1 (ad ogni foglia viene assegnato peso pari a 0). 
+Nel caso del parser per alberi (pesati) in virgola mobile si \`e assunto i \texttt{Double} siano rappresentabili da sequenze di cifre da 0 a 9 senza punto decimale.
+Dalla formulazione della consegna si \`e assunto la grammatica \textit{G} non abbia produzioni di tipo \(\epsilon\).
+\subparagraph*{Parte B:}
 
 
 
