@@ -102,49 +102,33 @@ dove
 quindi
 \[\mathcal{P}\setminus\mathcal{L}(G) = (\epsilon \cup \mathcal{L}_{1} \cup \mathcal{L}_{2} \cup \mathcal{L}_{3} \cup \mathcal{L}_{4} \cup \mathcal{L}_{5} )\setminus \mathcal{L}(G) \]
 equivalente a
-\[\mathcal{P}\setminus\mathcal{L}(G) = (\epsilon \cup \mathcal{L}_{1} \cup \mathcal{L}_{2} \cup \mathcal{L}_{3} \cup \mathcal{L}_{4} \cup \mathcal{L}_{5} )\setminus \mathcal{L}(G) - %
-( (\epsilon \cup \mathcal{L}_{1} \cup \mathcal{L}_{2} \cup \mathcal{L}_{3} \cup \mathcal{L}_{4} \cup \mathcal{L}_{5} )\cap \mathcal{L}(G) \]
+\[(\epsilon \cup \mathcal{L}_{1} \cup \mathcal{L}_{2} \cup \mathcal{L}_{3} \cup \mathcal{L}_{4} \cup \mathcal{L}_{5} )- %
+( (\epsilon \cup \mathcal{L}_{1} \cup \mathcal{L}_{2} \cup \mathcal{L}_{3} \cup \mathcal{L}_{4} \cup \mathcal{L}_{5} )\cap \mathcal{L}(G) ) \]
+che con semplici passaggi si vede essere uguale ad
+\[(\epsilon \cup \mathcal{L}_{1} \cup \mathcal{L}_{2} \cup \mathcal{L}_{3} \cup \mathcal{L}_{4} \cup \mathcal{L}_{5} ) - ( (\epsilon \cup \emptyset \cup \emptyset  \cup \emptyset \cup \emptyset \cup {a} \cap {b} ) \]
+ovvero
+\[\mathcal{P}\setminus\{x\in\Sigma^{\ast}\mid x=a \vee x=b\}.\]
+
 
 
 \newpage
-{ w € Sigma* | x palindroma } / L(G) = (e U L1 U L2 U L3 U L4 U L5) / L(G)
-					 = (e U L1 U L2 U L3 U L4 U L5) - ((e U L1 U L2 U L3 U L4 U L5) inters L(G)
-					 = (e U L1 U L2 U L3 U L4 U L5) - (e int L(G)) U (L1 int L(G)) U (L2 int L(G)) U (L3 int L(G)) U (L4 int L(G)) U (L5 int L(G))
-					 = (e U L1 U L2 U L3 U L4 U L5) - O U O U O U O U {a} U {b}
-					 = { w € Sigma* | x palindroma } - {a, b}
-									 
-O = insieme vuoto
-U1 / U2 = U1 - (U1 intersezione U2)
+
+\subparagraph*{Parte C:}
+La funzione \texttt{isSymm} si basa sull'idea che una foglia \`e sempre simmetrica a se stessa, mentre un nodo lo \`e solamente se equivale al suo albero trasposto. Per questo calcolo vengono utilizzate due sotto-funzioni:
+\begin{description}
+  \item[isEq:] stabilisce l'equivalenza strutturale di due alberi;
+  \item[trasp:] calcola la trasposta di un albero in maniera ricorsiva (invertendo i figli di ogni nodo);
+\end{description}
+\par
+Tutto il codice relativo \`e fornito nel file \texttt{Symm.hs}.
+\par
+
+\subparagraph*{Parte D:}
+La funzione isSymm \`e combinata al parser per interi nel file \texttt{TestSymm.hs} che ne importa i rispettivi moduli. Eseguendo il file compilato, con relativi parametri, vengono stampati a video l'albero, il rispettivo albero trasposto ed il risultato della funzione isSymm che indicher\`a se l'albero \`e effettivamente simmetrico.
+\`E possibile fornire in input il file \texttt{examples.txt} per effettuare svariati test case (eseguire l'automatizzazione di questo processo con il comando texttt{make demo} per veloce riscontro).
+
+
 \newpage
-In entrambi i parser \`e implementata, come codice aggiuntivo, la funzione detWeight che determina per ogni singolo nodo il rispettivo peso (sommando 1 al peso massimo di eventuali figli), il quale sarà fornito nel risultato.
-
-   La funzione isSymm utilizza due sotto-funzioni:
-
-- isEq: stabilisce l'equivalenza strutturale di due alberi;
-
-- trasp: la trasposta di un albero in maniera ricorsiva (invertendo i suoi figli);
-
-isSymm si basa sull'idea che una foglia \`e sempre simmetrica a se stessa, mentre un nodo lo \`e solamente se equivale al suo trasposto.
-
-
-- isEq: stabilisce l'equivalenza strutturale di due alberi;
-
-- trasp: la trasposta di un albero in maniera ricorsiva (invertendo i suoi figli);
-
-isSymm si basa sull'idea che una foglia \`e sempre simmetrica a se stessa, mentre un nodo lo \`e solamente se equivale al suo trasposto.
-   La funzione isSymm \`e combinata al parser per interi nel file sorgente TestSymm; quivi viene stampato a video l'albero, il rispettivo albero trasposto ed il risultato della funzione isSymm che indicherà se l'albero \`e effettivamente simmetrico.
-  All'eseguibile risultante dalla compilazione \`e possibile fornire in input il file "examples.txt" per effettuare svariati test case.
-  (eseguire make demo per veloce riscontro)
-
-  - breve descrizione della grammatica w=wR con esempi
-
-- breve descrizione della grammatica di L(G) con esempi, di cui palindrome solo "a", "b"
-
-- descrizione della sottrazione P - L(G) con dimostrazione
-
-- descrizione dell'insieme risultante con esempi ("[,[" e/o "ab[ba")
-  (G)
-
 
 
 \end{document}
