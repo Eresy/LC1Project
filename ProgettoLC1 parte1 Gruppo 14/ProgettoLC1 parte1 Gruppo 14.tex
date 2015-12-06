@@ -74,21 +74,23 @@ Il modulo \texttt{BoundMax} \`e testabile nell'interprete di GHC tramite i test 
 Dalla sintassi concreta per alberi pesati con numero arbitrario di figli fornita \`e stata costruita la sintassi astratta \textit{polimorfa}.
 L'implementazione proposta \`e suddivisa tra i seguenti file, di cui si da una breve descrizione:
 \begin{description}
-	\item[Data.hs] contiene la definizione dei tipi di dato per la sintassi astratta polimorfa  e per i token
-	\item[Lexer.x] lexer che produce token per i soli elementi dell'alfabeto usati dalla sintassi concreta comprese le rappresentazioni dei dati di tipo \texttt{Int} e \texttt{Double} ignorando elementi estranei all'alfabeto;
-	\item[ParserI.y] parser dedicato alla restituzione di alberi pesati di numeri soli \texttt{Int};
-	\item[ParserD.y] parser dedicato alla restituzione di alberi pesati di numeri \texttt{Double};
+	\item[Data.hs] contiene la definizione dei tipi di dato per la sintassi astratta polimorfa  e per i token,
+	\item[Lexer.x] produce token per i soli elementi dell'alfabeto usati dalla sintassi concreta comprese le rappresentazioni dei dati di tipo \texttt{Int} e \texttt{Double} ignorando elementi estranei all'alfabeto,
+	\item[ParserI.y] produce di alberi pesati di numeri soli \texttt{Int},
+	\item[ParserD.y] produce di alberi pesati di numeri \texttt{Double}.
 %	\item[Symm.hs] 
 %	\item[TestSymm.hs]
 \end{description}	
 \par
 In entrambi i parser \`e fornita, nella sezione di codice opzionale, la funzione \texttt{detWeight} che calcola il peso dei nodi individuali; il peso viene definito ricorsivamente come la distanza massima di una foglia dal nodo considerato, incrementato di 1 (ad ogni foglia viene assegnato peso pari a 0). 
 Nel caso del parser per alberi (pesati) in virgola mobile si \`e assunto i \texttt{Double} siano rappresentabili da sequenze di cifre da 0 a 9 senza punto decimale.
-Dalla formulazione della consegna si \`e assunto la grammatica \textit{G} non abbia produzioni di tipo \(\epsilon\).
+Dalla formulazione della consegna si \`e assunto la grammatica \textit{G}, implementata nel parser, non abbia produzioni di tipo \(\epsilon\).
 \subparagraph*{Parte B:}
-
-
-
+Considerando l'alfabeto \(\Sigma=\{\texttt{[},\texttt{]},\texttt{,},\texttt{a},\texttt{b}\}\), l'insieme \[\mathcal{P}=\{w \in \Sigma^{\ast}\mid w=w^{R}\}\] \`e l'insieme delle stringhe di elementi dell'alfabeto palindrome. 
+Siccome il linguaggio \(\mathcal{L}(G)\) generato dalla grammatica ammette come stringhe palindrome solo gli alberi di altezza zero rappresentati dal singolo nodo "\texttt{a}" e "\texttt{b}", l'insieme risultante da \[\mathcal{P}\setminus\mathcal{L}(G)\] corrisponde all'insieme ottenuto facendo %
+\[\mathcal{P}\setminus\{x\in\Sigma^{\ast}\mid x=a \vee x=b\}.\]
+\par
+Dimostrazione:
 
 
 \newpage
