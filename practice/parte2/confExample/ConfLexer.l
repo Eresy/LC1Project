@@ -4,6 +4,8 @@
 #define YYSTYPE  char *
 
 #include "ConfParser.h"
+
+int lineno = 1;
 %}
 
 %%
@@ -15,7 +17,7 @@
 \]                      return CSQUARE;
 ;                       return SEMICOLON;
 =                       return EQUALS;
-\n                      /* ignore EOL */;
+\n                      lineno++;
 [ \t]+                  /* ignore whitespace */;
 #.*                     /* ignore comments */
 %%

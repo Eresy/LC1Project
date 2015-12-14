@@ -11,7 +11,8 @@ int Conf_debug=0;
 
 void Conf_error(const char *str)
 {
-    fprintf(stderr,"error: %s\n",str);
+	extern int lineno;
+	fprintf(stderr,"%s at line %d\n",str,lineno);
 }
 
 int Conf_wrap()
@@ -26,6 +27,7 @@ main()
 
 %}
 
+%define parse.error verbose
 %token WORD OSQUARE CSQUARE SEMICOLON NUMBER QUOTE EQUALS
 
 %%

@@ -8,23 +8,17 @@ generatedC    = $(base)Lexer.c $(base)Parser.c
 generatedH    = $(base)Parser.h
 generated     = $(generatedC) $(generatedH)
 
-.PHONY : all
 all: $(generated) test$(base)
 
-
-.PHONY : test
 test: test$(base)
 	./test$(base) < example.conf
 
-.PHONY : clean
 clean:
 	-rm -fv *.o *.log *.output
 
-.PHONY : cleanGen
 cleanGen:
 	-rm -fv *.h *.c $(generated)
 
-.PHONY : distclean
 distclean: clean cleanGen
 	-rm -fv test$(base)*
 
@@ -43,3 +37,4 @@ test%: %Lexer.o %Parser.o
 
 %Parser.o: %Parser.c
 	$(CC) -c $<
+.PHONY : all test clean cleanGen distclean
