@@ -29,7 +29,8 @@ main()
 
 %define parse.error verbose
 %token WORD OSQUARE CSQUARE SEMICOLON NUMBER QUOTE EQUALS
-
+%token END 0 "end of file"
+%token EQUALS "="
 %%
 
 
