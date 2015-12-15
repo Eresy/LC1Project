@@ -17,7 +17,7 @@ int lineno = 1;
 \]                      return CSQUARE;
 ;                       return SEMICOLON;
 =                       return EQUALS;
-\n                      lineno++;
+\n                      lineno++/*Ignore EOL*/;
 [ \t]+                  /* ignore whitespace */;
 #.*                     /* ignore comments */
 %%

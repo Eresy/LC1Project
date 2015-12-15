@@ -8,11 +8,12 @@
 #include "ConfParser.h"
 
 int Conf_debug=0;
+char secname;
 
 void Conf_error(const char *str)
 {
 	extern int lineno;
-	fprintf(stderr,"%s at line %d\n",str,lineno);
+	fprintf(stderr,"\nOoops: %s at line %d\n",str,lineno);
 }
 
 int Conf_wrap()
@@ -28,9 +29,10 @@ main()
 %}
 
 %define parse.error verbose
-%token WORD OSQUARE CSQUARE SEMICOLON NUMBER QUOTE EQUALS
+%token WORD OSQUARE CSQUARE NUMBER QUOTE 
 %token END 0 "end of file"
 %token EQUALS "="
+%token SEMICOLON ";"
 %%
 
 
@@ -44,8 +46,13 @@ section: header commands
 
 header: OSQUARE WORD CSQUARE
     {
+      if(secname != $2){
       printf("\nApro la sezione '%s'\n", $2);
+      secname = $2;
+    } else {
+    fprintf(stderr,"\nI won't let you redefine section %s",$2);}
     }
+
 ;
 
 
