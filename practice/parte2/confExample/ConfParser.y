@@ -70,7 +70,7 @@ command:
 assignment:
     WORD EQUALS value
     {
-      printf("Assegno %d alla variabile '%s'\n", atoi($3), $2);
+      printf("Assegno %d alla variabile '%s'\n", atoi($3), $1);
     }
     ;
 
