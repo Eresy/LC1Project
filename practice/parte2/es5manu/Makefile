@@ -3,7 +3,7 @@ BIS = bison -vdt
 FLEX = flex
 
 cfiles = Parser.c Lexer.c
-hfiles = Parser.h Lexer.h
+hfiles = Parser.h
 gen = $(cfiles) $(hfiles)
 
 all: $(gen) test
@@ -20,22 +20,19 @@ cleangen:
 distclean: clean cleangen
 	-rm -fv test
 
-%Lexer.c: Lexer.l Parser.h
+Lexer.c: Lexer.l
 	$(FLEX) -o $@ $<
 
-%Parser.c %Parser.h: %Parser.y
-	$(BIS) $< -o $*Parser.c
-	
-%tokdef.h: %Parser.y
-	%(YACC) $< -o 
+Parser.c Parser.h: Parser.y
+	$(BIS) $< -o $@
 
-test%: %Lexer.o %Parser.o
+test: Lexer.o Parser.o
 	$(GCC) $^ -o $@
 
-%Lexer.o: %Lexer.c %Parser.h
+Lexer.o: Lexer.c Parser.h
 	$(GCC) -c $<
 
-%Parser.o: %Parser.c
+Parser.o: Parser.c
 	$(GCC) -c $<
 
 .PHONY : all test clean cleangen distclean

@@ -1,9 +1,6 @@
 %{
 
-#include <stdio.h>
-#include <string.h>
-#include "y.tab.h"
-#include "parser.h"
+#include "Parser.h"
 
 #define YYSTYPE char *
 
@@ -30,7 +27,7 @@ WHITE	[ \t]
 
 {CHAR}+{NUM}*	{ yylval = strdup( yytext ); return LABEL; }
 
-\"{CHAR}+\"	{ yy_lval = strdup( yytext ); return STRING; }
+\"{CHAR}+\"	{ yylval = strdup( yytext ); return STRING; }
 
 {NUM}+	{ yylval = strdup( yytext ); return INT; }
 

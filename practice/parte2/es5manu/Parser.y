@@ -1,8 +1,6 @@
 %{
 
-#include <stdio.h>
-#include <string.h>
-#include <Parser.h>
+//#include "Parser.h"
 
 #define YYSTYPE char *
 
@@ -41,7 +39,7 @@ void main(int argc, char **argv){
 Sections	:	|
 				Sections Section {}
 
-Section 	:	SectionName Declarations
+Section 	:	SectionName Declarations {}
 
 SectionName	:	OPENSEC LABEL CLOSESEC {}
 
@@ -54,5 +52,3 @@ Declaration	:	LABEL BIND Rvalue SEMICOLON {}
 Rvalue		:	INT {} |
 				STRING {} |
 				BOOL {}
-
-
