@@ -1,0 +1,51 @@
+\documentclass[a4paper,oneside,11pt]{article}
+\usepackage{graphicx}
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{standalone}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+%use this for direct use of àèìòù
+\usepackage[utf8x]{inputenc}
+%
+% fancy footnotes
+\usepackage[perpage, symbol*, stable, multiple]{footmisc}
+\makeatletter
+\renewcommand\@makefnmark{\@textsuperscript{\normalfont (\@thefnmark)}}
+\makeatother
+%
+% fancy captions 
+\usepackage[format=default, labelsep=period, font=small, labelfont=sc]{caption}[2004/07/16]
+\captionsetup[table]{position=top}
+%
+%
+% redefines the maketitle
+\makeatletter
+\renewcommand\and{\\}
+\renewcommand\maketitle{% 
+\bigskip\bigskip\bigskip\bigskip%
+\begin{center}\bfseries\large%
+Progetto di Linguaggi e Compilatori 1 -- Parte 2 \\ A.A. 2015/16\\%
+\end{center}%
+\bigskip%
+\begin{center}\bfseries\LARGE \@title  \end{center}%
+\bigskip%
+\begin{center}\bfseries\large \@author \end{center}%
+\bigskip\bigskip}
+\makeatother
+%
+% the paths where looking for figures
+%\graphicspath{{./}, {eps/}}
+%
+%
+\begin{document}
+\title{Gruppo 14}
+\author{Marco Bucchiarone \and Emanuele Tonetti \and Francesco Zilli}
+\maketitle
+%
+\section*{Esercizio 1}
+\includestandalone[width=\textwidth]{dfa}
+\section{ese1}
+\end{document}
