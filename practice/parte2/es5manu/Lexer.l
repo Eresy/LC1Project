@@ -1,17 +1,12 @@
+%option noyywrap yylineno
 %{
-
-#include "Parser.h"
 
 #define YYSTYPE char *
 
-int nlines = 1;
-int ncolumn = 1;
-
-#define YY_USER_ACTION ncolumn += yyleng;
+#include "Parser.h"
 
 %}
 
-%option noyywrap
 
 CHAR	[a-zA-Z]
 NUM 	[0-9]
@@ -31,17 +26,17 @@ WHITE	[ \t]
 
 {NUM}+	{ yylval = strdup( yytext ); return INT; }
 
-\=	{ return BIND; }
+=	{ return BIND; }
 
-\;	{ return SEMICOLON; }
+;	{ return SEMICOLON; }
 
-\n	{ nlines++; ncolumn = 1;}
+\n	;
 
-\#.*	{ yylval = strdup( yytext ); return COMMENT; }
+#.*	{ yylval = strdup( yytext ); return COMMENT; }
 
 {WHITE}+	%{/* WHITESPACE */%}
 
-.*	{ printf( "Scan error at (%i:%i), Unrecognized character or pattern: %s\n" , nlines, ncolumn, yytext ); }
+.	{ printf( "Scan error at (%d), Unrecognized character or pattern: %s\n" , yylineno, yytext ); }
 
 %%
 

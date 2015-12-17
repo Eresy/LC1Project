@@ -8,9 +8,6 @@ gen = $(cfiles) $(hfiles)
 
 all: $(gen) test
 
-test : test
-	./test | echo "asd"
-	
 clean:
 	-rm -fv *.o *.log *.output
 	

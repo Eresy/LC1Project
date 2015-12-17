@@ -1,14 +1,15 @@
 %{
-
-//#include "Parser.h"
+#include <stdio.h>
 
 #define YYSTYPE char *
 
-extern int nlines;
-extern int ncolumn;
+#include "Parser.h"
 
-void yyerror(const char *str){	
-	printf("Parse Error at (%i:%i): %s", nlines, ncolumn, str);
+extern int yylineno;
+extern char yytext;
+
+void yyerror(char *str){	
+	printf("%d: %s at %s \n",yylineno,str,yytext);
 }
 
 void main(int argc, char **argv){
@@ -50,5 +51,5 @@ Declarations:	{} |
 Declaration	:	LABEL BIND Rvalue SEMICOLON {}
 
 Rvalue		:	INT {} |
-				STRING {} |
+				STRING {printf("%s",$1);} |
 				BOOL {}
