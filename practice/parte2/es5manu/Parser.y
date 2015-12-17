@@ -1,25 +1,17 @@
 %{
-#include <stdio.h>
-
-#define YYSTYPE char *
 
 #include "Parser.h"
+#include "ABS.c"
+#include <stdio.h>
 
-extern int yylineno;
-extern char yytext;
+extern int nlines;
+extern int ncolumn;
 
-void yyerror(char *str){	
-	printf("%d: %s at %s \n",yylineno,str,yytext);
+void yyerror(const char *str){	
+	printf("Parse Error at (%i:%i): %s\n", nlines, ncolumn, str);
 }
 
 void main(int argc, char **argv){
-	/*argc--;
-	argv++;
-	if ( argc > 0 ){
-		yyin = fopen( argv[0], "r" );
-	}else{
-		yyin = stdin;
-	}*/
 	yyparse();
 }
 
@@ -28,28 +20,46 @@ void main(int argc, char **argv){
 
 %define parse.error verbose
 
-%token INT STRING BOOL LABEL
+%union{
+	struct Section *sec;
+	struct Command *cmd;
+	struct Value *val;
+	char *str;
+}
+
+%token <str> INT
+%token <str> STRING
+%token <str> BOOL
+%token <str> LABEL
+%token <str> COMMENT
 %token BIND "="
 %token SEMICOLON ";"
 %token OPENSEC "[" 
 %token CLOSESEC "]"
-%token COMMENT "#"
+
+%type <sec> Sections
+%type <sec> Section
+%type <cmd> Declarations
+%type <cmd> Declaration
+%type <str> Rvalue
+%type <str> SectionName
 
 %%
 
-Sections	:	|
-				Sections Section {}
+Sections	:	{ $$ = (void *)0; } |
+			Section Sections { $$ = addNextSections($1, $2); }
 
-Section 	:	SectionName Declarations {}
+Section 	:	SectionName Declarations { $$ = addCommandList( newSection( $1 ), $2); }
 
-SectionName	:	OPENSEC LABEL CLOSESEC {}
+SectionName	:	OPENSEC LABEL CLOSESEC { $$ = $2; }
 
-Declarations:	{} |
-				Declarations Declaration {} |
-				COMMENT Declarations {}
+Declarations	:	{ $$ = (void *)0; } |
+			Declaration Declarations { $$ = addNextCommands($2, $1); }
 
-Declaration	:	LABEL BIND Rvalue SEMICOLON {}
+Declaration	:	LABEL BIND Rvalue SEMICOLON { $$ = newCommand($1, $3); } |
+			COMMENT {$$ = newCommand( (char *)'#', $1 ); }
 
-Rvalue		:	INT {} |
-				STRING {printf("%s",$1);} |
-				BOOL {}
+Rvalue		:	INT { $$ = $1; } |
+			STRING { $$ = $1; } |
+			BOOL { $$ = $1; }
+	

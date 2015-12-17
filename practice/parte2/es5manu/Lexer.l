@@ -1,12 +1,15 @@
-%option noyywrap yylineno
-%{
+%option noyywrap
 
-#define YYSTYPE char *
+%{
 
 #include "Parser.h"
 
-%}
+int nlines = 1;
+int ncolumn = 1;
 
+#define YY_USER_ACTION ncolumn += yyleng;
+
+%}
 
 CHAR	[a-zA-Z]
 NUM 	[0-9]
@@ -18,25 +21,25 @@ WHITE	[ \t]
 
 \]	{ return CLOSESEC; }
 
-(true|false)	{ yylval = strdup( yytext ); return BOOL; }
+(true|false)		{ yylval.str = strdup( yytext ); return BOOL; }
 
-{CHAR}+{NUM}*	{ yylval = strdup( yytext ); return LABEL; }
+{CHAR}+({CHAR}|{NUM})*	{ yylval.str = strdup( yytext ); return LABEL; }
 
-\"{CHAR}+\"	{ yylval = strdup( yytext ); return STRING; }
+"{CHAR}+"		{ yylval.str = strdup( yytext ); return STRING; }
 
-{NUM}+	{ yylval = strdup( yytext ); return INT; }
+{NUM}+			{ yylval.str = strdup( yytext ); return INT; }
 
-=	{ return BIND; }
+=			{ return BIND; }
 
-;	{ return SEMICOLON; }
+;			{ return SEMICOLON; }
 
-\n	;
+\n			{ nlines++; ncolumn = 1;}
 
-#.*	{ yylval = strdup( yytext ); return COMMENT; }
+#.*			{ yylval.str = strdup( yytext ); return COMMENT; }
 
-{WHITE}+	%{/* WHITESPACE */%}
+{WHITE}+		%{/* WHITESPACE */%}
 
-.	{ printf( "Scan error at (%d), Unrecognized character or pattern: %s\n" , yylineno, yytext ); }
+.			{ printf( "Scan Error at (%i:%i), Unrecognized character or pattern: %s\n" , nlines, ncolumn, yytext ); }
 
 %%
 

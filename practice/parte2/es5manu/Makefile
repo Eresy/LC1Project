@@ -7,7 +7,7 @@ hfiles = Parser.h
 gen = $(cfiles) $(hfiles)
 
 all: $(gen) test
-
+	
 clean:
 	-rm -fv *.o *.log *.output
 	
@@ -29,7 +29,10 @@ test: Lexer.o Parser.o
 Lexer.o: Lexer.c Parser.h
 	$(GCC) -c $<
 
-Parser.o: Parser.c
+Parser.o: Parser.c ABS.h
 	$(GCC) -c $<
+
+ABS.h: 
+	$(GCC) -c ABS.c
 
 .PHONY : all test clean cleangen distclean
