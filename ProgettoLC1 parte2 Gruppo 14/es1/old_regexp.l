@@ -20,9 +20,19 @@
 
 COGNOME		[a-zA-Z\-\']+
 NOME		([a-zA-Z\-])+([ ]+[a-zA-Z\-]+)*
+<<<<<<< Updated upstream
 GIORNO		(0[1-9])|([1-2][0-9])|(3[0-1])
 MESE		(0[1-9])|(1[0-2])
 ANNO		([0-9][0-9])
+||||||| merged common ancestors
+GIORNO		(([0]?[0-9])|([1-2][0-9])|3[0-1])
+MESE		(([0]?[1-9])|(1[0-2]))
+ANNO		(([0]?[0-9])|([1-9][0-9]))
+=======
+GIORNO		((0?[1-9])|([12][0-9])|3[01])
+MESE		((0?[1-9])|(1[0-2]))
+ANNO		((0?[0-9])|([1-9][0-9]))
+>>>>>>> Stashed changes
 SEP		"/"
 MATRICOLA	([0-9]+{6})
 WHITESPACE	[ ]+
