@@ -18,30 +18,30 @@ program esercizio ;
     end
   end;
 {
-  init:
+init:
   ENT 2       -- 1 + temp
   LDA 0 9     -- variabile temporanea
   MST 1 
   LDA 1 4     -- IMAX
-  IND         -- BASTA UN IND PER GLOBALI?
-  LDA 0 5
+  IND         
+  LDA 0 5	-- j di init
   IND
-  CUP 2 min
+  CUP 2 min	-- chiamo min(imax,j)
   STO         -- temp := min(IMAX, j)
-  LDA 0 8
-  LDC int 0
+  LDA 0 8	--carico u
+  LDC int 0 
   STO         -- u := 0
-  UJP guard-i -- while u <= temp do S; u += 1;
-  body-i:
+  UJP guard-init -- while u <= temp do S; u += 1;
+body-init:
   MST 1
   LDA 0 8
   IND         -- u
   LDA 0 4
   IND         -- i
-  MUL         -- u * i
+  MUL int        -- u * i
   LDA 0 7
   IND         -- l-val di z
-  CUP 2 p
+  CUP 2 p	--siamo a p(u*i,z)
   LDA 0 6     -- h : history
   IND         -- poichè history := ^harray
   LDA 0 4     -- index i
@@ -50,7 +50,7 @@ program esercizio ;
   LDA 0 8     -- index u
   IND
   IXA 1       -- h[i][u] pointer
-  LDA 1 8
+  LDA 1 8	--prendo esternamente mainharray(offset 8
   IND
   LDA 0 8     -- index u
   IND
@@ -58,21 +58,21 @@ program esercizio ;
   LDA 0 5     -- index j
   IND 
   IXA 1       -- [u][j] pointer
-  IND         -- mainharray[u,j] value
-  STO
+  IND         --carico r-value di  mainharray[u,j]
+  STO		--memorizzo
   LDA 0 8     -- da qui faccio u += 1
   LDA 0 8     -- posso usare dup
   IND
   LDC int 1
-  SUM
+  SUM int
   STO
-  guard-i:
+guard-init:
   LDA 0 8     -- u
   IND
   LDA 0 9     -- temp
   IND
   GTR
-  FJP body-i
+  FJP body-init
   RETP
 }
 
@@ -88,7 +88,7 @@ program esercizio ;
 		p (y , y )
   end;
 {
-  p:
+p:
   ENT 0     -- nessuna local var
   LDA 0 5
   IND       -- viene fatto perchè y è passata per reference
@@ -102,7 +102,7 @@ program esercizio ;
   STO       -- y:= f(f(x))
 
   UJP guard-p
-  body-p:
+body-p:
   MST 1     -- preparo ricors p(y,y)
   LDA 0 5
   IND
@@ -110,7 +110,7 @@ program esercizio ;
   LDA 0 5
   IND       -- passo la "var" del secondo param
   CUP 2 p
-  guard-p:
+guard-p:
   LDA 0 5
   IND
   IND
@@ -118,9 +118,9 @@ program esercizio ;
   NEQ       -- devo invertire controllo
   LDA 0 4
   IND 
-  LDA 1 6   -- verificare effettivo level + offset di target
-  IND       -- BASTA UN SOLO IND???
-  LES       -- devo invertire controllo
+  LDA 1 6   -- carico target
+  IND       -- 
+  LEQ       -- <= 
   OR
   FJP body-p
   RETP
@@ -136,22 +136,18 @@ program esercizio ;
     function f ( x : real ) : real ;
     begin f := 1 + 1/ x end ;
 { 
-  f:
-  ENT 0
-  LDA 0 0
+f:		--interna ad alt
+  ENT 0		--niente variabili locali
+  LDA 0 0	--variabile f stesso nome funzione
   LDC real 1
-  DUP      -- oppure ricarico con LDC
-  LDA 0 4  -- carico 
+  LDC real 1      -- oppure ricarico con LDC
+  LDA 0 4  	-- x interna alla funz
   IND
   DIV real
   SUM real
   STO      -- assegno al valore di ritorno
   RETF
 }
-
-
-
-
   begin
 	if odd ( i ) then
 		alt := alt ( i -1 , f ( x ) )
@@ -159,18 +155,19 @@ program esercizio ;
 		alt := alt ( i -1 , x )
   end ;
 {
-  alt:
+alt:
   ENT 0
   LDA 0 4
   IND     -- carico i
   ODD
   FJP else
-  LDA 0 0 -- dove sarà memorrizzato val ritorno
+then:
+  LDA 0 0 -- dove sarà memorizzato val ritorno
   MST 1   -- preparo chiamata ricorsiva alt
   LDA 0 4
   IND
   LDC int 1
-  SUB
+  SUB int
   MST 0   -- preparo chiamata alla funzione interna f; forse MST 1
   LDA 0 5
   IND
@@ -178,13 +175,13 @@ program esercizio ;
   CUP 2 alt
   STO
   RETF
-  else:
+else:
   LDA 0 0
   MST 1
   LDA 0 4
   IND
   LDC int 1
-  SUB     -- param i-1
+  SUB int  -- param i-1
   LDA 0 5
   IND     -- param x
   CUP 2 alt
@@ -199,20 +196,19 @@ begin
 	...
 end;
 {
-  main:
+main:
   ...
-  MST 0       -- verifica 0
-  LDA 0 6
+  MST 0       -- 
+  LDA 0 6	--target
   IND
-  LDA 0 7
+  LDA 0 7	--aim
   CUP 2 p
-  MST 0       -- verifica 0
+  MST 0       -- 
   LDC int 20
   LDC int 30
-  LDA 0 8     -- VERIFICA SE BASTA (forse IND?)
-  LDA 0 6
+  LDA 0 8     -- mainharray 
+  LDA 0 6	
   CUP 4 init
   ...
-  STP
 }
 }

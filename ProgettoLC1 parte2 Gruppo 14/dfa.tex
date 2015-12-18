@@ -29,11 +29,10 @@
 \node[state]		(19)	[left of=18]	{$q_{19}$};
 \node[state]		(20)	[left of=19]	{$q_{20}$};
 \node[state]		(21)	[left of=20]	{$q_{21}$};
-\node[state]		(22)	[below of=20]	{$q_{22}$};
+\node[state]		(22)	[left  of=21]	{$q_{22}$};
 \node[state]		(23)	[left of=22]	{$q_{23}$};
 \node[state]		(24)	[left of=23]	{$q_{24}$};
 \node[state,accepting]  (25)	[left of=24]	{$q_{25}$};
-\node[state]		(26)	[below of=25]	{$q_{well}$};
                                           
 \path	(1)	edge	[bend left]	node	{}	(2)
 
@@ -48,6 +47,10 @@
 		edge	[loop above]	node	{}	(4)
 
 	(5)	edge	[bend left]	node	{}	(6)
+		edge			node	{}	(7)
+		edge			node	{}	(8)
+		edge			node	{}	(9)
+		edge	[loop below]	node	{}	(9)
 
 	(6)	edge	[bend left]	node	{[\textvisiblespace]}	(5)
 		edge	[loop above]	node	{}	(6)
@@ -63,21 +66,19 @@
 	(12)	edge	[bend left]	node	{}	(14)
 	(13)	edge	[bend left]	node	{}	(14)
 	(14)	edge	[left]		node	{}	(15)
-%	(15)    edge	[bend left]	node	{R}	(16)
-%        (16)    edge			node	{L}	(26)
-%        (17)    edge			node	{L}	(26)
-%
-%        (18)    edge			node	{L}	(26)
-%		edge	[loop above]	node	{L}	(18)
-%
-%        (19)    edge			node	{L}	(26)
-%        (20)    edge			node	{L}	(26)
-%        (21)    edge			node	{L}	(26)
-%        (22)	edge			node	{L}	(26)
-%        (23)	edge			node	{L}	(26)
-%        (24)	edge			node	{L}	(26)
-%        (25)	edge			node	{L}	(26)
-	(26)   	edge			node	{L}	(26);
+	(15)    edge	[bend left]	node	{}	(16)
+        (16)    edge			node	{}	(17)
+        (17)    edge			node	{}	(18)
+
+        (18)    edge			node	{}	(19)
+		edge	[loop above]	node	{}	(18)
+
+        (19)    edge			node	{}	(20)
+        (20)    edge			node	{}	(21)
+        (21)    edge			node	{}	(22)
+        (22)	edge			node	{}	(23)
+        (23)	edge			node	{}	(24)
+        (24)	edge			node	{}	(25);
 \end{tikzpicture}
 \end{document}
 %
