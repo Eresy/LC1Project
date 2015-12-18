@@ -1,29 +1,95 @@
-\documentclass{standalone}
+\documentclass[tikz,border=1pt]{standalone}
 \usepackage{pgf}
 \usepackage{tikz}
-\usetikzlibrary{arrows,automata}
+\usetikzlibrary{arrows,automata,positioning}
 \usepackage[latin1]{inputenc}
 
 \begin{document}
-\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
-	%->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,semithick]
-%\tikzstyle{every state}=[fill=red,draw=none,text=white]
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,semithick]
+%\tikzstyle{every state}=[fill=none,text=yellow]
 
-\node[initial,state] (A)                    {$q_a$};
-\node[state]         (B) [above right of=A] {$q_b$};
-\node[state]         (D) [below right of=A] {$q_d$};
-\node[state]         (C) [below right of=B] {$q_c$};
-\node[state]         (E) [below of=D]       {$q_e$};
+\node[initial,state] 	(1)			{$q_1$};
+\node[state]         	(2)	[right of=1]	{$q_2$};
+\node[state]		(3)	[right of=2]	{$q_3$};
+\node[state]		(4)	[right of=3]	{$q_4$};
+\node[state]		(5)	[right =of 4]	{$q_5$};
+\node[state]		(6)	[above of=5]	{$q_6$};
+\node[state]		(7)	[above right of=5]	{$q_7$};
+\node[state]		(8)	[right of=5]	{$q_8$};
+\node[state]		(9)	[below right of=5]	{$q_9$};
+\node[state]		(10)	[right of=8]	{$q_{10}$};
+\node[state]		(11)	[right =of 10]	{$q_{11}$};
+\node[state]		(12)	[above right of=11]	{$q_{12}$};
+\node[state]		(13)	[below right of=11]	{$q_{13}$};
+\node[state]		(14)	[right of=11]	{$q_{14}$};
+\node[state]		(15)	[below right of=13]	{$q_{15}$};
+\node[state]		(16)	[left of=15]	{$q_{16}$};
+\node[state]		(17)	[left of=16]	{$q_{17}$};
+\node[state]		(18)	[left of=17]	{$q_{18}$};
+\node[state]		(19)	[left of=18]	{$q_{19}$};
+\node[state]		(20)	[left of=19]	{$q_{20}$};
+\node[state]		(21)	[left of=20]	{$q_{21}$};
+\node[state]		(22)	[below of=20]	{$q_{22}$};
+\node[state]		(23)	[left of=22]	{$q_{23}$};
+\node[state]		(24)	[left of=23]	{$q_{24}$};
+\node[state,accepting]  (25)	[left of=24]	{$q_{25}$};
+\node[state]		(26)	[below of=25]	{$q_{well}$};
+                                          
+\path	(1)	edge	[bend left]	node	{}	(2)
 
-\path (A) edge              node {0,1,L} (B)
-          edge              node {1,1,R} (C)
-      (B) edge [loop above] node {1,1,L} (B)
-          edge              node {0,1,L} (C)
-      (C) edge              node {0,1,L} (D)
-          edge [bend left]  node {1,0,R} (E)
-      (D) edge [loop below] node {1,1,R} (D)
-          edge              node {0,1,R} (A)
-      (E) edge [bend left]  node {1,0,R} (A);
+	(2)	edge	[bend left]	node	{[\textvisiblespace]}	(3)
+		edge	[loop above]	node	{}	(2)
+      	
+
+	(3)	edge	[bend left]	node	{}	(4)
+		edge	[loop above]	node	{[\textvisiblespace]}	(3)
+
+	(4)	edge	[bend left]	node	{[\textvisiblespace]}	(5)
+		edge	[loop above]	node	{}	(4)
+
+	(5)	edge	[bend left]	node	{}	(6)
+
+	(6)	edge	[bend left]	node	{[\textvisiblespace]}	(5)
+		edge	[loop above]	node	{}	(6)
+
+	(7)	edge			node	{}	(10)
+	(8)	edge			node	{}	(10)
+	(9)	edge			node	{}	(10)
+	(10)	edge			node	{}	(11)
+
+	(11)	edge			node	{}	(12)
+		edge			node	{}	(13)
+
+	(12)	edge	[bend left]	node	{}	(14)
+	(13)	edge	[bend left]	node	{}	(14)
+	(14)	edge	[left]		node	{}	(15)
+%	(15)    edge	[bend left]	node	{R}	(16)
+%        (16)    edge			node	{L}	(26)
+%        (17)    edge			node	{L}	(26)
+%
+%        (18)    edge			node	{L}	(26)
+%		edge	[loop above]	node	{L}	(18)
+%
+%        (19)    edge			node	{L}	(26)
+%        (20)    edge			node	{L}	(26)
+%        (21)    edge			node	{L}	(26)
+%        (22)	edge			node	{L}	(26)
+%        (23)	edge			node	{L}	(26)
+%        (24)	edge			node	{L}	(26)
+%        (25)	edge			node	{L}	(26)
+	(26)   	edge			node	{L}	(26);
 \end{tikzpicture}
 \end{document}
+%
+%COGNOME	([a-zA-Z\-\']+)
+%NOME		(([a-zA-Z\-])+([ ]+[a-zA-Z\-]+)*)
+%
+%GIORNO		((0?[1-9])|([12][0-9])|3[01])
+%MESE		((0?[1-9])|(1[0-2]))
+%ANNO		((0?[0-9])|([1-9][0-9]))
+%
+%SEP		("/")
+%MATRICOLA	([0-9]+{6})
+%WHITESPACE	([\textvisiblespace]+)
+%COMMENTI	(.*)
 %

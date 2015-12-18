@@ -6,9 +6,11 @@
 \usepackage{standalone}
 \usepackage{pgf}
 \usepackage{tikz}
-\usetikzlibrary{arrows,automata}
+\usetikzlibrary{arrows,automata,positioning}
 %use this for direct use of àèìòù
 \usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
 %
 % fancy footnotes
 \usepackage[perpage, symbol*, stable, multiple]{footmisc}
@@ -17,8 +19,8 @@
 \makeatother
 %
 % fancy captions 
-\usepackage[format=default, labelsep=period, font=small, labelfont=sc]{caption}[2004/07/16]
-\captionsetup[table]{position=top}
+\usepackage[format=default, labelsep=period, font=small, labelfont=sc]{caption}
+%\captionsetup[table]{position=top}
 %
 %
 % redefines the maketitle
@@ -47,5 +49,4 @@ Progetto di Linguaggi e Compilatori 1 -- Parte 2 \\ A.A. 2015/16\\%
 %
 \section*{Esercizio 1}
 \includestandalone[width=\textwidth]{dfa}
-\section{ese1}
 \end{document}
