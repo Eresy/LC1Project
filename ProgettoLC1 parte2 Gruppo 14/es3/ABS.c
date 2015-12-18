@@ -46,20 +46,20 @@ Command *newCommand(char *label, char *value){
 }
 
 Command *addCommand(Command *cmd, Command *next){
-	printf("Concateno %s a %s\n", cmd -> label, next -> label);
+	printf("---Concateno il comando %s davanti a %s\n",  next -> label, cmd -> label);
 	cmd -> nextCommand = next;
 	return cmd;
 }
 
 
 Section *addCommands(Section *sec, Command *cmd){
-	printf("Aggiungo la lista di comandi %s a %s\n", cmd -> label, sec -> label);
+	printf("---Aggiungo la lista di comandi %s davanti a %s\n", cmd -> label, sec -> label);
 	sec -> listCommand = cmd;
 	return sec;
 }
 
 Section *addSection(Section *sec, Section *next){
-	printf("Aggiungo la sezione %s a %s\n", next -> label ,sec -> label );
+	printf("---Aggiungo la sezione %s davanti a %s\n", next -> label ,sec -> label );
 	sec -> nextSection = next;
 	return sec;
 }
@@ -101,9 +101,10 @@ void printSections(Section *sec){
 
 void printCommands(Command *com){
 	if(com != NULL){
-		switch((com -> label)[0]){
-			case '#': printf("#s%\n", com->value); break;
-			default: printf("%s=%s\n", com -> label , com -> value ); break;
+		if(*(com -> value) == '#'){
+			printf("%s\n", com->value);
+		}else{
+			printf("%s=%s\n", com -> label , com -> value );
 		}
 		printCommands( com -> nextCommand );
 	}
