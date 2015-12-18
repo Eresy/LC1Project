@@ -6,8 +6,10 @@
 
 extern int yylineno;
 extern int ncolumn;
-extern Section *global;
-extern Section *local;
+
+Section *global = NULL;
+Command *local = NULL;
+Section *returnAST = NULL;
 
 void yyerror(const char *str){	
 	printf("Parse Error at (%i:%i): %s\n", yylineno, ncolumn, str);
@@ -15,6 +17,9 @@ void yyerror(const char *str){
 
 void main(int argc, char **argv){
 	yyparse();
+	
+	printSections( returnAST );
+	
 }
 
 %}
@@ -33,7 +38,7 @@ void main(int argc, char **argv){
 %token <str> BOOL
 %token <str> LABEL
 %token <str> COMMENT
-%token <str> REFERENCE
+%token <str> REFERENCE "$"
 %token DOT "."
 %token BIND "="
 %token OPENSEC "[" 
@@ -45,25 +50,22 @@ void main(int argc, char **argv){
 %type <cmd> Declarations
 %type <cmd> Declaration
 %type <str> Rvalue
-%type <str> SectionName
 
 %%
 
-Sections	:	 { printf("SectionsNULL\n"); $$ = NULL; } |
-			Section Sections { printf("--Sections\n"); if($2 != NULL) $$ = addSection($1, $2); }
+Sections	:	Section Sections { printf("--Sections\n"); if($2 != NULL) $$ = returnAST = addSection($1, $2); } |
+			  { printf("--SectionsNULL\n"); $$ = NULL; }
 
-Section 	:	SectionName Declarations {  printf("--Section\n"); if($2 != NULL) $$ = addCommands( newSection( $1 ), $2); }
-
-SectionName	:	OPENSEC LABEL CLOSESEC { $$ = $2; }
+Section 	:	OPENSEC LABEL CLOSESEC Declarations {  printf("--Section\n"); Section *a = newSection( $2 ); local = NULL; if(global == NULL)global = a; if($4 != NULL) $$ = addCommands( a , $4); }
 
 Declarations	:	 {  printf("--DeclarationsNULL\n"); $$ = NULL;} |
-			Declaration Declarations { printf("--Declarations\n"); if($2 != NULL) $$ = addCommand( $2 , $1 ); }
+			Declaration Declarations { printf("--Declarations\n"); if($2 != NULL) $$ = addCommand( $1 , $2 ); }
 
-Declaration	:	LABEL BIND Rvalue { printf("--Declaration\n"); $$ = newCommand($1, $3); } |
-			COMMENT { char cmt = '#'; $$ = newCommand( &cmt, $1 ); }
+Declaration	:	LABEL BIND Rvalue { printf("--Declaration\n"); Command *a = newCommand($1, $3); if(local == NULL)local = a; $$ = a;} |
+			COMMENT { printf("--Declaration#\n"); char cmt = '#'; $$ = newCommand( &cmt, $1 ); }
 
 Rvalue		:	INT { $$ = $1; } |
 			STRING { $$ = $1; } |
 			BOOL { $$ = $1; } |
-			REFERENCE LABEL DOT LABEL { commandValueSearch( sectionSearch( global, $2 ), $4 ); } |
-			REFERENCE LABEL { commandValueSearch( local , $2 ); }
+			REFERENCE LABEL DOT LABEL { printf("Riferimento %s contenuta in %s \n", $4, $2); $$ = $2 } |
+			REFERENCE LABEL { printf("Riferisco %s contenuta in %s\n", $2, local -> label); $$ = $2 }

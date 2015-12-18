@@ -29,10 +29,10 @@ test: Lexer.o Parser.o
 Lexer.o: Lexer.c Parser.h
 	$(GCC) -c $<
 
-Parser.o: Parser.c ABS.h
+Parser.o: Parser.c ABS.c
 	$(GCC) -c $<
 
-ABS.h: 
+ABS.c: 
 	$(GCC) -c ABS.c
 
 .PHONY : all test clean cleangen distclean
