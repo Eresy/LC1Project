@@ -1,12 +1,14 @@
 \documentclass[tikz,border=1pt]{standalone}
+\usepackage{fancyvrb}
 \usepackage{pgf}
 \usepackage{tikz}
 \usetikzlibrary{arrows,automata,positioning}
 \usepackage[latin1]{inputenc}
 
 \begin{document}
-\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.8cm,semithick]
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.2cm,on grid,semithick]
 %\tikzstyle{every state}=[fill=none,text=yellow]
+\tikzset{every edge/.append style={font=\tiny}}
 
 \node[initial,state] 	(1)			{$q_1$};
 \node[state]         	(2)	[right of=1]	{$q_2$};
@@ -34,7 +36,7 @@
 \node[state]		(24)	[left of=23]	{$q_{24}$};
 \node[state,accepting]  (25)	[left of=24]	{$q_{25}$};
                                           
-\path	(1)	edge	[bend left]	node	{}	(2)
+\path	(1)	edge	[bend left]	node[sloped]	{\Verb/([a-zA-Z\\-\\']+)/}	(2)
 
 	(2)	edge	[bend left]	node	{[\textvisiblespace]}	(3)
 		edge	[loop above]	node	{}	(2)
