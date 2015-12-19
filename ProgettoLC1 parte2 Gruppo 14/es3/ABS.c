@@ -130,7 +130,7 @@ bool sectionNameError(Section *list, char *key, int line, int column){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0 ){
 			char buf[100];
-			sprintf(buf, "Parse error (%i:%i), La sezione \"%s\" è stata gia' definita in (%i:%i). Assegnamento illegale.\0", line, column, key, list -> nlines, list -> ncolumn);
+			sprintf(buf, "Parse error at (%i:%i): La sezione \"%s\" è stata gia' definita in (%i:%i). Assegnamento illegale.\0", line, column, key, list -> nlines, list -> ncolumn);
 			yyerror( buf );
 			return 1;
 		}else{
