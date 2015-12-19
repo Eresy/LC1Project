@@ -67,9 +67,14 @@ con i campi separati da un numero arbitrario di spazi, le espressioni regolari, 
 	\item[altro-testo]	$($\Verb/./$)$ 
 \end{itemize}
 dove, per semplicità di notazione, sono state numerate solo le parentesi contenenti le $regexp$ facenti il match dei campi che si vuole siano presenti nell'espressione $e_{out}$.
+\newpage
+\par
 Quindi la $regexp$ $e_{in}$ assumerà forma
 \begin{center}
-	$e_{in} =${cognome}{spazi}{nome/nomi}{spazi}{gg}{separatore}
+%$e_{in} =$\Verb!{cognome}{spazi}{nome/nomi}{spazi}{gg}{separatore}{mm}{separatore}{aa}\-{spazi}{matricola}{spazi}{altro-testo}!
+$e_{in} =$\Verb!{cognome}!\Verb!{spazi}!\Verb!{nome/nomi}!\Verb!{spazi}!
+\Verb!{gg}!\Verb!{separatore}!\Verb!{mm}!\Verb!{separatore}!\Verb!{aa}!
+\Verb!{spazi}!\Verb!{!\Verb!matricola}!\Verb!{spazi}!\Verb!{altro-testo}!.
 \end{center}
 \par
 Volendo $e_{out}$ della forma
@@ -81,8 +86,9 @@ con i campi separati con un tabulatore ed assumendo che, tutte le date successiv
 	$e_{out}=$\Verb!\6\t\2\t\1\t20\5-\4-\3!
 \end{center}
 dove \Verb!\t! indica il carattere di tabulazione.
-\par
-\includestandalone[width=\textwidth]{dfa}
+\paragraph*{(b)}
+Preso l'alfabeto $\Sigma$ contenente i caratteri ASCII il DFA minimo per $e_{in}$
+\includestandalone[width=\textwidth]{dfa}\ref{dfa}
 \section*{Esercizio 2}
 \section*{Esercizio 3}
 compilato con bison 3.0.4

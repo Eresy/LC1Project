@@ -210,7 +210,6 @@ begin
 end;
 {
 main:
-  ENT 5     -- spazio dedicato a IMAX, UNKNW, target, aim, mainharray(puntatore)
   ...
   MST 0     
   LDA 0 6	--target
