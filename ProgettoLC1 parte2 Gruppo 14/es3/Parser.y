@@ -1,7 +1,7 @@
 %{
 
 #include "Parser.h"
-#include "ABS.h"
+#include "ABS.c"
 #include <stdio.h>
 
 extern int yylineno;
