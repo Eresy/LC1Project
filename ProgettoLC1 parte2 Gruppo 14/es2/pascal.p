@@ -19,29 +19,29 @@ program esercizio ;
   end;
 {
 init:
-  ENT 2       -- 1 + temp
-  LDA 0 9     -- variabile temporanea
+  ENT 2           -- 1 + temp
+  LDA 0 9         -- variabile temporanea
   MST 1 
-  LDA 1 4     -- IMAX
+  LDA 1 4         -- IMAX
   IND         
-  LDA 0 5	-- j di init
+  LDA 0 5	      -- j di init
   IND
-  CUP 2 min	-- chiamo min(imax,j)
-  STO         -- temp := min(IMAX, j)
-  LDA 0 8	--carico u
+  CUP 2 min	      -- chiamo min(imax,j)
+  STO             -- temp := min(IMAX, j)
+  LDA 0 8	      --carico u
   LDC int 0 
-  STO         -- u := 0
-  UJP guard-init -- while u <= temp do S; u += 1;
+  STO             -- u := 0
+  UJP guard-init  -- while u <= temp do S; u += 1;
 body-init:
   MST 1
   LDA 0 8
   IND         -- u
   LDA 0 4
   IND         -- i
-  MUL int        -- u * i
+  MUL int     -- u * i
   LDA 0 7
   IND         -- l-val di z
-  CUP 2 p	--siamo a p(u*i,z)
+  CUP 2 p	  --siamo a p(u*i,z)
   LDA 0 6     -- h : history
   IND         -- poichè history := ^harray
   LDA 0 4     -- index i
@@ -50,7 +50,7 @@ body-init:
   LDA 0 8     -- index u
   IND
   IXA 1       -- h[i][u] pointer
-  LDA 1 8	--prendo esternamente mainharray(offset 8
+  LDA 1 8	  --prendo esternamente mainharray(offset 8
   IND
   LDA 0 8     -- index u
   IND
@@ -59,7 +59,7 @@ body-init:
   IND 
   IXA 1       -- [u][j] pointer
   IND         --carico r-value di  mainharray[u,j]
-  STO		--memorizzo
+  STO		  --memorizzo
   LDA 0 8     -- da qui faccio u += 1
   LDA 0 8     -- posso usare dup
   IND
@@ -79,6 +79,13 @@ guard-init:
 
   function f ( n : real ) : integer ;
   begin ... ... end ;
+{
+  f:
+  ENT 0
+  ...
+  RETF
+}
+
 
 
   procedure p ( x : integer ; var y : integer );
@@ -129,6 +136,12 @@ guard-p:
 
   function min (x , y : integer ): integer ;
   begin ... ... end ;
+{
+  min:
+  ENT 0
+  ...
+  RETF
+}
 
 
   function alt ( i : integer ; x : real ) : real ;
@@ -136,16 +149,16 @@ guard-p:
     function f ( x : real ) : real ;
     begin f := 1 + 1/ x end ;
 { 
-f:		--interna ad alt
-  ENT 0		--niente variabili locali
-  LDA 0 0	--variabile f stesso nome funzione
+f:		      --interna ad alt
+  ENT 0		  --niente variabili locali
+  LDA 0 0	  --variabile f stesso nome funzione
   LDC real 1
-  LDC real 1      -- oppure ricarico con LDC
-  LDA 0 4  	-- x interna alla funz
+  LDC real 1  -- oppure ricarico con LDC
+  LDA 0 4  	  -- x interna alla funz
   IND
   DIV real
   SUM real
-  STO      -- assegno al valore di ritorno
+  STO         -- assegno al valore di ritorno
   RETF
 }
   begin
@@ -158,17 +171,17 @@ f:		--interna ad alt
 alt:
   ENT 0
   LDA 0 4
-  IND     -- carico i
+  IND       -- carico i
   ODD
   FJP else
 then:
-  LDA 0 0 -- dove sarà memorizzato val ritorno
-  MST 1   -- preparo chiamata ricorsiva alt
+  LDA 0 0   -- dove sarà memorizzato val ritorno
+  MST 1     -- preparo chiamata ricorsiva alt
   LDA 0 4
   IND
   LDC int 1
   SUB int
-  MST 0   -- preparo chiamata alla funzione interna f;
+  MST 0     -- preparo chiamata alla funzione interna f;
   LDA 0 5
   IND
   CUP 1 f
@@ -181,9 +194,9 @@ else:
   LDA 0 4
   IND
   LDC int 1
-  SUB int  -- param i-1
+  SUB int   -- param i-1
   LDA 0 5
-  IND     -- param x
+  IND       -- param x
   CUP 2 alt
   STO
   RETF
@@ -197,13 +210,14 @@ begin
 end;
 {
 main:
+  ENT 5     -- spazio dedicato a IMAX, UNKNW, target, aim, mainharray(puntatore)
   ...
-  MST 0       -- 
+  MST 0     
   LDA 0 6	--target
   IND
   LDA 0 7	--aim
   CUP 2 p
-  MST 0       -- 
+  MST 0       
   LDC int 20
   LDC int 30
   LDA 0 8     -- mainharray 
