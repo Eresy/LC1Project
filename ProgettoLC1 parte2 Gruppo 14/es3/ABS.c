@@ -5,16 +5,18 @@
 typedef int bool;
 enum{false, true};
 
+extern int yylineno;
+extern int ncolumn;
+
 typedef struct Command {
 	char *label;
 	char *value;
-	int nline, ncol;
 	struct Command *nextCommand;
 }Command;
 
 typedef struct Section {
 	char *label;
-	int nline, ncol;
+	int nlines, ncolumn;
 	struct Command *listCommand;
 	struct Section *nextSection;
 }Section;
@@ -27,6 +29,8 @@ Section *newSection(char *label){
 		exit(1);
 	}
 	a -> label = label;
+	a -> nlines = yylineno;
+	a -> ncolumn = ncolumn;
 	a -> nextSection = NULL;
 	a -> listCommand = NULL;
 	return a;
@@ -112,7 +116,7 @@ void printCommands(Command *com){
 bool localNameWarning(Command *list, char *key){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0){
-			printf("WARNING: la variabile %s è stata definita due volte nello stesso blocco.\n", key);
+			printf("WARNING (%s:%s): la variabile %s è stata definita due volte nello stesso blocco.\n", key);
 			return 1;
 		}else{
 			if( list -> nextCommand != NULL ){
@@ -128,7 +132,8 @@ bool localNameWarning(Command *list, char *key){
 bool sectionNameError(Section *list, char *key){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0 ){
-			yyerror("La Sezione è stata definita due volte. Assegnamento illegale.\n", key);
+			char buf[50];
+			yyerror( sprintf(buf, "La sezione %s è stata gia' definita in (%i:%i). Assegnamento illegale", key, list -> nlines, list -> ncolumn));
 			exit(1);
 		}else{
 			if( list -> nextSection != NULL ){
