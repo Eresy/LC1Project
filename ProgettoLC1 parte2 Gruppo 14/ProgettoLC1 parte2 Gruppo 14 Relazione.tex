@@ -92,20 +92,22 @@ Preso l'alfabeto $\Sigma$ contenente i caratteri ASCII, il DFA minimo per $e_{in
 dove, per chiarezza illustrativa, si sono indicati sugli archi il range di caratteri che, ricevuti dallo stato $q_i$ causano la transizione allo stato $q_{j}$. Per la stessa ragione è stata omessa la rappresentazione dello stato "pozzo" a cui puntano tutti gli stati qualora ricevano un carattere non accettato dalle transizioni esplicitate.
 \newpage
 \section*{Esercizio 2}
+\lstset{tabsize=6,escapeinside={\%*}{*)}}
 \begin{lstlisting}
 init:
-		ENT 2           -- variabile u e variabile temporanea necessaria all'impl. del for
-		LDA 0 9         -- carico la variabile temporanea
+		ENT 2    -- variabile u e variabile temporanea 
+			   -- necessaria all'impl. del for
+		LDA 0 9  -- carico la variabile temporanea
 		MST 1 
-		LDA 1 4         -- IMAX
+		LDA 1 4  -- IMAX
 		IND         
-		LDA 0 5	        -- j di init
+		LDA 0 5	 -- j di init
 		IND
-		CUP 2 min	-- min(imax,j)
-		STO             -- temp := min(IMAX, j)
-		LDA 0 8	        -- carico u
+		CUP 2 min   -- min(imax,j)
+		STO         -- temp := min(IMAX, j)
+		LDA 0 8	    -- carico u
 		LDC int 0 
-		STO             -- u := 0
+		STO         -- u := 0
 		UJP guard-init  -- while u <= temp do S; u += 1;
 body-init:
 		MST 1
@@ -192,7 +194,7 @@ min:
 		ENT 0
 		...
 		RETF
-f:		      --interna ad alt
+f:		          --interna ad alt
 		ENT 0
 		LDA 0 0	
 		LDC real 1
@@ -249,7 +251,6 @@ main:
 		LDA 0 6	
 		CUP 4 init
 		...
-}
 \end{lstlisting}	
 \section*{Esercizio 3}
 compilato con bison 3.0.4
