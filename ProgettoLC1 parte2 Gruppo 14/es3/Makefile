@@ -6,8 +6,18 @@ cfiles = Parser.c Lexer.c
 hfiles = Parser.h
 gen = $(cfiles) $(hfiles)
 
-all: $(gen) test
-	
+all: $(gen) Es3
+
+demo: all
+	@echo -e "\nTesting conf with no errors\n"
+	./Es3 < example.conf
+	@echo -e "\nTesting another conf with no errors\n"
+	./Es3 < example-2.conf
+	@echo -e "\nTesting conf with Incorrect variable assignment \n"
+	./Es3 < example-warn.conf
+	@echo -e "\nTesting conf with multiple section  assignment \n"
+	./Es3 < example-err.conf
+
 clean:
 	-rm -fv *.o *.log *.output
 	
@@ -15,7 +25,7 @@ cleangen:
 	-rm -fv $(gen)
 
 distclean: clean cleangen
-	-rm -fv test
+	-rm -fv Es3
 
 Lexer.c: Lexer.l
 	$(FLEX) -o $@ $<
@@ -23,7 +33,7 @@ Lexer.c: Lexer.l
 Parser.c Parser.h: Parser.y
 	$(BIS) $< -o $@
 
-test: Lexer.o Parser.o
+Es3: Lexer.o Parser.o
 	$(GCC) $^ -o $@
 
 Lexer.o: Lexer.c Parser.h
@@ -35,4 +45,4 @@ Parser.o: Parser.c ABS.c
 ABS.c: 
 	$(GCC) -c ABS.c
 
-.PHONY : all clean cleangen distclean
+.PHONY : all clean cleangen distclean demo
