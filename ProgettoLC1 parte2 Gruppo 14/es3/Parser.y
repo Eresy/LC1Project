@@ -13,7 +13,7 @@ Section *prevS = NULL;
 Command *prevC = NULL;
 
 void yyerror(char const *str){	
-	fprintf(stderr, "Parse Error(%i:%i)%s", line, col, str);
+	fprintf(stderr, "Parse Error at  %s\n", str);
 }
 
 void main(int argc, char **argv){

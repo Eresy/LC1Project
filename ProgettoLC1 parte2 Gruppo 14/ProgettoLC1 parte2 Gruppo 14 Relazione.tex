@@ -49,9 +49,41 @@ Progetto di Linguaggi e Compilatori 1 -- Parte 2 \\ A.A. 2015/16\\%
 \maketitle
 %
 \section*{Esercizio 1}
+\subparagraph*{(a)}
+Dato un testo formattato come 
+\begin{center}
+cognome  nome/nomi  data(gg/mm/aa)  matricola  altro-testo
+\end{center}
+con i campi separati da un numero arbitrario di spazi, le espressioni regolari, nella sintassi di flex, componenti l'espressione regolare $e_{in}$ per eseguire la riformattazione del testo sono:
+\begin{itemize}
+	\item[cognome]		$($\Verb/[a-zA-Z\-\']+/$)_{1}$
+	\item[spazi]		$($\texttt{[\textvisiblespace]+}$)$
+	\item[nome/nomi]	$($\Verb/([a-zA-Z\-])+([ ]+[a-zA-Z\-]+)*/$)_{2}$
+	\item[spazi]		$($\texttt{[\textvisiblespace]+}$)$
+	\item[gg]		$($\Verb/(0?[1-9])|([12][0-9])|3[01]/$)_{3}$ 
+	\item[separatore data]	$($\Verb!"/"!$)$ 
+	\item[mm]		$($\Verb/(0?[1-9])|(1[0-2])/$)_{4}$ 
+	\item[separatore data]	$($\Verb!"/"!$)$ 
+	\item[aa]		$($\Verb/(0?[0-9])|([1-9][0-9])/$)_{5}$ 
+	\item[matricola]	$($\Verb/[0-9]+{6}/$)_{6}$ 
+	\item[altro-testo]	$($\Verb/./$)$ 
+\end{itemize}
+dove, per semplicità di notazione, sono state numerate solo le parentesi contenenti le $regexp$ facenti il match dei campi che si vuole siano presenti nell'espressione $e_{out}$.
+\par
+Volendo $e_{out}$ della forma
+\begin{center}
+	matricola nome/nomi cognome data(aaaa-mm-gg)
+\end{center}
+con i campi separati con un tabulatore ed assumendo che, tutte le date successive al 2000, non abbiano singole cifre non precedute da 0, si avrà
+\begin{center}
+	$e_{out}=$\Verb!\6\t\2\1\t20\5-\4\3!.
+\end{center}
+
+\par
+\includestandalone[width=\textwidth]{dfa}
+\section*{Esercizio 2}
+\section*{Esercizio 3}
 compilato con bison 3.0.4
 flex 2.6.0
-\begin{figure}
-\includestandalone[width=\textwidth]{dfa}
-\end{figure}
+
 \end{document}
