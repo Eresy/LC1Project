@@ -7,7 +7,9 @@
 int ncolumn = 1;
 int nline = 1;
 
-#define YY_USER_ACTION ncolumn += yyleng;
+#define YY_USER_ACTION	ncolumn += yyleng; \
+			yylloc.first_line = yylloc.last_line = nline;\
+			yylloc.first_column = ncolumn - yyleng ; yylloc.last_column = ncolumn;
 
 %}
 

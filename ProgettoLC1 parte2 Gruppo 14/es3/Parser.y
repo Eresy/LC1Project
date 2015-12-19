@@ -13,7 +13,7 @@ Section *prevS = NULL;
 Command *prevC = NULL;
 
 void yyerror(char const *str){	
-	fprintf(stderr, "Parse Error at (%d:%d): %s\n", nline, ncolumn, str);
+	fprintf(stderr, "Parse Error(%i:%i)%s", line, col, str);
 }
 
 void main(int argc, char **argv){
@@ -24,6 +24,7 @@ void main(int argc, char **argv){
 %}
 
 %define parse.error verbose
+%locations
 
 %union{
 	struct Section *sec;
@@ -39,7 +40,7 @@ void main(int argc, char **argv){
 %token <str> REFERENCE "$"
 %token DOT "."
 %token BIND "="
-%token OPENSEC "[" 
+%token OPENSEC "["
 %token CLOSESEC "]"
 %token END 0 "end of file"
 
@@ -55,11 +56,10 @@ Sections	:	Section Sections	{ };
 			|	{ };
 
 Section 	:	OPENSEC LABEL CLOSESEC Declarations	{	
-									//printf("--Section, local=%i\n", local != NULL);
-									if( sectionNameError(global, $2) ){
+									if( sectionNameError(global, $2, @2.first_line, @2.first_column) ){
 										YYERROR;
 									}
-									Section *a = newSection( $2, nline, ncolumn );
+									Section *a = newSection( $2, @2.first_line , @2.first_column );
 									if( local != NULL ) 
 										a = addCommands( a , local );
 									if ( prevS != NULL ){ 
@@ -78,7 +78,7 @@ Declarations	:	Declaration Declarations	{ }
 				
 Declaration	:	LABEL BIND Rvalue	{
 							//printf("--Declaration\n");
-							localNameWarning(local, $1, nline, ncolumn);
+							localNameWarning(local, $1, @1.first_line, @1.first_column);
 							Command *a = newCommand( $1, $3 );
 							if( prevC != NULL ){
 								addCommand( prevC, a);
