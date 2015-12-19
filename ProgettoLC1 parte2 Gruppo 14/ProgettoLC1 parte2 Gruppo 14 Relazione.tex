@@ -92,16 +92,16 @@ Preso l'alfabeto $\Sigma$ contenente i caratteri ASCII, il DFA minimo per $e_{in
 dove, per chiarezza illustrativa, si sono indicati sugli archi il range di caratteri che, ricevuti dallo stato $q_i$ causano la transizione allo stato $q_{j}$. Per la stessa ragione è stata omessa la rappresentazione dello stato "pozzo" a cui puntano tutti gli stati qualora ricevano un carattere non accettato dalle transizioni esplicitate.
 \newpage
 \section*{Esercizio 2}
-\lstset{tabsize=6,escapeinside={\%*}{*)}}
+\lstset{tabsize=6}
 \begin{lstlisting}
 init:
-		ENT 2    -- variabile u e variabile temporanea 
-			   -- necessaria all'impl. del for
-		LDA 0 9  -- carico la variabile temporanea
+		ENT 2       -- variabile u e variabile temporanea 
+			      -- necessaria all'impl. del for
+		LDA 0 9     -- carico la variabile temporanea
 		MST 1 
-		LDA 1 4  -- IMAX
+		LDA 1 4     -- IMAX
 		IND         
-		LDA 0 5	 -- j di init
+		LDA 0 5	    -- j di init
 		IND
 		CUP 2 min   -- min(imax,j)
 		STO         -- temp := min(IMAX, j)
@@ -117,7 +117,7 @@ body-init:
 		IND         -- i
 		MUL int     -- u * i
 		LDA 0 7
-		IND         -- 
+		IND          
 		CUP 2 p	    -- p(u*i , z)
 		LDA 0 6     -- h : history
 		IND         -- history := ^harray
@@ -135,18 +135,18 @@ body-init:
 		LDA 0 5     -- index j
 		IND 
 		IXA 1       -- [u][j] pointer
-		IND         -- mainharray[u,j]
+		IND       -- mainharray[u,j]
 		STO	    
 		LDA 0 8     
-		LDA 0 8     -- duplico la u
+		LDA 0 8   -- duplico la u
 		IND
 		LDC int 1
 		SUM int
 		STO
 guard-init:
-		LDA 0 8     -- u
+		LDA 0 8   -- u
 		IND
-		LDA 0 9     -- temp
+		LDA 0 9   -- temp
 		IND
 		GTR
 		FJP body-init
