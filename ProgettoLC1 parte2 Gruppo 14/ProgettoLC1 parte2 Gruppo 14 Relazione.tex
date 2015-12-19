@@ -256,14 +256,17 @@ main:
 \subsection*{Descrizione Soluzione}
 L'implementazione proposta è stata suddivisa tra i seguenti file:
 \begin{description}
-	\item[Lexer.l] 
+	\item[Lexer.l] oltre al riconoscimento dei singoli token passa al Parser i loro parametri posizionali riferiti allo stream di input.
 	\item[Parser.y] contiene i puntatori alla struttura dati per costruirla in concomitanza della scansione dei singoli token, in modo coerente anche durante il runtime del Parser. La funzione generica d'errore \texttt{yyerror} restituisce la posizione raggiunta dal Lexer poichè all'inizio del parsing è sempre nota la posizione del Lexer ma non dei singoli token. Alla stringa passata ad \texttt{yyerror} viene supplita una stringa di parametri contenente la posizione del token a cui l'errore si riferisce. Nel \texttt{main} si applica il pretty printing della struttura dati generata dal parser se e solo se il parser termina con successo. Si è scelto di usare il passaggio delle variabili per riferimento in modo da avere una valutazione ed un inserimento immediato nella struttura dati.
 	\item[ABS.c] implementa la struttura dati e le operazione necessarie alla sua costruzione e mantenimento. La struttura è formata da due sottostrutture:
 		\begin{description}
 			\item[Command] lista concatenata di assegnazioni di valori alle variabili,
 			\item[Section] lista concatenata di sezioni.
 		\end{description}
-		Con queste due sottostrutture si implementa la funzionalità dei messaggi di errore atti a fornire gli elementi necessari all'identificatione delle entità coinvolte e la loro posizione.
+		Con i due metodi \texttt{localNameWarning} \texttt{sectionNameError} si implementa la funzionalità dei messaggi di errore atti a fornire gli elementi necessari all'identificatione delle entità coinvolte e la loro posizione.
+		\texttt{sectionSearch} e \texttt{commandValueSearch} eseguono il fetch dei valori delle variabili che vengono passati per riferimento.
+		La ricerca delle variabili può procedere solo a ritroso; nel caso compaiano riferimenti a variabili non ancora definite viene ritornato un messaggio di errore.
+
 \end{description}
 compilato con bison 3.0.4
 flex 2.6.0
