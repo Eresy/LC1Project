@@ -5,7 +5,7 @@
 #include "Parser.h"
 
 /* punto dell'input in cui è arrivato il lexer */
-int ncolumn = 0;
+int ncolumn = 1;
 int nline = 1;
 
 /* questa è l'azione di default che viene eseguita prima del riconoscimento di un token */
@@ -42,7 +42,7 @@ WHITE	[ \t]
 
 \.			{ return DOT; }
 
-\n			{ ncolumn = 0; nline++; }
+\n			{ ncolumn = 1; nline++; }
 
 #.*			{ yylval.str = strdup( yytext ); return COMMENT; }
 
