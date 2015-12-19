@@ -4,14 +4,17 @@
 #include "ABS.c"
 #include <stdio.h>
 
+/*Numero di linee e colonne correnti del lexer*/
 extern int nline;
 extern int ncolumn;
 
+/*Puntatori alla struttura:*/
 Section *global = NULL;
 Command *local = NULL;
 Section *prevS = NULL;
 Command *prevC = NULL;
 
+/*Funzione di errore che di base fornisce la posizione del lexer*/
 void yyerror(char const *str){	
 	fprintf(stderr, "[%i:%i] %s\n", nline, ncolumn, str);
 }
@@ -23,6 +26,7 @@ void main(int argc, char **argv){
 
 %}
 
+/*Aumento la verbosità dei messaggi di errore del parser e le location dei token*/
 %define parse.error verbose
 %locations
 
@@ -31,6 +35,7 @@ void main(int argc, char **argv){
 	struct Command *cmd;
 	char *str;
 }
+
 
 %token <str> INT
 %token <str> STRING
@@ -55,22 +60,23 @@ void main(int argc, char **argv){
 Sections	:	Section Sections	{ };
 			|	{ };
 
-Section 	:	OPENSEC LABEL CLOSESEC Declarations	{	
+Section 	:	OPENSEC LABEL CLOSESEC Declarations	{	/* controllo delle duplicazioni */
 									if( sectionNameError(global, $2, @2.first_line, @2.first_column) ){
 										YYERROR;
 									}
+									/* creo la singola sezione */
 									Section *a = newSection( $2, @2.first_line , @2.first_column );
 									if( local != NULL ){
-										a = addCommands( a , local );
-									}
+										a = addCommands( a , local );	/* aggancio la lista di comandi alla sezione */
+									}					/* in ordine, prima il parser crea la lista, poi la sezione a cui riferiscono */
 									if ( prevS != NULL ){ 
-										addSection( prevS , a );
+										addSection( prevS , a ); /* la concateno alla sez. precedente se esiste */
 										prevS = a;
 										
 									}else{ 
-										global = prevS = a;
+										global = prevS = a; /* altrimenti se il precedente non esiste allora è la prima sezione */
 									}
-									local = NULL;
+									local = NULL; /* pulizia per un nuovo corpo di sezione */
 									prevC = NULL;
 								};
 
@@ -78,19 +84,20 @@ Declarations	:	Declaration Declarations	{ }
 			|	{ };
 				
 Declaration	:	LABEL BIND Rvalue	{
+							/* gestisco warning vari per le redifinizioni */
 							localNameWarning(local, $1, @1.first_line, @1.first_column);
 							Command *a = newCommand( $1, $3 );
-							if( prevC != NULL ){
+							if( prevC != NULL ){	/* aggiungo il comando creato al precedente */
 								addCommand( prevC, a);
 								prevC = a;
 							}else{
-								local = prevC = a;
+								local = prevC = a; /* se il precedente non esiste allora è il primo */
 							}
 						}
 			| COMMENT	{ 
-						char *cmt = "#";
+						char *cmt = "#"; /* i commenti sono inseriti nella struttura dati con simbolo riservato nella label*/
 						Command *a = newCommand( cmt, $1 );
-							if( prevC != NULL ){
+							if( prevC != NULL ){	/* stesso ragionamento come sopra */
 								addCommand( prevC, a);
 								prevC = a;
 							}else{
@@ -101,7 +108,7 @@ Declaration	:	LABEL BIND Rvalue	{
 Rvalue		:	INT		{ $$ = $1; }
 			| STRING	{ $$ = $1; }
 			| BOOL		{ $$ = $1; }
-			| REFERENCE LABEL DOT LABEL	{ 
+			| REFERENCE LABEL DOT LABEL	{ 	/* Per un riferimento, faccio il fetch della variabile, con errore irreversibile se non esiste */
 								char *c = commandValueSearch( sectionSearch( global, $2 ), $4 );
 								if(c != NULL){
 									$$ = c;
@@ -112,7 +119,7 @@ Rvalue		:	INT		{ $$ = $1; }
 									YYERROR;
 								}
 							} 
-			| REFERENCE LABEL	{ 
+			| REFERENCE LABEL	{ 	/* stesso ragionamento */
 							char *c = commandValueSearch( local, $2);
 							if(c != NULL){
 								$$ = c;
