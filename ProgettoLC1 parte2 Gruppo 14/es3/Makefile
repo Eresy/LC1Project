@@ -15,9 +15,6 @@ demo: all
 	./Es3 < example-2.conf
 	@echo -e "\nTesting conf with Incorrect variable assignment \n"
 	./Es3 < example-warn.conf
-	@echo -e "\nTesting conf with multiple section  assignment \n"
-	./Es3 < example-err.conf
-
 clean:
 	-rm -fv *.o *.log *.output
 	
