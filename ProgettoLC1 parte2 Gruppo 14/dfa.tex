@@ -21,8 +21,8 @@
 \node[state]		(9)	[below left of=5]	{$q_9$};
 \node[state]		(10)	[below of=8]	{$q_{10}$};
 \node[state]		(11)	[left =of 10]	{$q_{11}$};
-\node[state]		(12)	[below left of=11]	{$q_{12}$};
-\node[state]		(13)	[above left of=11]	{$q_{13}$};
+\node[state]		(12)	[above left of=11]	{$q_{12}$};
+\node[state]		(13)	[below left of=11]	{$q_{13}$};
 \node[state]		(14)	[left of=11]	{$q_{14}$};
 \node[state]		(15)	[left  of=14]	{$q_{15}$};
 \node[state]		(16)	[left of=15]	{$q_{16}$};
@@ -36,40 +36,40 @@
 \node[state]		(24)	[left of=23]	{$q_{24}$};
 \node[state,accepting]  (25)	[left of=24]	{$q_{25}$};
                                           
-\path	(1)	edge	[bend left]	node	{\texttt{([a-zA-Z\textbackslash\\-\\']+)}}	(2)
+\path	(1)	edge			node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\']+)}}	(2)
 
-	(2)	edge	[bend left]	node	{[\textvisiblespace]}	(3)
-		edge	[loop below]	node	{\texttt{([a-zA-Z\textbackslash\\-\\']+)}}	(2)
+	(2)	edge			node	{[\textvisiblespace]}	(3)
+		edge	[loop below]	node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\']+)}}	(2)
       	
 
-	(3)	edge	[bend left]	node	{\texttt{([a-zA-Z\textbackslash\\-\\']+)}}	(4)
+	(3)	edge			node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\']+)}}	(4)
 		edge	[loop above]	node	{\texttt{[\textvisiblespace]}}	(3)
 
-	(4)	edge	[bend left]	node	{[\textvisiblespace]}	(5)
-		edge	[loop above]	node	{\texttt{([a-zA-Z\textbackslash\\-\\']+)}}	(4)
+	(4)	edge			node	{[\textvisiblespace]}	(5)
+		edge	[loop below]	node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\']+)}}	(4)
 
-	(5)	edge	[bend left]	node	{\texttt{([a-zA-Z\textbackslash\\-\\']+)}}	(6)
+	(5)	edge	[bend left]	node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\']+)}}	(6)
 		edge			node	{\texttt{[0]}}	(7)
 		edge			node	{\texttt{[12]}}	(8)
 		edge			node	{\texttt{[3]}}	(9)
 		edge	[loop right]	node	{[\textvisiblespace]}	(9)
 
 	(6)	edge	[bend left]	node	{[\textvisiblespace]}	(5)
-		edge	[loop above]	node	{\texttt{([a-zA-Z\textbackslash\\-\\']+)}}	(6)
+		edge	[loop above]	node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\']+)}}	(6)
 
-	(7)	edge			node	{\texttt{[1-9]}}	(10)
+	(7)	edge	[bend left]	node	{\texttt{[1-9]}}	(10)
 	(8)	edge			node	{\texttt{[0-9]}}	(10)
-	(9)	edge			node	{\texttt{[01]}}	(10)
+	(9)	edge	[bend right]	node	{\texttt{[01]}}	(10)
 	(10)	edge			node	{\texttt{"/"}}	(11)
 
-	(11)	edge			node	{\texttt{[0]}}	(12)
-		edge			node	{\texttt{[1]}}	(13)
+	(11)	edge	[bend right]	node	{\texttt{[0]}}	(12)
+		edge	[bend left]	node	{\texttt{[1]}}	(13)
 
-	(12)	edge	[bend left]	node	{\texttt{[1-9]}}	(14)
-	(13)	edge	[bend right]	node	{\texttt{[0-2]}}	(14)
-	(14)	edge	[left]		node	{\texttt{"/"}}	(15)
-	(15)    edge	[left]		node	{\texttt{[0-9]}}	(16)
-        (16)    edge			node	{\texttt{[0-9]}}	(17)
+	(12)	edge	[bend right]	node	{\texttt{[1-9]}}	(14)
+	(13)	edge	[bend left]	node	{\texttt{[0-2]}}	(14)
+	(14)	edge			node	{\texttt{"/"}}	(15)
+	(15)    edge			node	{\texttt{[0-9]}}	(16)
+	(16)    edge			node	{\texttt{[0-9]}}	(17)
         (17)    edge			node	{\texttt{[0]}}	(18)
 
         (18)    edge			node	{\texttt{[0-9]}}	(19)
