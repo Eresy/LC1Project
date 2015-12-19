@@ -84,7 +84,7 @@ Declarations	:	Declaration Declarations	{ }
 			|	{ };
 				
 Declaration	:	LABEL BIND Rvalue	{
-							/* gestisco warning vari per le redifinizioni */
+							/* gestisco warning vari per le redefinizioni */
 							localNameWarning(local, $1, @1.first_line, @1.first_column);
 							Command *a = newCommand( $1, $3 );
 							if( prevC != NULL ){	/* aggiungo il comando creato al precedente */

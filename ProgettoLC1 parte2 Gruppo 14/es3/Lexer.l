@@ -8,7 +8,7 @@
 int ncolumn = 1;
 int nline = 1;
 
-/* questa è l'azione di default che viene eseguita prima del riconoscimento di un token */
+/* questa e' l'azione di default che viene eseguita prima del riconoscimento di un token */
 /* viene usata per aggiornare lo struct della posizione cosicchè il parser possa assegnare*/
 /* le coordinate giuste ai token nell'input stream. */
 
