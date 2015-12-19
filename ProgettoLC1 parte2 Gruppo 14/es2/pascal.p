@@ -168,7 +168,7 @@ then:
   IND
   LDC int 1
   SUB int
-  MST 0   -- preparo chiamata alla funzione interna f; forse MST 1
+  MST 0   -- preparo chiamata alla funzione interna f;
   LDA 0 5
   IND
   CUP 1 f
