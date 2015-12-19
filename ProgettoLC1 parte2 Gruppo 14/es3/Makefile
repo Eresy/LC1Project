@@ -35,4 +35,4 @@ Parser.o: Parser.c ABS.c
 ABS.c: 
 	$(GCC) -c ABS.c
 
-.PHONY : all test clean cleangen distclean
+.PHONY : all clean cleangen distclean
