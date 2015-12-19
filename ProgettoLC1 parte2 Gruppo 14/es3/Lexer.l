@@ -48,7 +48,7 @@ WHITE	[ \t]
 
 {WHITE}+		%{/* WHITESPACE */%}
 
-.			{ printf( "Scan Error at (%i:%i), Unrecognized character or pattern: %s\n" , yylineno, ncolumn, yytext ); }
+.			{ printf( "Scan Error at (%i:%i), Unrecognized character or pattern: %s\n" , nline, ncolumn, yytext ); }
 
 %%
 
