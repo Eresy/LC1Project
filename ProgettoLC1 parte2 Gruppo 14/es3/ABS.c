@@ -5,8 +5,6 @@
 typedef int bool;
 enum{false, true};
 
-
-
 typedef struct Command {
 	char *label;
 	char *value;
@@ -22,7 +20,7 @@ typedef struct Section {
 }Section;
 
 Section *newSection(char *label){
-	printf("Creo la sezione %s\n", label);
+	//printf("Creo la sezione %s\n", label);
 	Section *a = malloc( sizeof( Section ) );
 	if(!a){
 		yyerror("Out of Memory error while allocating: Section struct");
@@ -35,7 +33,7 @@ Section *newSection(char *label){
 }
 
 Command *newCommand(char *label, char *value){
-	printf("Creo il comando %s\n", label);
+	//printf("Creo il comando %s\n", label);
 	Command *a = malloc( sizeof( Command ) );
 	if(!a){
 		yyerror("Out of Memory error while allocating: Command struct");
@@ -47,20 +45,20 @@ Command *newCommand(char *label, char *value){
 }
 
 Command *addCommand(Command *cmd, Command *next){
-	printf("---Concateno il comando %s davanti a %s\n",  next -> label, cmd -> label);
+	//printf("---Concateno il comando %s davanti a %s\n",  next -> label, cmd -> label);
 	cmd -> nextCommand = next;
 	return cmd;
 }
 
 
 Section *addCommands(Section *sec, Command *cmd){
-	printf("---Aggiungo la lista di comandi %s davanti a %s\n", cmd -> label, sec -> label);
+	//printf("---Aggiungo la lista di comandi %s davanti a %s\n", cmd -> label, sec -> label);
 	sec -> listCommand = cmd;
 	return sec;
 }
 
 Section *addSection(Section *sec, Section *next){
-	printf("---Aggiungo la sezione %s davanti a %s\n", next -> label ,sec -> label );
+	//printf("---Aggiungo la sezione %s davanti a %s\n", next -> label ,sec -> label );
 	sec -> nextSection = next;
 	return sec;
 }
@@ -108,5 +106,36 @@ void printCommands(Command *com){
 			printf("%s=%s\n", com -> label , com -> value );
 		}
 		printCommands( com -> nextCommand );
+	}
+}
+
+bool localNameWarning(Command *list, char *key){
+	if(list != NULL){
+		if( strcmp(list -> label, key) == 0){
+			printf("WARNING: la variabile %s è stata definita due volte nello stesso blocco.\n", key);
+			return 1;
+		}else{
+			if( list -> nextCommand != NULL ){
+				return localNameWarning( list -> nextCommand, key );
+			}else{
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
+
+bool sectionNameError(Section *list, char *key){
+	if(list != NULL){
+		if( strcmp(list -> label, key) == 0 ){
+			yyerror("La Sezione è stata definita due volte. Assegnamento illegale.\n", key);
+			exit(1);
+		}else{
+			if( list -> nextSection != NULL ){
+				return sectionNameError( list -> nextSection, key );
+			}else{
+				return 0;
+			}
+		}
 	}
 }

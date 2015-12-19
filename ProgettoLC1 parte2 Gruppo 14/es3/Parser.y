@@ -1,7 +1,7 @@
 %{
 
 #include "Parser.h"
-#include "ABS.h"
+#include "ABS.c"
 #include <stdio.h>
 
 extern int yylineno;
@@ -12,8 +12,8 @@ Command *local = NULL;
 Section *prevS = NULL;
 Command *prevC = NULL;
 
-void yyerror(const char *str){	
-	printf("Parse Error at (%d:%d): %s\n", yylineno, ncolumn, str);
+void yyerror(char const *str){	
+	fprintf(stderr, "Parse Error at (%d:%d): %s\n", yylineno, ncolumn, str);
 }
 
 void main(int argc, char **argv){
@@ -55,8 +55,9 @@ Sections	:	Section Sections	{ };
 			|	{ };
 
 Section 	:	OPENSEC LABEL CLOSESEC Declarations	{	
-									printf("--Section, local=%i\n", local != NULL);
-									Section *a = newSection( $2 );  
+									//printf("--Section, local=%i\n", local != NULL);
+									sectionNameError(global, $2);
+									Section *a = newSection( $2 );
 									if( local != NULL ) 
 										a = addCommands( a , local );
 									if ( prevS != NULL ){ 
@@ -74,7 +75,8 @@ Declarations	:	Declaration Declarations	{ }
 			|	{ };
 				
 Declaration	:	LABEL BIND Rvalue	{
-							printf("--Declaration\n");
+							//printf("--Declaration\n");
+							localNameWarning(local, $1);
 							Command *a = newCommand( $1, $3 );
 							if( prevC != NULL ){
 								addCommand( prevC, a);
@@ -84,7 +86,7 @@ Declaration	:	LABEL BIND Rvalue	{
 							}
 						}
 			| COMMENT	{ 
-						printf("--Declaration#\n");
+						//printf("--Comment\n");
 						char *cmt = "#";
 						Command *a = newCommand( cmt, $1 );
 							if( prevC != NULL ){
@@ -99,10 +101,10 @@ Rvalue		:	INT		{ $$ = $1; }
 			| STRING	{ $$ = $1; }
 			| BOOL		{ $$ = $1; }
 			| REFERENCE LABEL DOT LABEL	{ 
-								printf("Riferimento %s contenuta in %s \n", $4, $2);
+								//printf("Riferimento %s contenuta in %s \n", $4, $2);
 								$$ = commandValueSearch( sectionSearch( global, $2 ), $4 );
 							} 
 			| REFERENCE LABEL	{ 
-							printf("Riferisco %s contenuta in %s\n", $2, local -> label);
+							//printf("Riferisco %s contenuta in %s\n", $2, local -> label);
 							$$ = commandValueSearch( local, $2);
 						};

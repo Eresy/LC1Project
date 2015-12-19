@@ -1,4 +1,4 @@
-GCC = gcc -Wall
+GCC = gcc
 BIS = bison -vdt
 FLEX = flex
 
