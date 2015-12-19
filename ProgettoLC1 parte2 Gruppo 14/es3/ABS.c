@@ -5,9 +5,6 @@
 typedef int bool;
 enum{false, true};
 
-extern int yylineno;
-extern int ncolumn;
-
 typedef struct Command {
 	char *label;
 	char *value;
@@ -16,21 +13,21 @@ typedef struct Command {
 
 typedef struct Section {
 	char *label;
-	int nlines, ncolumn;
+	int nlines;
+	int ncolumn;
 	struct Command *listCommand;
 	struct Section *nextSection;
 }Section;
 
-Section *newSection(char *label){
+Section *newSection(char *label, int line, int col){
 	//printf("Creo la sezione %s\n", label);
 	Section *a = malloc( sizeof( Section ) );
 	if(!a){
 		yyerror("Out of Memory error while allocating: Section struct");
-		exit(1);
 	}
 	a -> label = label;
-	a -> nlines = yylineno;
-	a -> ncolumn = ncolumn;
+	a -> nlines = line;
+	a -> ncolumn = col;
 	a -> nextSection = NULL;
 	a -> listCommand = NULL;
 	return a;
@@ -41,7 +38,6 @@ Command *newCommand(char *label, char *value){
 	Command *a = malloc( sizeof( Command ) );
 	if(!a){
 		yyerror("Out of Memory error while allocating: Command struct");
-		exit(1);
 	}
 	a -> label = label;
 	a -> value = value;
@@ -113,14 +109,14 @@ void printCommands(Command *com){
 	}
 }
 
-bool localNameWarning(Command *list, char *key){
+bool localNameWarning(Command *list, char *key, int line, int column){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0){
-			printf("WARNING (%s:%s): la variabile %s è stata definita due volte nello stesso blocco.\n", key);
+			fprintf(stderr, "WARNING (%i:%i): la variabile \"%s\" è stata definita due volte nello stesso blocco.\n", line, column, key);
 			return 1;
 		}else{
 			if( list -> nextCommand != NULL ){
-				return localNameWarning( list -> nextCommand, key );
+				return localNameWarning( list -> nextCommand, key, line , column);
 			}else{
 				return 0;
 			}
@@ -132,9 +128,10 @@ bool localNameWarning(Command *list, char *key){
 bool sectionNameError(Section *list, char *key){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0 ){
-			char buf[50];
-			yyerror( sprintf(buf, "La sezione %s è stata gia' definita in (%i:%i). Assegnamento illegale", key, list -> nlines, list -> ncolumn));
-			exit(1);
+			char buf[100];
+			sprintf(buf, "La sezione \"%s\" è stata gia' definita in (%i:%i). Assegnamento illegale.\0", key, list -> nlines, list -> ncolumn);
+			yyerror( buf );
+			return 1;
 		}else{
 			if( list -> nextSection != NULL ){
 				return sectionNameError( list -> nextSection, key );
@@ -143,4 +140,5 @@ bool sectionNameError(Section *list, char *key){
 			}
 		}
 	}
+	return 0;
 }
