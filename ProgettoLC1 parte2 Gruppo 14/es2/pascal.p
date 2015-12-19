@@ -211,4 +211,3 @@ main:
   CUP 4 init
   ...
 }
-}
