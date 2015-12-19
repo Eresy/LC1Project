@@ -1,7 +1,7 @@
 %{
 
 #include "Parser.h"
-#include "ABS.c"
+#include "ABS.h"
 #include <stdio.h>
 
 extern int yylineno;
@@ -13,7 +13,7 @@ Section *prevS = NULL;
 Command *prevC = NULL;
 
 void yyerror(const char *str){	
-	printf("Parse Error at (%i:%i): %s\n", yylineno, ncolumn, str);
+	printf("Parse Error at (%d:%d): %s\n", yylineno, ncolumn, str);
 }
 
 void main(int argc, char **argv){
