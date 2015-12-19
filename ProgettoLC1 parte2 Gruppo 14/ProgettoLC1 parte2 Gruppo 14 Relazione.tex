@@ -89,39 +89,21 @@ dove \Verb!\t! indica il carattere di tabulazione.
 \subsection*{(b)}
 Preso l'alfabeto $\Sigma$ contenente i caratteri ASCII, il DFA minimo per $e_{in}$ è:
 \includestandalone[width=\textwidth]{dfa}\label{dfa}
-dove, per chiarezza illustrativa, si sono indicati sugli archi il range di caratteri che, ricevuti dallo stato $q_i$ causano la transizione allo stato $q_{i+1}$. Per la stessa ragione è stata omessa la rappresentazione dello stato pozzo a cui puntano tutti gli stati qualora ricevano un carattere non accettato dalle transizioni esplicitate.
+dove, per chiarezza illustrativa, si sono indicati sugli archi il range di caratteri che, ricevuti dallo stato $q_i$ causano la transizione allo stato $q_{j}$. Per la stessa ragione è stata omessa la rappresentazione dello stato "pozzo" a cui puntano tutti gli stati qualora ricevano un carattere non accettato dalle transizioni esplicitate.
 \newpage
 \section*{Esercizio 2}
 \begin{lstlisting}
-program esercizio ;
-  const IMAX = 9 ; UNKNOWN = ...;   {IMAX 4, UNKNOWN 5 }
-  type harray = array [ 0.. IMAX , 0.. IMAX ] of integer ;
-  history = ^harray;
-  ... ...
-  var target , aim : integer ; {target 6, aim 7}
-  mainharray : harray ;         { mainharray 8}
-
-  procedure init ( i , j : integer ; h : history ; var z : integer );
-    var u : integer ;
-  begin
-    for u := 0 to min ( IMAX , j ) do
-    begin
-      p(u*i, z);
-      h^[i,u] := mainarray[u,j];
-    end
-  end;
-{
 init:
-		ENT 2           -- 1 + temp
-		LDA 0 9         -- variabile temporanea
+		ENT 2           -- variabile u e variabile temporanea necessaria all'impl. del for
+		LDA 0 9         -- carico la variabile temporanea
 		MST 1 
 		LDA 1 4         -- IMAX
 		IND         
-		LDA 0 5	      -- j di init
+		LDA 0 5	        -- j di init
 		IND
-		CUP 2 min	      -- chiamo min(imax,j)
+		CUP 2 min	-- min(imax,j)
 		STO             -- temp := min(IMAX, j)
-		LDA 0 8	      --carico u
+		LDA 0 8	        -- carico u
 		LDC int 0 
 		STO             -- u := 0
 		UJP guard-init  -- while u <= temp do S; u += 1;
@@ -133,8 +115,8 @@ body-init:
 		IND         -- i
 		MUL int     -- u * i
 		LDA 0 7
-		IND         -- l-val di z
-		CUP 2 p	  --siamo a p(u*i,z)
+		IND         -- 
+		CUP 2 p	    -- p(u*i , z)
 		LDA 0 6     -- h : history
 		IND         -- history := ^harray
 		LDA 0 4     -- index i
@@ -143,7 +125,7 @@ body-init:
 		LDA 0 8     -- index u
 		IND
 		IXA 1       -- h[i][u] pointer
-		LDA 1 8	  --prendo esternamente mainharray(offset 8
+		LDA 1 8	    -- mainharray(offset 8)
 		IND
 		LDA 0 8     -- index u
 		IND
@@ -151,10 +133,10 @@ body-init:
 		LDA 0 5     -- index j
 		IND 
 		IXA 1       -- [u][j] pointer
-		IND         --carico r-value di  mainharray[u,j]
-		STO		  --memorizzo
-		LDA 0 8     -- da qui faccio u += 1
-		LDA 0 8     -- posso usare dup
+		IND         -- mainharray[u,j]
+		STO	    
+		LDA 0 8     
+		LDA 0 8     -- duplico la u
 		IND
 		LDC int 1
 		SUM int
@@ -167,26 +149,14 @@ guard-init:
 		GTR
 		FJP body-init
 		RETP
-}
-  function f ( n : real ) : integer ;
-  begin ... ... end ;
-{
 f:
 		ENT 0
 		...
 		RETF
-}
-procedure p ( x : integer ; var y : integer );
-  begin
-    y := f ( f ( x ));
-	while ( y = 0) and ( x > target ) do
-		p (y , y )
-  end;
-{
 p:
-		ENT 0     -- nessuna local var
+		ENT 0     
 		LDA 0 5
-		IND       -- viene fatto perch y  passata per reference
+		IND       
 		MST 1     -- pre-chiamata al primo f
 		MST 1     -- pre-chiamata al secondo f
 		LDA 0 4
@@ -197,60 +167,42 @@ p:
 		STO       -- y:= f(f(x))
 		UJP guard-p
 body-p:
-		MST 1     -- preparo ricors p(y,y)
+		MST 1     -- preparo per chiamata ricorsiva di p(y,y)
 		LDA 0 5
 		IND
-		IND       -- passo il valore del primo param
+		IND       
 		LDA 0 5
-		IND       -- passo la "var" del secondo param
+		IND       
 		CUP 2 p
 guard-p:
 		LDA 0 5
 		IND
 		IND
 		LDC int 0
-		NEQ       -- devo invertire controllo
+		NEQ       
 		LDA 0 4
 		IND 
-		LDA 1 6   -- carico target
-		IND       -- 
-		LEQ       -- <= 
+		LDA 1 6  
+		IND     
+		LEQ       
 		OR
 		FJP body-p
 		RETP
-}
-function min (x , y : integer ): integer ;
-begin ... ... end ;
-{
 min:
 		ENT 0
 		...
 		RETF
-}
-  function alt ( i : integer ; x : real ) : real ;
-    
-    function f ( x : real ) : real ;
-    begin f := 1 + 1/ x end ;
-{ 
 f:		      --interna ad alt
-		ENT 0		  --niente variabili locali
-		LDA 0 0	  --variabile f stesso nome funzione
+		ENT 0
+		LDA 0 0	
 		LDC real 1
-		LDC real 1  -- oppure ricarico con LDC
-		LDA 0 4  	  -- x interna alla funz
+		LDC real 1
+		LDA 0 4  
 		IND
 		DIV real
 		SUM real
-		STO         -- assegno al valore di ritorno
+		STO     
 		RETF
-}
-  begin
-	if odd ( i ) then
-		alt := alt ( i -1 , f ( x ) )
-	else
-		alt := alt ( i -1 , x )
-  end ;
-{
 alt:
 		ENT 0
 		LDA 0 4
@@ -258,7 +210,7 @@ alt:
 		ODD
 		FJP else
 then:
-		LDA 0 0   -- dove sar memorizzato val ritorno
+		LDA 0 0
 		MST 1     -- preparo chiamata ricorsiva alt
 		LDA 0 4
 		IND
@@ -277,31 +229,23 @@ else:
 		LDA 0 4
 		IND
 		LDC int 1
-		SUB int   -- param i-1
+		SUB int 
 		LDA 0 5
-		IND       -- param x
+		IND     
 		CUP 2 alt
 		STO
 		RETF
-}
-begin
-	...;
-	p ( target , aim );
-	init ( 20 , 30 , @mainharray , target );
-	...
-end;
-{
 main:
 		...
 		MST 0     
-		LDA 0 6	--target
+		LDA 0 6	-- target
 		IND
-		LDA 0 7	--aim
+		LDA 0 7	-- aim
 		CUP 2 p
 		MST 0       
 		LDC int 20
 		LDC int 30
-		LDA 0 8     -- mainharray 
+		LDA 0 8	-- mainharray 
 		LDA 0 6	
 		CUP 4 init
 		...
