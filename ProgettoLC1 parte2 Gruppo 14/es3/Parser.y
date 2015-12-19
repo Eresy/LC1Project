@@ -60,8 +60,9 @@ Section 	:	OPENSEC LABEL CLOSESEC Declarations	{
 										YYERROR;
 									}
 									Section *a = newSection( $2, @2.first_line , @2.first_column );
-									if( local != NULL ) 
+									if( local != NULL ){
 										a = addCommands( a , local );
+									}
 									if ( prevS != NULL ){ 
 										addSection( prevS , a );
 										prevS = a;
@@ -101,8 +102,24 @@ Rvalue		:	INT		{ $$ = $1; }
 			| STRING	{ $$ = $1; }
 			| BOOL		{ $$ = $1; }
 			| REFERENCE LABEL DOT LABEL	{ 
-								$$ = commandValueSearch( sectionSearch( global, $2 ), $4 );
+								char *c = commandValueSearch( sectionSearch( global, $2 ), $4 );
+								if(c != NULL){
+									$$ = c;
+								}else{
+									char buf[50];
+									sprintf(buf, "FATAL: Variable \"%s.%s\" does not exist\n", $2, $4);
+									yyerror( buf );
+									YYERROR;
+								}
 							} 
 			| REFERENCE LABEL	{ 
-							$$ = commandValueSearch( local, $2);
+							char *c = commandValueSearch( local, $2);
+							if(c != NULL){
+								$$ = c;
+							}else{
+								char buf[50];
+								sprintf(buf, "FATAL: Variable \"%s\" does not exist\n", $2);
+								yyerror( buf );
+								YYERROR;
+							}
 						};
