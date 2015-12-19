@@ -129,7 +129,7 @@ bool sectionNameError(Section *list, char *key){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0 ){
 			char buf[100];
-			sprintf(buf, "La sezione \"%s\" è stata gia' definita in (%i:%i). Assegnamento illegale.\0", key, list -> nlines, list -> ncolumn);
+			sprintf(buf, "ERROR (%d:%d) : La sezione \"%s\" è stata gia' definita in Precedenza. Assegnamento illegale.\0", list -> nlines, list -> ncolumn, key);
 			yyerror( buf );
 			return 1;
 		}else{
