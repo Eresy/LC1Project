@@ -31,8 +31,6 @@ void main(int argc, char **argv){
 %locations
 
 %union{
-	struct Section *sec;
-	struct Command *cmd;
 	char *str;
 }
 
@@ -49,10 +47,6 @@ void main(int argc, char **argv){
 %token CLOSESEC "]"
 %token END 0 "end of file"
 
-%type <sec> Sections 
-%type <sec> Section
-%type <cmd> Declarations
-%type <cmd> Declaration
 %type <str> Rvalue
 
 %%
