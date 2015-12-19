@@ -77,7 +77,6 @@ Declarations	:	Declaration Declarations	{ }
 			|	{ };
 				
 Declaration	:	LABEL BIND Rvalue	{
-							//printf("--Declaration\n");
 							localNameWarning(local, $1, @1.first_line, @1.first_column);
 							Command *a = newCommand( $1, $3 );
 							if( prevC != NULL ){
@@ -88,7 +87,6 @@ Declaration	:	LABEL BIND Rvalue	{
 							}
 						}
 			| COMMENT	{ 
-						//printf("--Comment\n");
 						char *cmt = "#";
 						Command *a = newCommand( cmt, $1 );
 							if( prevC != NULL ){
@@ -103,10 +101,8 @@ Rvalue		:	INT		{ $$ = $1; }
 			| STRING	{ $$ = $1; }
 			| BOOL		{ $$ = $1; }
 			| REFERENCE LABEL DOT LABEL	{ 
-								//printf("Riferimento %s contenuta in %s \n", $4, $2);
 								$$ = commandValueSearch( sectionSearch( global, $2 ), $4 );
 							} 
 			| REFERENCE LABEL	{ 
-							//printf("Riferisco %s contenuta in %s\n", $2, local -> label);
 							$$ = commandValueSearch( local, $2);
 						};

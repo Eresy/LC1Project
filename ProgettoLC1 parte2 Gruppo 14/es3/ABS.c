@@ -2,15 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+//Tipo bool, per comodita'
 typedef int bool;
 enum{false, true};
 
+//Lista di comandi
 typedef struct Command {
 	char *label;
 	char *value;
 	struct Command *nextCommand;
 }Command;
 
+//Lista di sezioni
 typedef struct Section {
 	char *label;
 	int nlines;
@@ -19,8 +22,8 @@ typedef struct Section {
 	struct Section *nextSection;
 }Section;
 
+//Crea un elemento vuoto della lista delle sezioni
 Section *newSection(char *label, int line, int col){
-	//printf("Creo la sezione %s\n", label);
 	Section *a = malloc( sizeof( Section ) );
 	if(!a){
 		yyerror("Out of Memory error while allocating: Section struct");
@@ -33,8 +36,8 @@ Section *newSection(char *label, int line, int col){
 	return a;
 }
 
+//Crea un elemento vuoto della lista dei comandi
 Command *newCommand(char *label, char *value){
-	//printf("Creo il comando %s\n", label);
 	Command *a = malloc( sizeof( Command ) );
 	if(!a){
 		yyerror("Out of Memory error while allocating: Command struct");
@@ -45,25 +48,26 @@ Command *newCommand(char *label, char *value){
 	return a;
 }
 
+//Fa' puntare cmd a next e restituisce cmd
 Command *addCommand(Command *cmd, Command *next){
-	//printf("---Concateno il comando %s davanti a %s\n",  next -> label, cmd -> label);
 	cmd -> nextCommand = next;
 	return cmd;
 }
 
-
+//Fornisce a sec la lista di comandi cmd e restituisce sec
 Section *addCommands(Section *sec, Command *cmd){
-	//printf("---Aggiungo la lista di comandi %s davanti a %s\n", cmd -> label, sec -> label);
 	sec -> listCommand = cmd;
 	return sec;
 }
 
+//Fa' puntare sec a next e restituisce sec
 Section *addSection(Section *sec, Section *next){
-	//printf("---Aggiungo la sezione %s davanti a %s\n", next -> label ,sec -> label );
 	sec -> nextSection = next;
 	return sec;
 }
 
+//Cerca fra le sezioni create con il label key e restituisce la sua lista di comandi
+//usata nel risolvere gli r-value di tipo REFERENCE
 Command *sectionSearch(Section *list, char *key){
 	if( strcmp(list -> label, key) == 0 ){
 		return list -> listCommand;
@@ -76,6 +80,8 @@ Command *sectionSearch(Section *list, char *key){
 	}
 }
 
+//Cerca in una lista di comandi il valore della variabile che corrisponde a quella key
+//usata nel risolvere gli r-value di tipo REFERENCE
 char *commandValueSearch(Command *list, char *key){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0){
@@ -91,6 +97,7 @@ char *commandValueSearch(Command *list, char *key){
 	return NULL;
 }
 
+//Pretty printing di una lista di sezioni
 void printSections(Section *sec){
 	if(sec != NULL){
 		printf("[%s]\n", sec -> label);
@@ -99,6 +106,7 @@ void printSections(Section *sec){
 	}
 }
 
+//Pretty printing di una lista di comandi
 void printCommands(Command *com){
 	if(com != NULL){
 		if(*(com -> value) == '#'){
@@ -110,6 +118,8 @@ void printCommands(Command *com){
 	}
 }
 
+//Funzione di ricerca di un comando di label == key, per stampare uno warning per la definizione multipla
+//line e column servono per il messaggio di errore e rappresentano la posizione dell'elemento da verificare
 bool localNameWarning(Command *list, char *key, int line, int column){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0){
@@ -126,6 +136,8 @@ bool localNameWarning(Command *list, char *key, int line, int column){
 	return 0;
 }
 
+//Funzione di ricerca per una sezione di label == key, per l'errore di ridefinizione di una sezione
+//line e column servono per il messaggio di errore e rappresentano la posizione dell'elemento da verificare
 bool sectionNameError(Section *list, char *key, int line, int column){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0 ){
