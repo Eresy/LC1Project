@@ -113,7 +113,7 @@ void printCommands(Command *com){
 bool localNameWarning(Command *list, char *key, int line, int column){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0){
-			fprintf(stderr, "WARNING : la variabile \"%s\" in posizione (%i,%i) è stata definita due volte nello stesso blocco.\n", key, line, column);
+			fprintf(stderr, "WARNING : Var: \"%s\" multiple definition at (%i,%i).\n", key, line, column);
 			return 1;
 		}else{
 			if( list -> nextCommand != NULL ){
