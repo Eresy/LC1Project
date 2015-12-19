@@ -16,9 +16,9 @@
 \node[state]		(4)	[right of=3]	{$q_4$};
 \node[state]		(5)	[right =of 4]	{$q_5$};
 \node[state]		(6)	[above of=5]	{$q_6$};
-\node[state]		(7)	[below right of=5]	{$q_7$};
+\node[state]		(7)	[below left of=5]	{$q_7$};
 \node[state]		(8)	[below of=5]	{$q_8$};
-\node[state]		(9)	[below left of=5]	{$q_9$};
+\node[state]		(9)	[below right of=5]	{$q_9$};
 \node[state]		(10)	[below of=8]	{$q_{10}$};
 \node[state]		(11)	[left =of 10]	{$q_{11}$};
 \node[state]		(12)	[above left of=11]	{$q_{12}$};
@@ -38,49 +38,50 @@
                                           
 \path	(1)	edge			node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\'])}}	(2)
 
-	(2)	edge			node	{\texttt{[\textvisiblespace]}}	(3)
+	(2)	edge			node	{\texttt{([\textvisiblespace])}}	(3)
 		edge	[loop below]	node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\'])}}	(2)
       	
 
 	(3)	edge			node	{\texttt{([a-zA-Z\textbackslash\\-])}}	(4)
-		edge	[loop above]	node	{\texttt{[\textvisiblespace]}}	(3)
+		edge	[loop above]	node	{\texttt{([\textvisiblespace])}}	(3)
 
-	(4)	edge			node	{\texttt{[\textvisiblespace]}}	(5)
+	(4)	edge			node	{\texttt{([\textvisiblespace])}}	(5)
 		edge	[loop below]	node	{\texttt{([a-zA-Z\textbackslash\\-])}}	(4)
 
 	(5)	edge	[bend left]	node	{\texttt{([a-zA-Z\textbackslash\\-])}}	(6)
-		edge			node	{\texttt{[0]}}	(7)
-		edge			node	{\texttt{[12]}}	(8)
-		edge			node	{\texttt{[3]}}	(9)
-		edge	[loop right]	node	{\texttt{[\textvisiblespace]}}	(9)
+		edge			node	{\texttt{([0])}}	(7)
+		edge			node	{\texttt{([12])}}	(8)
+		edge			node	{\texttt{([3])}}	(9)
+		edge	[loop right]	node	{\texttt{([\textvisiblespace])}}	(9)
 
-	(6)	edge	[bend left]	node	{\texttt{[\textvisiblespace]}}	(5)
+	(6)	edge	[bend left]	node	{\texttt{([\textvisiblespace])}}	(5)
 		edge	[loop above]	node	{\texttt{([a-zA-Z\textbackslash\\-])}}	(6)
 
-	(7)	edge	[bend left]	node	{\texttt{[1-9]}}	(10)
-	(8)	edge			node	{\texttt{[0-9]}}	(10)
-	(9)	edge	[bend right]	node	{\texttt{[01]}}	(10)
-	(10)	edge			node	{\texttt{"/"}}	(11)
+	(7)	edge	[bend right]	node	{\texttt{([1-9])}}	(10)
+	(8)	edge			node	{\texttt{([0-9])}}	(10)
+	(9)	edge	[bend left]	node	{\texttt{([01])}}	(10)
+	(10)	edge			node	{\texttt{("/")}}	(11)
 
-	(11)	edge	[bend right]	node	{\texttt{[0]}}	(12)
-		edge	[bend left]	node	{\texttt{[1]}}	(13)
+	(11)	edge	[bend right]	node	{\texttt{([0])}}	(12)
+		edge	[bend left]	node	{\texttt{([1])}}	(13)
 
-	(12)	edge	[bend right]	node	{\texttt{[1-9]}}	(14)
-	(13)	edge	[bend left]	node	{\texttt{[0-2]}}	(14)
-	(14)	edge			node	{\texttt{"/"}}	(15)
-	(15)    edge			node	{\texttt{[0-9]}}	(16)
-	(16)    edge			node	{\texttt{[0-9]}}	(17)
-	(17)    edge			node	{\texttt{[\textvisiblespace]}}	(18)
+	(12)	edge	[bend right]	node	{\texttt{([1-9])}}	(14)
+	(13)	edge	[bend left]	node	{\texttt{([0-2])}}	(14)
+	(14)	edge			node	{\texttt{("/")}}	(15)
+	(15)    edge			node	{\texttt{([0-9])}}	(16)
+	(16)    edge			node	{\texttt{([0-9])}}	(17)
+	(17)    edge			node	{\texttt{([\textvisiblespace])}}	(18)
 
-        (18)    edge			node	{\texttt{[0-9]}}	(19)
-		edge	[loop left]	node	{\texttt{[\textvisiblespace]}}	(18)
+        (18)    edge			node	{\texttt{([0-9])}}	(19)
+		edge	[loop left]	node	{\texttt{([\textvisiblespace])}}	(18)
 
-        (19)    edge			node	{\texttt{[0-9]}}	(20)
-        (20)    edge			node	{\texttt{[0-9]}}	(21)
-        (21)    edge			node	{\texttt{[0-9]}}	(22)
-        (22)	edge			node	{\texttt{[0-9]}}	(23)
-        (23)	edge			node	{\texttt{[0-9]}}	(24)
-        (24)	edge			node	{\texttt{[\textvisiblespace]}}	(25);
+        (19)    edge			node	{\texttt{([0-9])}}	(20)
+        (20)    edge			node	{\texttt{([0-9])}}	(21)
+        (21)    edge			node	{\texttt{([0-9])}}	(22)
+        (22)	edge			node	{\texttt{([0-9])}}	(23)
+        (23)	edge			node	{\texttt{([0-9])}}	(24)
+        (24)	edge			node	{\texttt{([\textvisiblespace])}}	(25)
+	(25)	edge	[loop left]	node	{\texttt{(.)}}	(25);
 \end{tikzpicture}
 \end{document}
 %
