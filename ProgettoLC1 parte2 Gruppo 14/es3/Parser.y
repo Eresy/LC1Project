@@ -4,7 +4,7 @@
 #include "ABS.c"
 #include <stdio.h>
 
-extern int yylineno;
+extern int nline;
 extern int ncolumn;
 
 Section *global = NULL;
@@ -13,12 +13,12 @@ Section *prevS = NULL;
 Command *prevC = NULL;
 
 void yyerror(char const *str){	
-	fprintf(stderr, "Parse Error at (%d:%d): %s\n", yylineno, ncolumn, str);
+	fprintf(stderr, "Parse Error at (%d:%d): %s\n", nline, ncolumn, str);
 }
 
 void main(int argc, char **argv){
-	yyparse();
-	printSections( global );
+	if( yyparse() == 0)
+		printSections( global );
 }
 
 %}
@@ -56,8 +56,10 @@ Sections	:	Section Sections	{ };
 
 Section 	:	OPENSEC LABEL CLOSESEC Declarations	{	
 									//printf("--Section, local=%i\n", local != NULL);
-									sectionNameError(global, $2);
-									Section *a = newSection( $2 );
+									if( sectionNameError(global, $2) ){
+										YYERROR;
+									}
+									Section *a = newSection( $2, nline, ncolumn );
 									if( local != NULL ) 
 										a = addCommands( a , local );
 									if ( prevS != NULL ){ 
@@ -76,7 +78,7 @@ Declarations	:	Declaration Declarations	{ }
 				
 Declaration	:	LABEL BIND Rvalue	{
 							//printf("--Declaration\n");
-							localNameWarning(local, $1);
+							localNameWarning(local, $1, nline, ncolumn);
 							Command *a = newCommand( $1, $3 );
 							if( prevC != NULL ){
 								addCommand( prevC, a);

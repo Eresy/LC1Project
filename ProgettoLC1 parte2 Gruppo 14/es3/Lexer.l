@@ -5,6 +5,7 @@
 #include "Parser.h"
 
 int ncolumn = 1;
+int nline = 1;
 
 #define YY_USER_ACTION ncolumn += yyleng;
 
@@ -34,7 +35,7 @@ WHITE	[ \t]
 
 \.			{ return DOT; }
 
-\n			{ ncolumn = 1;}
+\n			{ ncolumn = 1; nline++; }
 
 #.*			{ yylval.str = strdup( yytext ); return COMMENT; }
 
