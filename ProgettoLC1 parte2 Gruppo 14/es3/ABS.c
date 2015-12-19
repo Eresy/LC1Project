@@ -41,6 +41,7 @@ Command *newCommand(char *label, char *value){
 	}
 	a -> label = label;
 	a -> value = value;
+	a -> nextCommand = NULL;
 	return a;
 }
 
@@ -112,7 +113,7 @@ void printCommands(Command *com){
 bool localNameWarning(Command *list, char *key, int line, int column){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0){
-			fprintf(stderr, "WARNING (%i:%i): la variabile \"%s\" è stata definita due volte nello stesso blocco.\n", line, column, key);
+			fprintf(stderr, "WARNING : la variabile \"%s\" in posizione (%i,%i) è stata definita due volte nello stesso blocco.\n", key, line, column);
 			return 1;
 		}else{
 			if( list -> nextCommand != NULL ){
@@ -125,16 +126,16 @@ bool localNameWarning(Command *list, char *key, int line, int column){
 	return 0;
 }
 
-bool sectionNameError(Section *list, char *key){
+bool sectionNameError(Section *list, char *key, int line, int column){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0 ){
 			char buf[100];
-			sprintf(buf, "ERROR (%d:%d) : La sezione \"%s\" è stata gia' definita in Precedenza. Assegnamento illegale.\0", list -> nlines, list -> ncolumn, key);
+			sprintf(buf, "Parse error (%i:%i), La sezione \"%s\" è stata gia' definita in (%i:%i). Assegnamento illegale.\0", line, column, key, list -> nlines, list -> ncolumn);
 			yyerror( buf );
 			return 1;
 		}else{
 			if( list -> nextSection != NULL ){
-				return sectionNameError( list -> nextSection, key );
+				return sectionNameError( list -> nextSection, key, line, column);
 			}else{
 				return 0;
 			}
