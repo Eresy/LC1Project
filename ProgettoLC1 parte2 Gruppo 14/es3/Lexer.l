@@ -24,13 +24,15 @@ WHITE	[ \t]
 
 {CHAR}+({CHAR}|{NUM})*	{ yylval.str = strdup( yytext ); return LABEL; }
 
-"{CHAR}+"		{ yylval.str = strdup( yytext ); return STRING; }
+\"{CHAR}+\"		{ yylval.str = strdup( yytext ); return STRING; }
 
 {NUM}+			{ yylval.str = strdup( yytext ); return INT; }
 
-[$]			{ yylval.str = strdup( yytext ); return REFERENCE;}
+\$			{ return REFERENCE;}
 
-=			{ return BIND; }
+\=			{ return BIND; }
+
+\.			{ return DOT; }
 
 \n			{ ncolumn = 1;}
 
