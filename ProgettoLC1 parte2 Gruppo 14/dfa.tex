@@ -36,26 +36,26 @@
 \node[state]		(24)	[left of=23]	{$q_{24}$};
 \node[state,accepting]  (25)	[left of=24]	{$q_{25}$};
                                           
-\path	(1)	edge			node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\']+)}}	(2)
+\path	(1)	edge			node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\'])}}	(2)
 
-	(2)	edge			node	{[\textvisiblespace]}	(3)
-		edge	[loop below]	node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\']+)}}	(2)
+	(2)	edge			node	{\texttt{[\textvisiblespace]}}	(3)
+		edge	[loop below]	node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\'])}}	(2)
       	
 
-	(3)	edge			node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\']+)}}	(4)
+	(3)	edge			node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\'])}}	(4)
 		edge	[loop above]	node	{\texttt{[\textvisiblespace]}}	(3)
 
-	(4)	edge			node	{[\textvisiblespace]}	(5)
-		edge	[loop below]	node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\']+)}}	(4)
+	(4)	edge			node	{\texttt{[\textvisiblespace]}}	(5)
+		edge	[loop below]	node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\'])}}	(4)
 
-	(5)	edge	[bend left]	node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\']+)}}	(6)
+	(5)	edge	[bend left]	node	{\texttt{([a-zA-Z\textbackslash\\-])}}	(6)
 		edge			node	{\texttt{[0]}}	(7)
 		edge			node	{\texttt{[12]}}	(8)
 		edge			node	{\texttt{[3]}}	(9)
-		edge	[loop right]	node	{[\textvisiblespace]}	(9)
+		edge	[loop right]	node	{\texttt{[\textvisiblespace]}}	(9)
 
-	(6)	edge	[bend left]	node	{[\textvisiblespace]}	(5)
-		edge	[loop above]	node	{\texttt{([a-zA-Z\textbackslash\\-\textbackslash\\']+)}}	(6)
+	(6)	edge	[bend left]	node	{\texttt{[\textvisiblespace]}}	(5)
+		edge	[loop above]	node	{\texttt{([a-zA-Z\textbackslash\\-])}}	(6)
 
 	(7)	edge	[bend left]	node	{\texttt{[1-9]}}	(10)
 	(8)	edge			node	{\texttt{[0-9]}}	(10)
@@ -70,10 +70,10 @@
 	(14)	edge			node	{\texttt{"/"}}	(15)
 	(15)    edge			node	{\texttt{[0-9]}}	(16)
 	(16)    edge			node	{\texttt{[0-9]}}	(17)
-        (17)    edge			node	{\texttt{[0]}}	(18)
+	(17)    edge			node	{\texttt{[\textvisiblespace]}}	(18)
 
         (18)    edge			node	{\texttt{[0-9]}}	(19)
-		edge	[loop left]	node	{\texttt{[0]}}	(18)
+		edge	[loop left]	node	{\texttt{[\textvisiblespace]}}	(18)
 
         (19)    edge			node	{\texttt{[0-9]}}	(20)
         (20)    edge			node	{\texttt{[0-9]}}	(21)
