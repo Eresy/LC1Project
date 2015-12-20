@@ -32,7 +32,7 @@ WHITE	[ \t]
 
 {CHAR}+({CHAR}|{NUM})*	{ yylval.str = strdup( yytext ); return LABEL; }
 
-\"({CHAR}|{NUM})+\"	{ yylval.str = strdup( yytext ); return STRING; }
+\"({CHAR}|{NUM}|{WHITE})*\"		{ yylval.str = strdup( yytext ); return STRING; }
 
 {NUM}+			{ yylval.str = strdup( yytext ); return INT; }
 
