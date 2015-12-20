@@ -16,7 +16,7 @@ Command *prevC = NULL;
 
 /*Funzione di errore che di base fornisce la posizione del lexer*/
 void yyerror(char const *str){	
-	fprintf(stderr, "[%i:%i] %s\n", nline, ncolumn, str);
+	fprintf(stderr, "[%i:%i] %s\n", yylloc.first_line, yylloc.first_column, str);
 }
 
 void main(int argc, char **argv){

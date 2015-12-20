@@ -27,6 +27,7 @@ Section *newSection(char *label, int line, int col){
 	Section *a = malloc( sizeof( Section ) );
 	if(!a){
 		yyerror("Out of Memory error while allocating: Section struct");
+		exit(1);
 	}
 	a -> label = label;
 	a -> nlines = line;
@@ -41,6 +42,7 @@ Command *newCommand(char *label, char *value){
 	Command *a = malloc( sizeof( Command ) );
 	if(!a){
 		yyerror("Out of Memory error while allocating: Command struct");
+		exit(1);
 	}
 	a -> label = label;
 	a -> value = value;
@@ -141,9 +143,7 @@ bool localNameWarning(Command *list, char *key, int line, int column){
 bool sectionNameError(Section *list, char *key, int line, int column){
 	if(list != NULL){
 		if( strcmp(list -> label, key) == 0 ){
-			char buf[100];
-			sprintf(buf, "ERROR - at (%i:%i): section \"%s\" was already defined at (%i:%i). Illegal assignment.\0", line, column, key, list -> nlines, list -> ncolumn);
-			yyerror( buf );
+			fprintf(stderr, "ERROR - at (%i:%i): section \"%s\" was already defined at (%i:%i). Illegal assignment.\n", line, column, key, list -> nlines, list -> ncolumn);
 			return 1;
 		}else{
 			if( list -> nextSection != NULL ){
