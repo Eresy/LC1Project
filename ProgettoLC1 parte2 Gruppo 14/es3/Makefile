@@ -15,14 +15,18 @@ demo: all
 	./Es3 < example-2.conf
 	@echo -e "\nTesting conf with Incorrect variable assignment \n"
 	./Es3 < example-warn.conf
+	@echo -e "\nTesting conf with Multiple sections assignment \n"
+	-./Es3 < example-err.conf
+	#ritorna errore, lo facciamo ignorare a make 
+	#in modo che continui
 clean:
-	-rm -fv *.o *.log *.output
+	rm -f *.o *.log *.output
 	
 cleangen:
-	-rm -fv $(gen)
+	rm -f $(gen)
 
 distclean: clean cleangen
-	-rm -fv Es3
+	rm -f Es3
 
 Lexer.c: Lexer.l
 	$(FLEX) -o $@ $<
