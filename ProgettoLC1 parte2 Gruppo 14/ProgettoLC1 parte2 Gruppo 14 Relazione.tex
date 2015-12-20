@@ -270,7 +270,7 @@ L'implementazione proposta è stata suddivisa tra i seguenti file:
 
 	\item[Parser.y:] per costruire, in modo coerente anche durante il runtime, la struttura dati in concomitanza alla scansione dei singoli token utilizza i puntatori alla struttura dati.
 		La funzione built-in d'errore \texttt{yyerror} restituisce la posizione raggiunta dal Lexer qualora quest'ultimo incontri un errore sintattico.
-		La posizione del token a cui l'errore fa riferimento è fornita ad \texttt{yyerror} in aggiunta alla stringa di argomento con cui viene chiamata. 
+		Nel definire \texttt{yyerror} in aggiunta alla stringa di argomento con cui viene chiamata si da la posizione del token a cui l'errore fa riferimento. 
 		Nel \texttt{main} è applicato il pretty printing della struttura dati generata dal parser solo nel caso di terminazione con successo del parser.
 		\'E stato scelto di implementare il passaggio delle variabili per riferimento in modo da avere una valutazione eager e conseguentemente un inserimento immediato nella struttura dati.
 \end{description}
