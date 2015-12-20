@@ -54,7 +54,8 @@ Dato un testo formattato come
 \begin{center}
 cognome  nome/nomi  data(gg/mm/aa)  matricola  altro-testo
 \end{center}
-con i campi separati da un numero arbitrario di spazi, le espressioni regolari, nella sintassi di flex, componenti l'espressione regolare $e_{in}$ per eseguire la riformattazione del testo sono:
+con i campi separati da un numero arbitrario di spazi.
+Le espressioni regolari, nella sintassi di flex, componenti l'espressione regolare $e_{in}$ per eseguire la riformattazione del testo sono:
 \begin{itemize}
 	\item[cognome]		$($\Verb/[a-zA-Z\-\']+/$)_{1}$
 	\item[nome/nomi]	$($\Verb/([a-zA-Z\-])+([ ]+[a-zA-Z\-]+)*/$)_{2}$
@@ -253,20 +254,25 @@ main:
 		...
 \end{lstlisting}	
 \section*{Esercizio 3}
-\subsection*{Descrizione Soluzione}
 L'implementazione proposta è stata suddivisa tra i seguenti file:
 \begin{description}
-	\item[Lexer.l] oltre al riconoscimento dei singoli token passa al Parser i loro parametri posizionali riferiti allo stream di input.
+	\item[Lexer.l]: esegue, oltre al riconoscimento dei singoli token, il passaggio dei loro parametri posizionali riferiti allo stream di input al Parser,
 	\item[Parser.y] contiene i puntatori alla struttura dati per costruirla in concomitanza della scansione dei singoli token, in modo coerente anche durante il runtime del Parser. La funzione generica d'errore \texttt{yyerror} restituisce la posizione raggiunta dal Lexer poichè all'inizio del parsing è sempre nota la posizione del Lexer ma non dei singoli token. Alla stringa passata ad \texttt{yyerror} viene supplita una stringa di parametri contenente la posizione del token a cui l'errore si riferisce. Nel \texttt{main} si applica il pretty printing della struttura dati generata dal parser se e solo se il parser termina con successo. Si è scelto di usare il passaggio delle variabili per riferimento in modo da avere una valutazione ed un inserimento immediato nella struttura dati.
-	\item[ABS.c] implementa la struttura dati e le operazione necessarie alla sua costruzione e mantenimento. La struttura è formata da due sottostrutture:
+	\item[ABS.c]: definisce la struttura dati e le operazione necessarie alla sua costruzione e mantenimento.
+		La struttura è formata da due sottostrutture:
 		\begin{description}
 			\item[Command] lista concatenata di assegnazioni di valori alle variabili,
 			\item[Section] lista concatenata di sezioni.
 		\end{description}
-		Con i due metodi \texttt{localNameWarning} \texttt{sectionNameError} si implementa la funzionalità dei messaggi di errore atti a fornire gli elementi necessari all'identificatione delle entità coinvolte e la loro posizione.
-		\texttt{sectionSearch} e \texttt{commandValueSearch} eseguono il fetch dei valori delle variabili che vengono passati per riferimento.
+		Con i metodi \texttt{localNameWarning} e \texttt{sectionNameError} si implementa la funzionalità dei messaggi di errore atti a fornire gli elementi necessari all'identificatione delle entità coinvolte e la loro posizione.
+		Le funzioni \texttt{sectionSearch} e \texttt{commandValueSearch} eseguono il fetch dei valori delle variabili che sono passate per riferimento.
 		La ricerca delle variabili può procedere solo a ritroso; nel caso compaiano riferimenti a variabili non ancora definite viene ritornato un messaggio di errore.
 
+	\item[Parser.y]: per costruire, in modo coerente anche durante il runtime, la struttura dati in concomitanza alla scansione dei singoli token contiene i puntatori alla struttura dati.
+		La generica funzione built-in d'errore \texttt{yyerror} restituisce la posizione raggiunta dal Lexer in quanto durante il parsing è sempre nota la posizione del Lexer ma non dei singoli token ricevuti in input.
+		Alla stringa data ad \texttt{yyerror} viene aggiunta una stringa di parametri, contenente la posizione del token a cui l'errore si riferisce. 
+		Nel \texttt{main} è applicato il pretty printing della struttura dati generata dal parser solo nel caso di terminazione con successo del parser.
+		\'E stato scelto di implementare il passaggio delle variabili per riferimento in modo da avere una valutazione eager e conseguentemente un inserimento immediato nella struttura dati.
 \end{description}
 compilato con bison 3.0.4
 flex 2.6.0
