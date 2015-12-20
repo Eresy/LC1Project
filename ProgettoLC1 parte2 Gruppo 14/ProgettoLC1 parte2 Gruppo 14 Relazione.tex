@@ -272,6 +272,12 @@ L'implementazione proposta è stata suddivisa tra i seguenti file:
 		Le funzioni \texttt{sectionSearch} e \texttt{commandValueSearch} eseguono il fetch dei valori delle variabili che sono passate per riferimento.
 		La ricerca delle variabili può procedere solo a ritroso; nel caso compaiano riferimenti a variabili non ancora definite viene ritornato un messaggio di errore.
 \end{description}
+
+make demo: non è stato incluso l'esempio di file con errore nella "ricetta" del \texttt{Makefile} in quanto l'uscita con errore del programma causava make da dichiarare anch'esso errore.
+
+lo metto???
+Viene comunque fornito ed è testabile con ./Es3 < example-err.conf
+
 compilato con bison 3.0.4
 flex 2.6.0
 
