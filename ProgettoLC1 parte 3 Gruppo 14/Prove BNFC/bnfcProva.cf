@@ -1,0 +1,91 @@
+Init.	S ::= [TopStatement] ;
+
+terminator TopStatement ";" ;
+Tstat.	TopStatement ::= Definition ;
+
+terminator Statement ";" ;
+Stat.	Statement ::= Assignment ;
+Stat2.	Statement ::= Definition  ;
+Stat3.	Statement ::= FunctionCall ;
+
+Assign.	Assignment ::= LValue "=" RValue ;
+
+Def.	Definition ::= TypeLabel LValue ;
+Def2.	Definition ::= TypeLabel Assignment ;
+Def3.	Definition ::= FunctionDef ;
+FDef.	FunctionDef ::= TypeLabel Label "(" [Argument] ")" "{" [Instruction] "}" ;
+	
+Lval.	LValue ::= Label ;
+Lval2.	LValue ::= Label Array;
+Lval3.	LValue ::= Pointer Array ;
+
+Rval.	RValue ::= LValue ;
+Rval2.	RValue ::= Expression ;
+Rval3.	RValue ::= Assignment ;
+Rval4.	RValue ::= FunctionCall ;
+Rval5.	RValue ::= ArrayDef ;
+
+Type.	Type ::= Integer ;
+Type2.	Type ::= Char ;
+Type3.	Type ::= String ;
+Type4.	Type ::= "True" ;
+Type4.	Type ::= "False" ;
+Type5.	Type ::= Double ;
+
+Typel.	TypeLabel ::= "int";
+Typel2.	TypeLabel ::= "bool";
+Typel3.	TypeLabel ::= "double";
+Typel4.	TypeLabel ::= "String";
+
+terminator Instruction ";" ;
+Instr.	Instruction ::= [Statement] ;
+Instr2.	Instruction ::= FlowControl;
+
+Fcall.	FunctionCall ::= Label "(" [Parameter] ")" ;
+separator Parameter "," ;
+Parm.	Parameter ::= RValue ;
+separator nonempty Argument "," ;
+Args2.	Argument ::= Type Label ;
+
+
+Fctrl.	FlowControl ::= IfThenElse ;
+Fctrl2.	FlowControl ::= While ;
+Fctrl3.	FlowControl ::= For ; 
+Fctrl4.	FlowControl ::= "break";
+Fctrl5.	FlowControl ::= "continue";
+
+If.		IfThenElse ::= "if" "(" Expression ")" Then ;
+If2.	IfThenElse ::= "if" "(" Expression ")" Then Else ;
+Then.	Then ::= "{" [Instruction] "}" ;
+Else.	Else ::= "else" Then ;
+While.	While ::= "while" "(" Expression ")" "{" [Instruction] "}" ;
+For.	For ::= "for" "(" ForInd ";" Expression ";" Expression ")" "{" [Instruction] "}" ;
+ForInd.	ForInd ::= ForVars ;
+ForInd2.ForInd ::= ;
+ForVar.	ForVars ::= ForVar "," ForVars ;
+ForVar2.ForVars ::= ForVar ;
+ForVar3.ForVar ::= Type LValue ;
+
+
+Lbl.	Label ::= Ident ;
+Arr.	Array ::= "[" Integer "]" ;
+Adef.	ArrayDef ::= "{" [ArrayItem] "}" ;
+(:).	[ArrayItem] ::= ArrayItem "," [ArrayItem] ;
+Aitm2.	ArrayItem ::= RValue ;
+Ptr.	Pointer ::= "*";
+
+Expr.	Expression ::= Operand Operator Expression ;
+Expr2.	Expression ::= Operand ;
+Oper.	Operand ::= Type ;
+Sum.	Operator ::= "+" ;
+Diff.	Operator ::= "-" ;
+Div.	Operator ::= "/" ;
+Mul.	Operator ::= "*" ;
+Andbw.	Operator ::= "&" ;
+Orbw.	Operator ::= "|" ;
+And.	Operator ::= "&&" ;
+Or.		Operator ::= "||" ;
+Concat.	Operator ::= "++" ;
+
+comment "//" ;
+comment "/*" "*/" ;
