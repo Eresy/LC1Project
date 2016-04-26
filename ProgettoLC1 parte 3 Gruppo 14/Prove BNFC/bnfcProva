@@ -1,0 +1,82 @@
+init.	S ::= Statements;
+stats.	Statements ::= Statement Statements ;
+stats2.	Statements ::= ;
+stat.	Statement ::= Assignment ";" ;
+stat2.	Statement ::= Definition ";" ;
+stat3.	Statement ::= FunctionCall ";" ;
+
+assign.	Assignment ::= LValue "=" RValue ;
+
+FDef.	FunctionDef ::= Type Label "(" Arguments ")" "{" Instructions "}" ;
+Def.	Definition ::= Type LValue ";" ;
+Def2.	Definition ::= Type Assignment ;
+Def3.	Definition ::= FunctionDef ;
+
+Lval.	LValue ::= Label ;
+Lval2.	LValue ::= Label Array;
+Lval3.	LValue ::= Pointer Array ;
+
+Rval.	RValue ::= LValue ;
+Rval2.	RValue ::= Type ;
+Rval3.	RValue ::= Assignment ;
+Rval4.	RValue ::= FunctionCall ;
+Rval5.	RValue ::= ArrayDef ;
+Rval6.	RValue ::= Expression ;
+
+type.	Type ::= Integer ;
+type2.	Type ::= Char ;
+type3.	Type ::= String ;
+type4.	Type ::= Bool ;
+type5.	Type ::= Double ;
+type6.	Bool ::= "True" ;
+type6.	Bool ::= "False" ;
+
+insts.	Instructions ::= Instruction Instructions ;
+insts2.	Instructions ::= ;
+instr.	Instruction ::= Statements ;
+instr2.	Instruction ::= FlowControl;
+
+fcall.	FunctionCall ::= Label "(" Parameters ")" ;
+parm.	Parameters ::= RValue Parameters ;
+parm2.	Parameters ::= ;
+args.	Arguments ::= Type Label ;
+args2.	Arguments ::= Type Label "," Arguments ;
+
+fctrl.	FlowControl ::= IfThenElse ;
+fctrl2.	FlowControl ::= While ;
+fctrl3.	FlowControl ::= For ;
+fctrl4.	FlowControl ::= "break";
+fctrl5.	FlowControl ::= "continue";
+
+if.		IfThenElse ::= "if" "(" Expression ")" Then ;
+if2.	IfThenElse ::= "if" "(" Expression ")" Then Else ;
+then.	Then ::= "{" Instructions "}" ;
+else.	Else ::= "else" Then ;
+while.	While ::= "while" "(" Expression ")" "{" Instructions "}" ;
+for.	For ::= "for" "(" ForInd ";" Expression ";" Expression ")" "{" Instructions "}" ;
+forInd.	ForInd ::= ForVars ;
+forInd2.ForInd ::=  ;
+forVar.	ForVars ::= ForVar "," ForVars ;
+forVar2.ForVars ::= ForVar ;
+forVar3.ForVar ::= Type LValue ;
+
+
+lbl.	Label ::= Ident ;
+arr.	Array ::= "[" Integer "]" ;
+Adef.	ArrayDef ::= "{" ArrayItems "}" ;
+Aitm.	ArrayItems ::= RValue ;
+Aitm2.	ArrayItems ::= RValue "," ArrayItems ;
+ptr.	Pointer ::= "*";
+
+expr.	Expression ::= Operand Operator Expression ;
+expr2.	Expression ::= Operand ;
+oper.	Operand ::= Type ;
+sum.	Operator ::= "+" ;
+diff.	Operator ::= "-" ;
+div.	Operator ::= "/" ;
+mul.	Operator ::= "*" ;
+andbw.	Operator ::= "&" ;
+orbw.	Operator ::= "|" ;
+and.	Operator ::= "&&" ;
+or.		Operator ::= "||" ;
+concat.	Operator ::= "++" ;
