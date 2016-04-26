@@ -86,6 +86,12 @@ instance Print Ident where
 instance Print S where
   prt i e = case e of
 
+instance Print TopStatements where
+  prt i e = case e of
+
+instance Print TopStatement where
+  prt i e = case e of
+
 instance Print Statements where
   prt i e = case e of
 
@@ -95,15 +101,15 @@ instance Print Statement where
 instance Print Assignment where
   prt i e = case e of
 
-instance Print FunctionDef where
-  prt i e = case e of
-    FDef type_ label arguments instructions -> prPrec i 0 (concatD [prt 0 type_, prt 0 label, doc (showString "("), prt 0 arguments, doc (showString ")"), doc (showString "{"), prt 0 instructions, doc (showString "}")])
-
 instance Print Definition where
   prt i e = case e of
-    Def type_ lvalue -> prPrec i 0 (concatD [prt 0 type_, prt 0 lvalue, doc (showString ";")])
-    Def2 type_ assignment -> prPrec i 0 (concatD [prt 0 type_, prt 0 assignment])
+    Def typelabel lvalue -> prPrec i 0 (concatD [prt 0 typelabel, prt 0 lvalue, doc (showString ";")])
+    Def2 typelabel assignment -> prPrec i 0 (concatD [prt 0 typelabel, prt 0 assignment])
     Def3 functiondef -> prPrec i 0 (concatD [prt 0 functiondef])
+
+instance Print FunctionDef where
+  prt i e = case e of
+    FDef typelabel label arguments instructions -> prPrec i 0 (concatD [prt 0 typelabel, prt 0 label, doc (showString "("), prt 0 arguments, doc (showString ")"), doc (showString "{"), prt 0 instructions, doc (showString "}")])
 
 instance Print LValue where
   prt i e = case e of
@@ -124,6 +130,9 @@ instance Print Type where
   prt i e = case e of
 
 instance Print Bool where
+  prt i e = case e of
+
+instance Print TypeLabel where
   prt i e = case e of
 
 instance Print Instructions where

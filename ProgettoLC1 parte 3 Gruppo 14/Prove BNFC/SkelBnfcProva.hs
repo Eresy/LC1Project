@@ -14,20 +14,24 @@ transIdent x = case x of
   Ident string -> failure x
 transS :: S -> Result
 transS x = case x of
+transTopStatements :: TopStatements -> Result
+transTopStatements x = case x of
+transTopStatement :: TopStatement -> Result
+transTopStatement x = case x of
 transStatements :: Statements -> Result
 transStatements x = case x of
 transStatement :: Statement -> Result
 transStatement x = case x of
 transAssignment :: Assignment -> Result
 transAssignment x = case x of
-transFunctionDef :: FunctionDef -> Result
-transFunctionDef x = case x of
-  FDef type_ label arguments instructions -> failure x
 transDefinition :: Definition -> Result
 transDefinition x = case x of
-  Def type_ lvalue -> failure x
-  Def2 type_ assignment -> failure x
+  Def typelabel lvalue -> failure x
+  Def2 typelabel assignment -> failure x
   Def3 functiondef -> failure x
+transFunctionDef :: FunctionDef -> Result
+transFunctionDef x = case x of
+  FDef typelabel label arguments instructions -> failure x
 transLValue :: LValue -> Result
 transLValue x = case x of
   Lval label -> failure x
@@ -45,6 +49,8 @@ transType :: Type -> Result
 transType x = case x of
 transBool :: Bool -> Result
 transBool x = case x of
+transTypeLabel :: TypeLabel -> Result
+transTypeLabel x = case x of
 transInstructions :: Instructions -> Result
 transInstructions x = case x of
 transInstruction :: Instruction -> Result

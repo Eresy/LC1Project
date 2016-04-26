@@ -9,15 +9,18 @@ import ErrM
 }
 
 %name pS S
+%name pTopStatements TopStatements
+%name pTopStatement TopStatement
 %name pStatements Statements
 %name pStatement Statement
 %name pAssignment Assignment
-%name pFunctionDef FunctionDef
 %name pDefinition Definition
+%name pFunctionDef FunctionDef
 %name pLValue LValue
 %name pRValue RValue
 %name pType Type
 %name pBool Bool
+%name pTypeLabel TypeLabel
 %name pInstructions Instructions
 %name pInstruction Instruction
 %name pFunctionCall FunctionCall
@@ -57,19 +60,23 @@ import ErrM
   ';' { PT _ (TS _ 11) }
   '=' { PT _ (TS _ 12) }
   'False' { PT _ (TS _ 13) }
-  'True' { PT _ (TS _ 14) }
-  '[' { PT _ (TS _ 15) }
-  ']' { PT _ (TS _ 16) }
-  'break' { PT _ (TS _ 17) }
-  'continue' { PT _ (TS _ 18) }
-  'else' { PT _ (TS _ 19) }
-  'for' { PT _ (TS _ 20) }
-  'if' { PT _ (TS _ 21) }
-  'while' { PT _ (TS _ 22) }
-  '{' { PT _ (TS _ 23) }
-  '|' { PT _ (TS _ 24) }
-  '||' { PT _ (TS _ 25) }
-  '}' { PT _ (TS _ 26) }
+  'String' { PT _ (TS _ 14) }
+  'True' { PT _ (TS _ 15) }
+  '[' { PT _ (TS _ 16) }
+  ']' { PT _ (TS _ 17) }
+  'bool' { PT _ (TS _ 18) }
+  'break' { PT _ (TS _ 19) }
+  'continue' { PT _ (TS _ 20) }
+  'double' { PT _ (TS _ 21) }
+  'else' { PT _ (TS _ 22) }
+  'for' { PT _ (TS _ 23) }
+  'if' { PT _ (TS _ 24) }
+  'int' { PT _ (TS _ 25) }
+  'while' { PT _ (TS _ 26) }
+  '{' { PT _ (TS _ 27) }
+  '|' { PT _ (TS _ 28) }
+  '||' { PT _ (TS _ 29) }
+  '}' { PT _ (TS _ 30) }
 
 L_integ  { PT _ (TI $$) }
 L_charac { PT _ (TC $$) }
@@ -87,7 +94,12 @@ Double  :: { Double }  : L_doubl  { (read ( $1)) :: Double }
 Ident   :: { Ident }   : L_ident  { Ident $1 }
 
 S :: { S }
-S : Statements { AbsBnfcProva.init_ $1 }
+S : TopStatements { AbsBnfcProva.init_ $1 }
+TopStatements :: { TopStatements }
+TopStatements : TopStatements TopStatement { AbsBnfcProva.tstats_ $1 $2 }
+              | TopStatement { AbsBnfcProva.tstats2_ $1 }
+TopStatement :: { TopStatement }
+TopStatement : Definition ';' { AbsBnfcProva.tstat_ $1 }
 Statements :: { Statements }
 Statements : Statement Statements { AbsBnfcProva.stats_ $1 $2 }
            | {- empty -} { AbsBnfcProva.stats2_ }
@@ -97,12 +109,12 @@ Statement : Assignment ';' { AbsBnfcProva.stat_ $1 }
           | FunctionCall ';' { AbsBnfcProva.stat3_ $1 }
 Assignment :: { Assignment }
 Assignment : LValue '=' RValue { AbsBnfcProva.assign_ $1 $3 }
-FunctionDef :: { FunctionDef }
-FunctionDef : Type Label '(' Arguments ')' '{' Instructions '}' { AbsBnfcProva.FDef $1 $2 $4 $7 }
 Definition :: { Definition }
-Definition : Type LValue ';' { AbsBnfcProva.Def $1 $2 }
-           | Type Assignment { AbsBnfcProva.Def2 $1 $2 }
+Definition : TypeLabel LValue ';' { AbsBnfcProva.Def $1 $2 }
+           | TypeLabel Assignment { AbsBnfcProva.Def2 $1 $2 }
            | FunctionDef { AbsBnfcProva.Def3 $1 }
+FunctionDef :: { FunctionDef }
+FunctionDef : TypeLabel Label '(' Arguments ')' '{' Instructions '}' { AbsBnfcProva.FDef $1 $2 $4 $7 }
 LValue :: { LValue }
 LValue : Label { AbsBnfcProva.Lval $1 }
        | Label Array { AbsBnfcProva.Lval2 $1 $2 }
@@ -123,6 +135,11 @@ Type : Integer { AbsBnfcProva.type_ $1 }
 Bool :: { Bool }
 Bool : 'True' { AbsBnfcProva.type6_ }
      | 'False' { AbsBnfcProva.type6_ }
+TypeLabel :: { TypeLabel }
+TypeLabel : 'int' { AbsBnfcProva.typel_ }
+          | 'bool' { AbsBnfcProva.typel_ }
+          | 'double' { AbsBnfcProva.typel_ }
+          | 'String' { AbsBnfcProva.typel_ }
 Instructions :: { Instructions }
 Instructions : Instruction Instructions { AbsBnfcProva.insts_ $1 $2 }
              | {- empty -} { AbsBnfcProva.insts2_ }

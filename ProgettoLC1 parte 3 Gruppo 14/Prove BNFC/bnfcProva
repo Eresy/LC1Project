@@ -1,4 +1,8 @@
-init.	S ::= Statements;
+init.	S ::= TopStatements ;
+tstats.	TopStatements ::= TopStatements TopStatement;
+tstats2.	TopStatements ::= TopStatement;
+tstat.	TopStatement ::= Definition ";" ;
+
 stats.	Statements ::= Statement Statements ;
 stats2.	Statements ::= ;
 stat.	Statement ::= Assignment ";" ;
@@ -7,10 +11,10 @@ stat3.	Statement ::= FunctionCall ";" ;
 
 assign.	Assignment ::= LValue "=" RValue ;
 
-FDef.	FunctionDef ::= Type Label "(" Arguments ")" "{" Instructions "}" ;
-Def.	Definition ::= Type LValue ";" ;
-Def2.	Definition ::= Type Assignment ;
+Def.	Definition ::= TypeLabel LValue ";" ;
+Def2.	Definition ::= TypeLabel Assignment ;
 Def3.	Definition ::= FunctionDef ;
+FDef.	FunctionDef ::= TypeLabel Label "(" Arguments ")" "{" Instructions "}" ;
 
 Lval.	LValue ::= Label ;
 Lval2.	LValue ::= Label Array;
@@ -31,6 +35,11 @@ type5.	Type ::= Double ;
 type6.	Bool ::= "True" ;
 type6.	Bool ::= "False" ;
 
+typel.	TypeLabel ::= "int";
+typel.	TypeLabel ::= "bool";
+typel.	TypeLabel ::= "double";
+typel.	TypeLabel ::= "String";
+
 insts.	Instructions ::= Instruction Instructions ;
 insts2.	Instructions ::= ;
 instr.	Instruction ::= Statements ;
@@ -44,7 +53,7 @@ args2.	Arguments ::= Type Label "," Arguments ;
 
 fctrl.	FlowControl ::= IfThenElse ;
 fctrl2.	FlowControl ::= While ;
-fctrl3.	FlowControl ::= For ;
+fctrl3.	FlowControl ::= For ; 
 fctrl4.	FlowControl ::= "break";
 fctrl5.	FlowControl ::= "continue";
 

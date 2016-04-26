@@ -42,8 +42,9 @@ followed by an unsigned or negative exponent.
 The set of reserved words is the set of terminals appearing in the grammar. Those reserved words that consist of non-letter characters are called symbols, and they are treated in a different way from those that are similar to identifiers. The lexer follows rules familiar from languages like Haskell, C, and Java, including longest match and spacing conventions.
 
 The reserved words used in bnfcProva are the following:
-  | ``False`` | ``True`` | ``break`` | ``continue``
-  | ``else`` | ``for`` | ``if`` | ``while``
+  | ``False`` | ``String`` | ``True`` | ``bool``
+  | ``break`` | ``continue`` | ``double`` | ``else``
+  | ``for`` | ``if`` | ``int`` | ``while``
 
 The symbols used in bnfcProva are the following:
   | ; | = | ( | )
@@ -61,17 +62,20 @@ The symbols -> (production),  **|**  (union)
 and **eps** (empty rule) belong to the BNF notation. 
 All other symbols are terminals.
 
-  | //S// | -> | //Statements// 
+  | //S// | -> | //TopStatements// 
+  | //TopStatements// | -> | //TopStatements// //TopStatement// 
+  |  |  **|**  | //TopStatement// 
+  | //TopStatement// | -> | //Definition// ``;`` 
   | //Statements// | -> | //Statement// //Statements// 
   |  |  **|**  | **eps**
   | //Statement// | -> | //Assignment// ``;`` 
   |  |  **|**  | //Definition// ``;`` 
   |  |  **|**  | //FunctionCall// ``;`` 
   | //Assignment// | -> | //LValue// ``=`` //RValue// 
-  | //FunctionDef// | -> | //Type// //Label// ``(`` //Arguments// ``)`` ``{`` //Instructions// ``}`` 
-  | //Definition// | -> | //Type// //LValue// ``;`` 
-  |  |  **|**  | //Type// //Assignment// 
+  | //Definition// | -> | //TypeLabel// //LValue// ``;`` 
+  |  |  **|**  | //TypeLabel// //Assignment// 
   |  |  **|**  | //FunctionDef// 
+  | //FunctionDef// | -> | //TypeLabel// //Label// ``(`` //Arguments// ``)`` ``{`` //Instructions// ``}`` 
   | //LValue// | -> | //Label// 
   |  |  **|**  | //Label// //Array// 
   |  |  **|**  | //Pointer// //Array// 
@@ -88,6 +92,10 @@ All other symbols are terminals.
   |  |  **|**  | //Double// 
   | //Bool// | -> | ``True`` 
   |  |  **|**  | ``False`` 
+  | //TypeLabel// | -> | ``int`` 
+  |  |  **|**  | ``bool`` 
+  |  |  **|**  | ``double`` 
+  |  |  **|**  | ``String`` 
   | //Instructions// | -> | //Instruction// //Instructions// 
   |  |  **|**  | **eps**
   | //Instruction// | -> | //Statements// 

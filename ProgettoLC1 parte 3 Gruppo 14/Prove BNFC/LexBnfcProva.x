@@ -95,7 +95,7 @@ eitherResIdent tv s = treeFind resWords
                               | s == a = t
 
 resWords :: BTree
-resWords = b "True" 14 (b "++" 7 (b ")" 4 (b "&&" 2 (b "&" 1 N N) (b "(" 3 N N)) (b "+" 6 (b "*" 5 N N) N)) (b ";" 11 (b "-" 9 (b "," 8 N N) (b "/" 10 N N)) (b "False" 13 (b "=" 12 N N) N))) (b "if" 21 (b "continue" 18 (b "]" 16 (b "[" 15 N N) (b "break" 17 N N)) (b "for" 20 (b "else" 19 N N) N)) (b "|" 24 (b "{" 23 (b "while" 22 N N) N) (b "}" 26 (b "||" 25 N N) N)))
+resWords = b "[" 16 (b "," 8 (b ")" 4 (b "&&" 2 (b "&" 1 N N) (b "(" 3 N N)) (b "+" 6 (b "*" 5 N N) (b "++" 7 N N))) (b "=" 12 (b "/" 10 (b "-" 9 N N) (b ";" 11 N N)) (b "String" 14 (b "False" 13 N N) (b "True" 15 N N)))) (b "if" 24 (b "continue" 20 (b "bool" 18 (b "]" 17 N N) (b "break" 19 N N)) (b "else" 22 (b "double" 21 N N) (b "for" 23 N N))) (b "|" 28 (b "while" 26 (b "int" 25 N N) (b "{" 27 N N)) (b "}" 30 (b "||" 29 N N) N)))
    where b s n = let bs = id s
                   in B bs (TS bs n)
 

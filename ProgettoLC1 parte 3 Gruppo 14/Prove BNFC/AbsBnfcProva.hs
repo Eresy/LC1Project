@@ -11,6 +11,12 @@ newtype Ident = Ident String deriving (Eq, Ord, Show, Read)
 data S
   deriving (Eq, Ord, Show, Read)
 
+data TopStatements
+  deriving (Eq, Ord, Show, Read)
+
+data TopStatement
+  deriving (Eq, Ord, Show, Read)
+
 data Statements
   deriving (Eq, Ord, Show, Read)
 
@@ -20,11 +26,13 @@ data Statement
 data Assignment
   deriving (Eq, Ord, Show, Read)
 
-data FunctionDef = FDef Type Label Arguments Instructions
+data Definition
+    = Def TypeLabel LValue
+    | Def2 TypeLabel Assignment
+    | Def3 FunctionDef
   deriving (Eq, Ord, Show, Read)
 
-data Definition
-    = Def Type LValue | Def2 Type Assignment | Def3 FunctionDef
+data FunctionDef = FDef TypeLabel Label Arguments Instructions
   deriving (Eq, Ord, Show, Read)
 
 data LValue = Lval Label | Lval2 Label Array | Lval3 Pointer Array
@@ -43,6 +51,9 @@ data Type
   deriving (Eq, Ord, Show, Read)
 
 data Bool
+  deriving (Eq, Ord, Show, Read)
+
+data TypeLabel
   deriving (Eq, Ord, Show, Read)
 
 data Instructions
