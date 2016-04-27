@@ -1,20 +1,20 @@
 Init.	S ::= [TopStatement] ;
 
-terminator TopStatement ";" ;
+terminator TopStatement "" ;
 Tstat.	TopStatement ::= Definition ;
 
-terminator Statement ";" ;
+terminator Statement "" ;
 Stat.	Statement ::= Assignment ;
 Stat2.	Statement ::= Definition  ;
 Stat3.	Statement ::= FunctionCall ;
 
-Assign.	Assignment ::= LValue "=" RValue ;
+Assign.	Assignment ::= LValue "=" RValue ";" ;
 
-Def.	Definition ::= TypeLabel LValue ;
-Def2.	Definition ::= TypeLabel Assignment ;
+Def.	Definition ::= TypeLabel LValue ";" ;
+Def2.	Definition ::= TypeLabel Assignment ";" ;
 Def3.	Definition ::= FunctionDef ;
-FDef.	FunctionDef ::= TypeLabel Label "(" [Argument] ")" "{" [Statement] "}" ;
-PDef.	FunctionDef ::= "void" Label "(" [Argument] ")" "{" [Statement] "}" ;
+FDef.	FunctionDef ::= TypeLabel Label "(" [Argument] ")" "{" [Instruction] "}" ;
+PDef.	FunctionDef ::= "void" Label "(" [Argument] ")" "{" [Instruction] "}" ;
  	
 Lval.	LValue ::= Label ;
 Lval2.	LValue ::= Label Array;
@@ -38,38 +38,51 @@ Typel2.	TypeLabel ::= "char";
 Typel3.	TypeLabel ::= "double";
 Typel4.	TypeLabel ::= "String";
 
-PredF.	PredFunction ::= "read"
-PredF.	PredFunction ::= "write"
+PredF.	PredFunction ::= "readInt()" ;
+PredF2.	PredFunction ::= "writeInt(" Parameter ")";
+PredF3.	PredFunction ::= "readFloat()" ;
+PredF4.	PredFunction ::= "writeFloat()";
+PredF5.	PredFunction ::= "readChar()" ;
+PredF6.	PredFunction ::= "writeChar()";
+PredF7.	PredFunction ::= "readString()" ;
+PredF8.	PredFunction ::= "writeString()";
 
-terminator Instruction ";" ;
+terminator Instruction "" ;
 Instr.	Instruction ::= [Statement] ;
-Instr2.	Instruction ::= FlowControl;
+Instr2.	Instruction ::= FlowControl ;
 
-Fcall.	FunctionCall ::= Label "(" [Parameter] ")" ;
-Fcall2.	FunctionCall ::= PredFunction TypeLabel ;
+Fcall.	FunctionCall ::= Label "(" [Parameter] ")" ";" ;
+Fcall2.	FunctionCall ::= PredFunction ";" ;
 separator Parameter "," ;
 Parm.	Parameter ::= RValue ;
-separator nonempty Argument "," ;
-Args2.	Argument ::= TypeLabel Label ;
 
+separator nonempty Argument "," ;
+Args.	Argument ::= PassingType TypeLabel Label ;
+PassT.	PassingType ::= ;
+PassT.	PassingType ::= "valres";
 
 Fctrl.	FlowControl ::= IfThenElse ;
 Fctrl2.	FlowControl ::= While ;
-Fctrl3.	FlowControl ::= For ; 
-Fctrl4.	FlowControl ::= "break";
-Fctrl5.	FlowControl ::= "continue";
+Fctrl3.	FlowControl ::= For ;
+
+separator FlowStatement "" ;
+Fstmt.	FlowStatement ::= "break" ";";
+Fstmt2.	FlowStatement ::= "continue" ";";
+Fstmt3.	FlowStatement ::= Statement;
 
 If.		IfThenElse ::= "if" "(" Expression ")" Then ;
 If2.	IfThenElse ::= "if" "(" Expression ")" Then Else ;
-Then.	Then ::= "{" [Instruction] "}" ;
+Then.	Then ::= "{" [Statement] "}" ;
 Else.	Else ::= "else" Then ;
-While.	While ::= "while" "(" Expression ")" "{" [Instruction] "}" ;
-For.	For ::= "for" "(" ForInd ";" Expression ";" Expression ")" "{" [Instruction] "}" ;
+While.	While ::= "while" "(" Expression ")" "{" [FlowStatement] "}" ;
+For.	For ::= "for" "(" ForInd ";" ForExpression ";" ForExpression ")" "{" [FlowStatement] "}" ;
 ForInd.	ForInd ::= ForVars ;
 ForInd2.ForInd ::= ;
 ForVar.	ForVars ::= ForVar "," ForVars ;
 ForVar2.ForVars ::= ForVar ;
-ForVar3.ForVar ::= Type LValue ;
+ForVar3.ForVar ::=  Assignment;
+ForExp.	ForExpression ::= Expression ;
+ForExp2.	ForExpression ::= ;
 
 Lbl.	Label ::= Ident ;
 Arr.	Array ::= "[" Integer "]" ;
@@ -80,7 +93,7 @@ Ptr.	Pointer ::= "*";
 
 Expr.	Expression ::= Operand BinaryOperator Expression ;
 Expr2.	Expression ::= Operand ;
-Expr3.	Expression ::= UnaryOperator Operand
+Expr3.	Expression ::= UnaryOperator Operand ;
 Oper.	Operand ::= Type ;
 Sum.	BinaryOperator ::= "+" ;
 Diff.	BinaryOperator ::= "-" ;
@@ -94,7 +107,6 @@ Or.		BinaryOperator ::= "||" ;
 Not.	UnaryOperator ::= "!" ;
 Inc.	UnaryOperator ::= "++" ;
 Dec.	UnaryOperator ::= "--" ;
-coercions Expression 3
 
 comment "//" ;
 comment "/*" "*/" ;
