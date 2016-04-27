@@ -13,8 +13,9 @@ Assign.	Assignment ::= LValue "=" RValue ;
 Def.	Definition ::= TypeLabel LValue ;
 Def2.	Definition ::= TypeLabel Assignment ;
 Def3.	Definition ::= FunctionDef ;
-FDef.	FunctionDef ::= TypeLabel Label "(" [Argument] ")" "{" [Instruction] "}" ;
-	
+FDef.	FunctionDef ::= TypeLabel Label "(" [Argument] ")" "{" [Statement] "}" ;
+PDef.	FunctionDef ::= "void" Label "(" [Argument] ")" "{" [Statement] "}" ;
+ 	
 Lval.	LValue ::= Label ;
 Lval2.	LValue ::= Label Array;
 Lval3.	LValue ::= Pointer Array ;
