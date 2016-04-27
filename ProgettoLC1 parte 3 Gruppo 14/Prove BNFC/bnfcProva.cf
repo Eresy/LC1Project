@@ -26,12 +26,12 @@ Rval3.	RValue ::= Assignment ;
 Rval4.	RValue ::= FunctionCall ;
 Rval5.	RValue ::= ArrayDef ;
 
-Type.	Type ::= Integer ;
+Type1.	Type ::= Integer ;
 Type2.	Type ::= Char ;
 Type3.	Type ::= String ;
 Type4.	Type ::= "True" ;
-Type4.	Type ::= "False" ;
-Type5.	Type ::= Double ;
+Type5.	Type ::= "False" ;
+Type6.	Type ::= Double ;
 
 Typel.	TypeLabel ::= "int";
 Typel2.	TypeLabel ::= "char";
@@ -48,7 +48,7 @@ PredF7.	PredFunction ::= "readString()" ;
 PredF8.	PredFunction ::= "writeString()";
 
 terminator Instruction "" ;
-Instr.	Instruction ::= [Statement] ;
+Instr.	Instruction ::= Statement ;
 Instr2.	Instruction ::= FlowControl ;
 
 Fcall.	FunctionCall ::= Label "(" [Parameter] ")" ";" ;
@@ -59,28 +59,28 @@ Parm.	Parameter ::= RValue ;
 separator nonempty Argument "," ;
 Args.	Argument ::= PassingType TypeLabel Label ;
 PassT.	PassingType ::= ;
-PassT.	PassingType ::= "valres";
+PassT2.	PassingType ::= "valres";
 
 Fctrl.	FlowControl ::= IfThenElse ;
 Fctrl2.	FlowControl ::= While ;
 Fctrl3.	FlowControl ::= For ;
 
 separator FlowStatement "" ;
-Fstmt.	FlowStatement ::= "break" ";";
-Fstmt2.	FlowStatement ::= "continue" ";";
+Fstmt.	FlowStatement ::= "break" ";" ;
+Fstmt2.	FlowStatement ::= "continue" ";" ;
 Fstmt3.	FlowStatement ::= Statement;
 
 If.		IfThenElse ::= "if" "(" Expression ")" Then ;
 If2.	IfThenElse ::= "if" "(" Expression ")" Then Else ;
-Then.	Then ::= "{" [Statement] "}" ;
-Else.	Else ::= "else" Then ;
-While.	While ::= "while" "(" Expression ")" "{" [FlowStatement] "}" ;
-For.	For ::= "for" "(" ForInd ";" ForExpression ";" ForExpression ")" "{" [FlowStatement] "}" ;
-ForInd.	ForInd ::= ForVars ;
-ForInd2.ForInd ::= ;
-ForVar.	ForVars ::= ForVar "," ForVars ;
-ForVar2.ForVars ::= ForVar ;
-ForVar3.ForVar ::=  Assignment;
+ThenS.	Then ::= "{" [Statement] "}" ;
+ElseS.	Else ::= "else" Then ;
+WhileS.	While ::= "while" "(" Expression ")" "{" [FlowStatement] "}" ;
+ForS.	For ::= "for" "(" ForInd ";" ForExpression ";" ForExpression ")" "{" [FlowStatement] "}" ;
+Forind.	ForInd ::= ForVars ;
+Forind2.	ForInd ::= ;
+Forvar.	ForVars ::= ForVar "," ForVars ;
+Forvar2.	ForVars ::= ForVar ;
+Forvar3.	ForVar ::=  Assignment;
 ForExp.	ForExpression ::= Expression ;
 ForExp2.	ForExpression ::= ;
 
@@ -91,9 +91,14 @@ Adef.	ArrayDef ::= "{" [ArrayItem] "}" ;
 Aitm2.	ArrayItem ::= RValue ;
 Ptr.	Pointer ::= "*";
 
-Expr.	Expression ::= Operand BinaryOperator Expression ;
-Expr2.	Expression ::= Operand ;
-Expr3.	Expression ::= UnaryOperator Operand ;
+
+
+
+
+
+Expr.	Expression ::= Operand  ;
+Expr2.	Expression ::= UnaryOperator Operand ;
+Expr3.	Expression ::= Operand BinaryOperator Expression;
 Oper.	Operand ::= Type ;
 Sum.	BinaryOperator ::= "+" ;
 Diff.	BinaryOperator ::= "-" ;
@@ -107,6 +112,8 @@ Or.		BinaryOperator ::= "||" ;
 Not.	UnaryOperator ::= "!" ;
 Inc.	UnaryOperator ::= "++" ;
 Dec.	UnaryOperator ::= "--" ;
+coercions Expression 3;
+
 
 comment "//" ;
 comment "/*" "*/" ;
