@@ -11,7 +11,7 @@ Stat3.	Statement ::= FunctionCall ;
 Assign.	Assignment ::= LValue "=" RValue ";" ;
 
 Def.	Definition ::= TypeLabel LValue ";" ;
-Def2.	Definition ::= TypeLabel Assignment ";" ;
+Def2.	Definition ::= TypeLabel Assignment ;
 Def3.	Definition ::= FunctionDef ;
 FDef.	FunctionDef ::= TypeLabel Label "(" [Argument] ")" "{" [Instruction] "}" ;
 PDef.	FunctionDef ::= "void" Label "(" [Argument] ")" "{" [Instruction] "}" ;
@@ -56,7 +56,7 @@ Fcall2.	FunctionCall ::= PredFunction ";" ;
 separator Parameter "," ;
 Parm.	Parameter ::= RValue ;
 
-separator nonempty Argument "," ;
+separator Argument "," ;
 Args.	Argument ::= PassingType TypeLabel Label ;
 PassT.	PassingType ::= ;
 PassT2.	PassingType ::= "valres";
@@ -64,6 +64,7 @@ PassT2.	PassingType ::= "valres";
 Fctrl.	FlowControl ::= IfThenElse ;
 Fctrl2.	FlowControl ::= While ;
 Fctrl3.	FlowControl ::= For ;
+Fctrl4.	FlowControl ::= "return" ";";
 
 separator FlowStatement "" ;
 Fstmt.	FlowStatement ::= "break" ";" ;
@@ -100,6 +101,7 @@ Expr.	Expression ::= Operand  ;
 Expr2.	Expression ::= UnaryOperator Operand ;
 Expr3.	Expression ::= Operand BinaryOperator Expression;
 Oper.	Operand ::= Type ;
+Oper2.	Operand ::= Label ;
 Sum.	BinaryOperator ::= "+" ;
 Diff.	BinaryOperator ::= "-" ;
 Div.	BinaryOperator ::= "/" ;
