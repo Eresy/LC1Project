@@ -33,19 +33,23 @@ Type4.	Type ::= "False" ;
 Type5.	Type ::= Double ;
 
 Typel.	TypeLabel ::= "int";
-Typel2.	TypeLabel ::= "bool";
+Typel2.	TypeLabel ::= "char";
 Typel3.	TypeLabel ::= "double";
 Typel4.	TypeLabel ::= "String";
+
+PredF.	PredFunction ::= "read"
+PredF.	PredFunction ::= "write"
 
 terminator Instruction ";" ;
 Instr.	Instruction ::= [Statement] ;
 Instr2.	Instruction ::= FlowControl;
 
 Fcall.	FunctionCall ::= Label "(" [Parameter] ")" ;
+Fcall2.	FunctionCall ::= PredFunction TypeLabel ;
 separator Parameter "," ;
 Parm.	Parameter ::= RValue ;
 separator nonempty Argument "," ;
-Args2.	Argument ::= Type Label ;
+Args2.	Argument ::= TypeLabel Label ;
 
 
 Fctrl.	FlowControl ::= IfThenElse ;
@@ -66,7 +70,6 @@ ForVar.	ForVars ::= ForVar "," ForVars ;
 ForVar2.ForVars ::= ForVar ;
 ForVar3.ForVar ::= Type LValue ;
 
-
 Lbl.	Label ::= Ident ;
 Arr.	Array ::= "[" Integer "]" ;
 Adef.	ArrayDef ::= "{" [ArrayItem] "}" ;
@@ -74,18 +77,23 @@ Adef.	ArrayDef ::= "{" [ArrayItem] "}" ;
 Aitm2.	ArrayItem ::= RValue ;
 Ptr.	Pointer ::= "*";
 
-Expr.	Expression ::= Operand Operator Expression ;
+Expr.	Expression ::= Operand BinaryOperator Expression ;
 Expr2.	Expression ::= Operand ;
+Expr3.	Expression ::= UnaryOperator Operand
 Oper.	Operand ::= Type ;
-Sum.	Operator ::= "+" ;
-Diff.	Operator ::= "-" ;
-Div.	Operator ::= "/" ;
-Mul.	Operator ::= "*" ;
-Andbw.	Operator ::= "&" ;
-Orbw.	Operator ::= "|" ;
-And.	Operator ::= "&&" ;
-Or.		Operator ::= "||" ;
-Concat.	Operator ::= "++" ;
+Sum.	BinaryOperator ::= "+" ;
+Diff.	BinaryOperator ::= "-" ;
+Div.	BinaryOperator ::= "/" ;
+Mul.	BinaryOperator ::= "*" ;
+Comp.	BinaryOperator ::= "==" ;
+Andbw.	BinaryOperator ::= "&" ;
+Orbw.	BinaryOperator ::= "|" ;
+And.	BinaryOperator ::= "&&" ;
+Or.		BinaryOperator ::= "||" ;
+Not.	UnaryOperator ::= "!" ;
+Inc.	UnaryOperator ::= "++" ;
+Dec.	UnaryOperator ::= "--" ;
+coercions Expression 3
 
 comment "//" ;
 comment "/*" "*/" ;
