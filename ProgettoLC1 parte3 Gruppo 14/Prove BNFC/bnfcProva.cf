@@ -8,20 +8,19 @@ Stat.	Statement ::= Assignment ;
 Stat2.	Statement ::= Definition  ;
 Stat3.	Statement ::= FunctionCall ;
 Stat4.	Statement ::= "return" Expression ";" ;
-Stat5.	Statement ::= Flowcontrol;
+Stat5.	Statement ::= FlowControl;
 
 Assign.	Assignment ::= LValue "=" RValue ";" ;
 
 Def.	Definition ::= TypeLabel LValue ";" ;
 Def2.	Definition ::= TypeLabel Assignment ;
 Def3.	Definition ::= FunctionDef ;
-FDef.	FunctionDef ::= TypeLabel Label "(" [Argument] ")" "{" [Instruction] "}" ;
-PDef.	FunctionDef ::= "void" Label "(" [Argument] ")" "{" [Instruction] "}" ;
+FDef.	FunctionDef ::= TypeLabel Label "(" [Argument] ")" "{" [Statement] "}" ;
+PDef.	FunctionDef ::= "void" Label "(" [Argument] ")" "{" [Statement] "}" ;
  	
 Lval.	LValue ::= Label ;
-Lval2.	LValue ::= Label Array ;
+Lval2.	LValue ::= Label Array;
 Lval3.	LValue ::= Pointer Array ;
-Lval4.	LValue ::= Pointer Label ;
 
 --Rval.	RValue ::= LValue ;
 Rval2.	RValue ::= Expression ;
@@ -41,14 +40,14 @@ Typel2.	TypeLabel ::= "char";
 Typel3.	TypeLabel ::= "double";
 Typel4.	TypeLabel ::= "String";
 
-PredF.	PredFunction ::= "readInt" "(" ")" ;
-PredF2.	PredFunction ::= "writeInt" "(" Expression ")";
-PredF3.	PredFunction ::= "readFloat" "(" ")" ;
-PredF4.	PredFunction ::= "writeFloat" "(" Expression ")";
-PredF5.	PredFunction ::= "readChar" "(" ")" ;
-PredF6.	PredFunction ::= "writeChar" "(" Expression ")";
-PredF7.	PredFunction ::= "readString" "(" ")" ;
-PredF8.	PredFunction ::= "writeString" "(" Expression ")";
+PredF.	PredFunction ::= "readInt()" ;
+PredF2.	PredFunction ::= "writeInt(" Parameter ")";
+PredF3.	PredFunction ::= "readFloat()" ;
+PredF4.	PredFunction ::= "writeFloat()";
+PredF5.	PredFunction ::= "readChar()" ;
+PredF6.	PredFunction ::= "writeChar()";
+PredF7.	PredFunction ::= "readString()" ;
+PredF8.	PredFunction ::= "writeString()";
 
 Fcall.	FunctionCall ::= Label "(" [Parameter] ")" ";" ;
 Fcall2.	FunctionCall ::= PredFunction ";" ;
@@ -66,14 +65,13 @@ Fctrl3.	FlowControl ::= For ;
 
 separator FlowStatement ";" ;
 Fstmt.	FlowStatement ::= "break"  ;
-Fstmt2.	FlowStatement ::= "continue";
+Fstmt2.	FlowStatement ::= "continue" ;
 Fstmt3.	FlowStatement ::= Statement;
 
 If.		IfThenElse ::= "if" "(" Expression ")" Then ;
 If2.	IfThenElse ::= "if" "(" Expression ")" Then Else ;
 ThenS.	Then ::= "{" [Statement] "}" ;
 ElseS.	Else ::= "else" Then ;
-
 WhileS.	While ::= "while" "(" Expression ")" "{" [FlowStatement] "}" ;
 ForS.	For ::= "for" "(" ForInd ";" ForExpression ";" ForExpression ")" "{" [FlowStatement] "}" ;
 Forind.	ForInd ::= ForVars ;
