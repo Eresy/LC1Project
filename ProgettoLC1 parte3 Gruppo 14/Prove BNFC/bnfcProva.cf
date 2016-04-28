@@ -64,19 +64,9 @@ Fctrl.	FlowControl ::= IfThenElse ;
 Fctrl2.	FlowControl ::= While ;
 Fctrl3.	FlowControl ::= For ;
 
-<<<<<<< HEAD
 separator FlowStatement ";" ;
 Fstmt.	FlowStatement ::= "break"  ;
 Fstmt2.	FlowStatement ::= "continue";
-||||||| merged common ancestors
-separator FlowStatement "" ;
-Fstmt.	FlowStatement ::= "break" ";" ;
-Fstmt2.	FlowStatement ::= "continue" ";" ;
-=======
-separator FlowStatement ";" ;
-Fstmt.	FlowStatement ::= "break" ;
-Fstmt2.	FlowStatement ::= "continue" ;
->>>>>>> 85c7c8c82ff5714fedcf787f9f6597c2d453266c
 Fstmt3.	FlowStatement ::= Statement;
 
 If.		IfThenElse ::= "if" "(" Expression ")" Then ;
