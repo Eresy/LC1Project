@@ -7,6 +7,8 @@ terminator Statement "" ;
 Stat.	Statement ::= Assignment ;
 Stat2.	Statement ::= Definition  ;
 Stat3.	Statement ::= FunctionCall ;
+Stat4.	Statement ::= "return" Expression ";" ;
+Stat5.	Statement ::= Flowcontrol;
 
 Assign.	Assignment ::= LValue "=" RValue ";" ;
 
@@ -47,10 +49,6 @@ PredF6.	PredFunction ::= "writeChar()";
 PredF7.	PredFunction ::= "readString()" ;
 PredF8.	PredFunction ::= "writeString()";
 
-terminator Instruction "" ;
-Instr.	Instruction ::= Statement ;
-Instr2.	Instruction ::= FlowControl ;
-
 Fcall.	FunctionCall ::= Label "(" [Parameter] ")" ";" ;
 Fcall2.	FunctionCall ::= PredFunction ";" ;
 separator Parameter "," ;
@@ -64,11 +62,10 @@ PassT2.	PassingType ::= "valres";
 Fctrl.	FlowControl ::= IfThenElse ;
 Fctrl2.	FlowControl ::= While ;
 Fctrl3.	FlowControl ::= For ;
-Fctrl4.	FlowControl ::= "return" Expression ";";
 
-separator FlowStatement "" ;
-Fstmt.	FlowStatement ::= "break" ";" ;
-Fstmt2.	FlowStatement ::= "continue" ";" ;
+separator FlowStatement ";" ;
+Fstmt.	FlowStatement ::= "break"  ;
+Fstmt2.	FlowStatement ::= "continue";
 Fstmt3.	FlowStatement ::= Statement;
 
 If.		IfThenElse ::= "if" "(" Expression ")" Then ;
@@ -105,10 +102,10 @@ Expr10.	Expression4 ::= Expression4 "+" Expression5 ;
 Expr11.	Expression4 ::= Expression4 "-" Expression5 ;
 Expr12.	Expression5 ::= Expression5 "*" Expression6 ;
 Expr13.	Expression5 ::= Expression5 "/" Expression6 ;
-Expr14.	Expression6 ::= Expression7 "++" ;
-Expr15.	Expression6 ::= Expression7 "--" ;
-Expr16.	Expression6 ::= "++" Expression7 ;
-Expr17.	Expression6 ::= "--" Expression7 ;
+Expr14.	Expression6 ::= Expression6 "++" ;
+Expr15.	Expression6 ::= Expression6 "--" ;
+Expr16.	Expression7 ::= "++" Expression7 ;
+Expr17.	Expression7 ::= "--" Expression7 ;
 Expr18.	Expression7 ::= Type;
 Expr19.	Expression7 ::= LValue;
 Expr20.	Expression7 ::= FunctionCall;
