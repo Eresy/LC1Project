@@ -17,8 +17,9 @@ FDef.	FunctionDef ::= TypeLabel Label "(" [Argument] ")" "{" [Instruction] "}" ;
 PDef.	FunctionDef ::= "void" Label "(" [Argument] ")" "{" [Instruction] "}" ;
  	
 Lval.	LValue ::= Label ;
-Lval2.	LValue ::= Label Array;
+Lval2.	LValue ::= Label Array ;
 Lval3.	LValue ::= Pointer Array ;
+Lval4.	LValue ::= Pointer Label ;
 
 --Rval.	RValue ::= LValue ;
 Rval2.	RValue ::= Expression ;
@@ -38,14 +39,14 @@ Typel2.	TypeLabel ::= "char";
 Typel3.	TypeLabel ::= "double";
 Typel4.	TypeLabel ::= "String";
 
-PredF.	PredFunction ::= "readInt()" ;
-PredF2.	PredFunction ::= "writeInt(" Parameter ")";
-PredF3.	PredFunction ::= "readFloat()" ;
-PredF4.	PredFunction ::= "writeFloat()";
-PredF5.	PredFunction ::= "readChar()" ;
-PredF6.	PredFunction ::= "writeChar()";
-PredF7.	PredFunction ::= "readString()" ;
-PredF8.	PredFunction ::= "writeString()";
+PredF.	PredFunction ::= "readInt" "(" ")" ;
+PredF2.	PredFunction ::= "writeInt" "(" Expression ")";
+PredF3.	PredFunction ::= "readFloat" "(" ")" ;
+PredF4.	PredFunction ::= "writeFloat" "(" Expression ")";
+PredF5.	PredFunction ::= "readChar" "(" ")" ;
+PredF6.	PredFunction ::= "writeChar" "(" Expression ")";
+PredF7.	PredFunction ::= "readString" "(" ")" ;
+PredF8.	PredFunction ::= "writeString" "(" Expression ")";
 
 terminator Instruction "" ;
 Instr.	Instruction ::= Statement ;
@@ -66,15 +67,16 @@ Fctrl2.	FlowControl ::= While ;
 Fctrl3.	FlowControl ::= For ;
 Fctrl4.	FlowControl ::= "return" Expression ";";
 
-separator FlowStatement "" ;
-Fstmt.	FlowStatement ::= "break" ";" ;
-Fstmt2.	FlowStatement ::= "continue" ";" ;
+separator FlowStatement ";" ;
+Fstmt.	FlowStatement ::= "break" ;
+Fstmt2.	FlowStatement ::= "continue" ;
 Fstmt3.	FlowStatement ::= Statement;
 
 If.		IfThenElse ::= "if" "(" Expression ")" Then ;
 If2.	IfThenElse ::= "if" "(" Expression ")" Then Else ;
 ThenS.	Then ::= "{" [Statement] "}" ;
 ElseS.	Else ::= "else" Then ;
+
 WhileS.	While ::= "while" "(" Expression ")" "{" [FlowStatement] "}" ;
 ForS.	For ::= "for" "(" ForInd ";" ForExpression ";" ForExpression ")" "{" [FlowStatement] "}" ;
 Forind.	ForInd ::= ForVars ;
