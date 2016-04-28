@@ -20,10 +20,10 @@ Lval.	LValue ::= Label ;
 Lval2.	LValue ::= Label Array;
 Lval3.	LValue ::= Pointer Array ;
 
-Rval.	RValue ::= LValue ;
+--Rval.	RValue ::= LValue ;
 Rval2.	RValue ::= Expression ;
 Rval3.	RValue ::= Assignment ;
-Rval4.	RValue ::= FunctionCall ;
+--Rval4.	RValue ::= FunctionCall ;
 Rval5.	RValue ::= ArrayDef ;
 
 Type1.	Type ::= Integer ;
@@ -64,7 +64,7 @@ PassT2.	PassingType ::= "valres";
 Fctrl.	FlowControl ::= IfThenElse ;
 Fctrl2.	FlowControl ::= While ;
 Fctrl3.	FlowControl ::= For ;
-Fctrl4.	FlowControl ::= "return" ";";
+Fctrl4.	FlowControl ::= "return" Expression ";";
 
 separator FlowStatement "" ;
 Fstmt.	FlowStatement ::= "break" ";" ;
@@ -92,30 +92,32 @@ Adef.	ArrayDef ::= "{" [ArrayItem] "}" ;
 Aitm2.	ArrayItem ::= RValue ;
 Ptr.	Pointer ::= "*";
 
+ArExpr0.	AritmExp1 ::= AritmExp1 "+" AritmExp2 ;
+ArExpr1.	AritmExp1 ::= AritmExp1 "-" AritmExp2 ;
+ArExpr2.	AritmExp2 ::= AritmExp2 "*" AritmExp3 ;
+ArExpr3.	AritmExp2 ::= AritmExp2 "/" AritmExp3 ;
+ArExpr4.	AritmExp3 ::= AritmExp4 "++" ;
+ArExpr5.	AritmExp3 ::= AritmExp4 "--" ;
+ArExpr6.	AritmExp3 ::= "++" AritmExp4 ;
+ArExpr7.	AritmExp3 ::= "--" AritmExp4 ;
+ArExpr8.	AritmExp4 ::= Type;
+ArExpr9.	AritmExp4 ::= LValue;
+ArExpr10.	AritmExp4 ::= FunctionCall;
+coercions AritmExp 4 ;
 
+LoExpr1.	LogicExp1 ::= LogicExp1 "&&" LogicExp2 ;
+LoExpr2.	LogicExp1 ::= LogicExp1 "||" LogicExp2 ;
+LoExpr5.	LogicExp2 ::= "!" LogicExp3 ;
+LoExpr6.	LogicExp3 ::= LogicExp3 "==" LogicExp4 ;
+LoExpr7.	LogicExp3 ::= LogicExp3 "!=" LogicExp4 ;
+LoExpr8.	LogicExp3 ::= LogicExp3 "<" LogicExp4 ;
+LoExpr9.	LogicExp3 ::= LogicExp3 ">" LogicExp4 ;
+LoExpr10.	LogicExp3 ::= LogicExp3 "<=" LogicExp4 ;
+LoExpr11.	LogicExp3 ::= LogicExp3 ">=" LogicExp4 ;
+LoExpr12.	LogicExp4 ::= AritmExp;
+coercions LogicExp 4 ;
 
-
-
-
-Expr.	Expression ::= Operand  ;
-Expr2.	Expression ::= UnaryOperator Operand ;
-Expr3.	Expression ::= Operand BinaryOperator Expression;
-Oper.	Operand ::= Type ;
-Oper2.	Operand ::= Label ;
-Sum.	BinaryOperator ::= "+" ;
-Diff.	BinaryOperator ::= "-" ;
-Div.	BinaryOperator ::= "/" ;
-Mul.	BinaryOperator ::= "*" ;
-Comp.	BinaryOperator ::= "==" ;
-Andbw.	BinaryOperator ::= "&" ;
-Orbw.	BinaryOperator ::= "|" ;
-And.	BinaryOperator ::= "&&" ;
-Or.		BinaryOperator ::= "||" ;
-Not.	UnaryOperator ::= "!" ;
-Inc.	UnaryOperator ::= "++" ;
-Dec.	UnaryOperator ::= "--" ;
-coercions Expression 3;
-
+Expr.	Expression ::= LogicExp ;
 
 comment "//" ;
 comment "/*" "*/" ;
