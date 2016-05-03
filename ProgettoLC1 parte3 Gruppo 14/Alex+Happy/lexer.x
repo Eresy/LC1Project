@@ -77,7 +77,9 @@ $lett ($lett | $num | ’_’ | ’\’’)*  {\x -> Label x}
 
 \= {\x -> AssignOp}
 
-\=\= {\x -> CompareOp}
+\=\= {\x -> EqualsOp}
+
+\!\= {\x -> DiffOp }
 
 \< {\x -> LessThanOp}
 

@@ -24,7 +24,8 @@ import Data (Token(..), Type(..), Pointer(..))
 	cBrakOpen_	{ CBrakOpen }
 	cBrakClose_	{ CBrakClose }
 	assignOp_	{ AssignOp }
-	compareOp_	{ CompareOp }
+	equalsOp_	{ EqualsOp }
+	diffOp_		{ DiffOp }
 	lessThanOp_	{ LessThanOp }
 	greaterThanOp_	{ GreaterThanOp }
 	eLessThanOp_	{ ELessThanOp }
@@ -44,18 +45,38 @@ import Data (Token(..), Type(..), Pointer(..))
 	break_		{ Break }
 	continue_	{ Continue }
 	return_		{ Return }
-
+	intLabel_	{ IntLabel }
+	floatLabel_	{ FloatLabel }
+	charLabel_	{ CharLabel }
+	stringLabel_	{ StringLabel }
+	voidLabel_	{ VoidLabel }
+	if_		{ If }
+	else_		{ Else }
+	for_		{ For }
+	while_		{ While }
+	readInt_	{ ReadIntPF }
+	writeInt_	{ WriteIntPF }
+	readFloat_	{ WriteFloatPF }
+	writeFloat_	{ WriteFloatPF }
+	readChar_	{ ReadCharPF }
+	writeChar_	{ WriteCharPF }
+	readString_	{ ReadStringPF }
+	writeString_	{ WriteStringPF }
+	valRes_		{ ValRes }
 	
 %%
+
 S : TopStatements {}
 
 TopStatements	:   TopStatement TopStatements {}
 TopStatement	:   Definition {}
 
+Statements  :	Statement Statements {}
+		| {}
 Statement   :	Assignment {}
 		| Definition  {}
 		| FunctionCall {}
-		| return_ Expression semicolon_ {}
+		| return_ Expression1 semicolon_ {}
 		| FlowControl {}
 
 Assignment  :	LValue assignOp_ RValue semicolon_ {}
@@ -64,104 +85,120 @@ Definition  :	TypeLabel LValue semicolon_ {}
 		| TypeLabel Assignment {}
 		| FunctionDef {}
 
-FunctionDef :	TypeLabel Label brakOpen_ [Argument] brakClose_ cBrakOpen_ [Statement] cBrakClose_ {}
-		| "void" Label brakOpen_  [Argumenta brakClose_ cBrakOpen_ [Statement] cBrakClose_ {}
+FunctionDef :	TypeLabel Label brakOpen_ Arguments brakClose_ cBrakOpen_ Statements cBrakClose_ {}
+		| voidLabel_ Label brakOpen_  Arguments brakClose_ cBrakOpen_ Statements cBrakClose_ {}
 
-LValue	    :	Label ArrayList {}
+LValue	    :	Label Arrays {}
 		| Pointer Label {}
 
-RValue	:	Expression {}
+RValue	:	Expression1 {}
 		| Assignment {}
-		| FunctionCall {}
 		| ArrayDef {}
-		| Dereference
+		| dereference_ {}
 
-Type	:	Integer {}
-		| Char {}
-		| String {}
-		| "True" {}
-		| "False" {}
-		| Double {}
+Type	:	int_ {}
+		| char_ {}
+		| string_ {}
+		| double_ {}
 
-TypeLabel   :	"int"	    {}
-		| "char"    {}
-		| "double"  {}
-		| "String"  {}
+TypeLabel   :	intLabel_       {}
+		| charLabel_    {}
+		| floatLabel_  {}
+		| stringLabel_  {}
 
-PredFunction : "readInt" "(" ")" {}
-		| "writeInt(" Parameter ")"{}
-		| "readFloat" "(" ")" {}
-		| "writeFloat(" Parameter ")"{}
-		| "readChar" "(" ")" {}
-		| "writeChar(" Parameter ")"{}
-		| "readString" "(" ")" {}
-		| "writeString(" Parameter ")"{}
+PredFunction : readInt_ brakOpen_ brakClose_ {}
+		| writeInt_ brakOpen_ Parameter brakClose_ {}
+		| readFloat_ brakOpen_ brakClose_ {}
+		| writeFloat_ brakOpen_ Parameter brakClose_ {}
+		| readChar_ brakOpen_ brakClose_ {}
+		| writeChar_ brakOpen_ Parameter brakClose_ {}
+		| readString_ brakOpen_ brakClose_ {}
+		| writeString_ brakOpen_ Parameter brakClose_ {}
 
-FunctionCall :	Label brakOpen Parameters brakClose ";" {}
-		| PredFunction ";" {}
+FunctionCall :	Label brakOpen_ Parameters brakClose_ semicolon_ {}
+		| PredFunction semicolon_ {}
 
-Parameters  :	Parameter Comma Parameters {}
-		| Parameter {}
-Parameter   : RValue {}
+Parameters  :	Parameter ParameterL {}
+		| {}
+ParameterL  :	comma_ Parameter ParameterL {}
+		| {}
+Parameter   :	RValue {}
 
-separator Argument "," {}
-Argument : PassingType TypeLabel Label {}
-PassingType : {}
-		| "valres"{}
+Arguments   :	Argument ArgumentsL {}
+		| {}
+ArgumentsL  :	comma_ Argument ArgumentsL {}
+		| {}
+Argument    :	PassingType TypeLabel Label {}
+PassingType :	valRes_ {}
+		| {}
 
-FlowControl : IfThenElse {}
+FlowControl :	IfThenElse {}
 		| While {}
 		| For {}
 
-separator FlowStatement ";" {}
-FlowStatement : "break"  {}
-		| "continue" {}
-		| Statement{}
+FlowStatements :    FlowStatement FlowStatements {}
+		    | {}
+FlowStatement : break_ semicolon_ {}
+		| continue_ semicolon_ {}
+		| Statement {}
 
-IfThenElse :	"if" "(" Expression ")" Then {}
-		| "if" "(" Expression ")" Then Else {}
-Then : "{" [Statement] "}" {}
-Else : "else" Then {}
-While : "while" "(" Expression ")" "{" [FlowStatement] "}" {}
-For : "for" "(" ForInd ";" ForExpression ";" ForExpression ")" "{" [FlowStatement] "}" {}
-ForInd : ForVars {}
+IfThenElse :	if_ brakOpen_ Expression brakClose_ Then {}
+		| if_ brakOpen_ Expression brakClose_ Then Else {}
+Then	:	cBrakOpen_ Statements cBrakClose_ {}
+Else	:	else_ Then {}
+While	:	while_ brakOpen_ Expression brakClose_ cBrakOpen_ FlowStatements cBrakClose_ {}
+For	:	for_ brakOpen_ ForInd semicolon_ ForExpression semicolon_ ForExpression brakClose_ cBrakOpen_ FlowStatements cBrakClose_ {}
+ForInd	:	ForVars {}
 		| {}
-ForVars :	ForVar "," ForVars {}
+ForVars :	ForVar comma_ ForVars {}
 		| ForVar {}
-ForVar :  Assignment{}
+ForVar	:	Assignment{}
 ForExpression : Expression {}
 		| {}
 
-Label : Ident {}
+Label	:   label_ {}
 
-separator Array "" {}
-Array : "[" Integer "]" {}
-ArrayDef : "{" [ArrayItem] "}" {}
-separator ArrayItem "," {}
-ArrayItem : RValue {}
+Arrays	:   Array Arrays {}
+	    | {}
+Array	:   sBrakOpen_ int_ sBrakClose_ {}
 
-Pointer : "*"{}
+ArrayDef    :	cBrakOpen_ ArrayItems cBrakClose_ {}
+ArrayItems  :	ArrayItem ArrayItemL {}
+		| {}
+ArrayItemL  :	comma_ ArrayItem ArrayItemL {}
+		| {}
+ArrayItem   :	RValue {}
 
-Expression1 :	Expression1 "&&" Expression2 {}
-		| Expression1 "||" Expression2 {}
-Expression2 :	"!" Expression3 {}
-Expression3 :	Expression3 "==" Expression4 {}
-		| Expression3 "!=" Expression4 {}
-		| Expression3 "<" Expression4 {}
-		| Expression3 ">" Expression4 {}
-		| Expression3 "<=" Expression4 {}
-		| Expression3 ">=" Expression4 {}
-Expression4 :	Expression4 "+" Expression5 {}
-		| Expression4 "-" Expression5 {}
-Expression5 :	Expression5 "*" Expression6 {}
-		| Expression5 "/" Expression6 {}
-Expression6 :	Expression6 "++" {}
-		| Expression6 "--" {}
-Expression7 :	"++" Expression7 {}
-		| "--" Expression7 {}
-		| Type{}
-		| LValue{}
-		| FunctionCall{}
+Pointer	    :	mulOp_ {}
+
+Expression  :	Expression1 {}
+Expression1 :	Expression1 and_ Expression2 {}
+		| Expression1 or_ Expression2 {}
+		| Expression2 {}
+Expression2 :	negOp_ Expression3 {}
+		| Expression3 {}
+Expression3 :	Expression3 equalsOp_ Expression4 {}
+		| Expression3 diffOp_ Expression4 {}
+		| Expression3 lessThanOp_ Expression4 {}
+		| Expression3 greaterThanOp_ Expression4 {}
+		| Expression3 eLessThanOp_ Expression4 {}
+		| Expression3 eGreaterThanOp_ Expression4 {}
+		| Expression4 {}
+Expression4 :	Expression4 addOp_ Expression5 {}
+		| Expression4 subOp_ Expression5 {}
+		| Expression5 {}
+Expression5 :	Expression5 mulOp_ Expression6 {}
+		| Expression5 divOp_ Expression6 {}
+		| Expression6 {}
+Expression6 :	Expression6 incOp_ {}
+		| Expression6 decOp_ {}
+		| Expression7 {}
+Expression7 :	incOp_ Expression7 {}
+		| decOp_ Expression7 {}
+		| Type {}
+		| LValue {}
+		| FunctionCall {}
+		| brakOpen_ Expression1 brakClose_ {}
 
 {
 

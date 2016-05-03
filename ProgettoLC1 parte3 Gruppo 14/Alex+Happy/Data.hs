@@ -12,7 +12,8 @@ data Token =	Int String
 		| CBrakOpen 
 		| CBrakClose 
 		| AssignOp 
-		| CompareOp
+		| EqualsOp
+		| DiffOp
 		| LessThanOp
 		| GreaterThanOp
 		| ELessThanOp
@@ -29,23 +30,23 @@ data Token =	Int String
 		| And
 		| Or
 		| NegOp 
-      | Break
-      | Continue
-      | Return
-      | IntLabel
-      | FloatLabel
-      | CharLabel
-      | StringLabel
-      | VoidLabel
-      | ReadIntPF
-      | WriteIntPF
-      | ReadFloatPF
-      | WriteFloatPF
-      | ReadCharPF
-      | WriteCharPF
-      | ReadStringPF
-      | WriteStringPF
-      | ValRes
+		| Break
+		| Continue
+		| Return
+		| IntLabel
+		| FloatLabel
+		| CharLabel
+		| StringLabel
+		| VoidLabel
+		| ReadIntPF
+		| WriteIntPF
+		| ReadFloatPF
+		| WriteFloatPF
+		| ReadCharPF
+		| WriteCharPF
+		| ReadStringPF
+		| WriteStringPF
+		| ValRes
 		deriving (Eq, Ord, Show)
 
 
