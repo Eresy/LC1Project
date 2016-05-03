@@ -23,11 +23,39 @@ $num+				                     {\x -> Int x}
 
 $num+ ’.’ $num+ (’e’ ’-’? $num+)?   {\x -> Double x} 
 
+int                                 {\x -> IntLabel}
+
+float                               {\x -> FloatLabel}
+
+char                                {\x -> CharLabel}
+
+String                              {\x -> StringLabel}
+
+void                                {\x -> VoidLabel}
+
+readInt                             {\x -> ReadIntPF}
+
+writeInt                            {\x -> WriteIntPF}
+
+readFloat                           {\x -> ReadFloatPF}
+
+writeFloat                          {\x -> WriteFloatPF}
+
+readChar                            {\x -> ReadCharPF}
+
+writeChar                           {\x -> WriteCharPF}
+
+readString                          {\x -> ReadStringPF}
+
+writeString                         {\x -> WriteStringPF}
+
 break                               {\x -> Break}
 
 continue                            {\x -> Continue}
 
 return                              {\x -> Return}
+
+valres                              {\x -> ValRes}
 
 ’\’’ ($lett | (’\\’ "\n\t")) ’\’’   {\x -> Char x}
 

@@ -32,6 +32,20 @@ data Token =	Int String
       | Break
       | Continue
       | Return
+      | IntLabel
+      | FloatLabel
+      | CharLabel
+      | StringLabel
+      | VoidLabel
+      | ReadIntPF
+      | WriteIntPF
+      | ReadFloatPF
+      | WriteFloatPF
+      | ReadCharPF
+      | WriteCharPF
+      | ReadStringPF
+      | WriteStringPF
+      | ValRes
 		deriving (Eq, Ord, Show)
 
 
