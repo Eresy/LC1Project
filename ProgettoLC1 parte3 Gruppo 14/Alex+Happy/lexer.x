@@ -1,6 +1,8 @@
 {
 
-module Lexer(alexScanTokens) where
+--module Main(main) where
+
+module Lexer (alexScanTokens) where
 
 import Data (Token(..))
 
@@ -10,20 +12,20 @@ import Data (Token(..))
 
 $lett = [a-zA-Z]
 $num = [0-9]
-
+$special = [\t\n]
 :-
 
 $white+ ;
 
-$num+ {\x -> Int x}
+$num+				    {\x -> Int x}
 
-$num+ ’.’ $num+ (’e’ ’-’? $num+)? {\x -> Double x}
+$num+ ’.’ $num+ (’e’ ’-’? $num+)?   {\x -> Double x} 
 
-’\’’ (($lett - ["’\\"]) | (’\\’ ["’\\nt"])) ’\’’ {\x -> Char x}
+’\’’ ($lett | (’\\’ "\n\t")) ’\’’   {\x -> Char x}
 
-’"’ ((char - ["\"\\"]) | (’\\’ ["\"\\nt"]))* ’"’ {\x -> LitString x}
+’"’ @string ’"’			    {\x -> String x}
 
-$lett ($lett | $num | ’_’ | ’\’’)* {\x -> Label x}
+$lett ($lett | $num | ’_’ | ’\’’)*  {\x -> Label x}
 
 \( {\x -> BrakOpen}
 
@@ -37,9 +39,17 @@ $lett ($lett | $num | ’_’ | ’\’’)* {\x -> Label x}
 
 \} {\x -> CBrakClose}
 
-\= {\x -> AssignOP}
+\= {\x -> AssignOp}
 
-\=\= {\x -> CompareOP}
+\=\= {\x -> CompareOp}
+
+\< {\x -> LessThanOp}
+
+\> {\x -> GreaterThanOp}
+
+\>\= {\x -> ELessThanOp}
+
+\<\= {\x -> EGreaterThanOp}
 
 \+ {\x -> AddOp}
 
@@ -49,7 +59,9 @@ $lett ($lett | $num | ’_’ | ’\’’)* {\x -> Label x}
 
 \/ {\x -> DivOp}
 
-\+\+ {\x -> CatOp}
+\+\+ {\x -> IncOp}
+
+\-\- {\x -> DecOp}
 
 \, {\x -> Comma}
 
@@ -57,11 +69,19 @@ $lett ($lett | $num | ’_’ | ’\’’)* {\x -> Label x}
 
 \& {\x -> Dereference }
 
+\&\& {\x -> And} 
+
+\|\| {\x -> Or}
+
+\! {\x -> NegOp}
+
 . ;
 
 {
 
---empty
+--main = do
+--    s <- getContents
+--    print (alexScanTokens s)
 
 }
 

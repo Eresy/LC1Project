@@ -1,9 +1,41 @@
 module Data where
 
-data Token =	Type String	| BrakOpen | BrakClose | SBrakOpen 
-				| SBrakClose | CBrakOpen | CBrakClose | AssignOp 
-				| AddOp | SubOp | MulOp | DivOp | Comma | Semicolon
-				| CompOp | NegOp | IncOp | DecOp
+data Token =	Int String
+		| Double String
+		| Char String
+		| String String 
+		| Label String
+		| BrakOpen 
+		| BrakClose 
+		| SBrakOpen 
+		| SBrakClose 
+		| CBrakOpen 
+		| CBrakClose 
+		| AssignOp 
+		| CompareOp
+		| LessThanOp
+		| GreaterThanOp
+		| ELessThanOp
+		| EGreaterThanOp
+		| AddOp 
+		| SubOp 
+		| MulOp 
+		| DivOp 
+		| IncOp
+		| DecOp
+		| Comma 
+		| Semicolon
+		| Dereference
+		| And
+		| Or
+		| NegOp 
+		deriving (Eq, Ord, Show)
 
-data Type = 	Integer | Float | Character | String | Pointer Type 
-				| Array Type
+
+data Type =	IntType Int
+		| DoubleType Double 
+		| CharType Char
+		| StringType String
+		| PointerType Type 
+		| ArrayType Type
+		deriving(Eq, Ord, Show)
