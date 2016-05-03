@@ -13,17 +13,25 @@ import Data (Token(..))
 $lett = [a-zA-Z]
 $num = [0-9]
 $special = [\t\n]
+
+
 :-
 
-$white+ ;
+$white+                             ;
 
-$num+				    {\x -> Int x}
+$num+				                     {\x -> Int x}
 
 $num+ ’.’ $num+ (’e’ ’-’? $num+)?   {\x -> Double x} 
 
+break                               {\x -> Break}
+
+continue                            {\x -> Continue}
+
+return                              {\x -> Return}
+
 ’\’’ ($lett | (’\\’ "\n\t")) ’\’’   {\x -> Char x}
 
-’"’ @string ’"’			    {\x -> String x}
+’"’ @string ’"’			            {\x -> String x}
 
 $lett ($lett | $num | ’_’ | ’\’’)*  {\x -> Label x}
 

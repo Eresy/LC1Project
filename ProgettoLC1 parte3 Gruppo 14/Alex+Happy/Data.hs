@@ -29,6 +29,9 @@ data Token =	Int String
 		| And
 		| Or
 		| NegOp 
+      | Break
+      | Continue
+      | Return
 		deriving (Eq, Ord, Show)
 
 
