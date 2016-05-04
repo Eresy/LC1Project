@@ -5,6 +5,7 @@ data Token =    Int String Pos
                 | Char String Pos
                 | String String Pos
                 | Label String Pos
+                | Comment String Pos
                 | BrakOpen Pos
                 | BrakClose Pos
                 | SBrakOpen Pos
@@ -47,6 +48,10 @@ data Token =    Int String Pos
                 | ReadStringPF Pos
                 | WriteStringPF Pos
                 | ValRes Pos
+                | If Pos
+                | Else Pos
+                | While Pos
+                | For Pos
                 deriving (Eq, Ord, Show)
                 
 type Pos = ( Int , Int )

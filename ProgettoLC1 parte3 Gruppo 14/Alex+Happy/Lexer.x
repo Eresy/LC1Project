@@ -1,8 +1,8 @@
 {
 
---module Main(main) where
+module Main(main) where
 
-module Lexer (alexScanTokens) where
+--module Lexer (alexScanTokens) where
 
 import Data (Token(..), Pos(..))
 
@@ -15,6 +15,10 @@ $num = [0-9]
 
 
 :-
+
+"//" [.]*                           {\x y -> Comment y (getPos x)}
+
+"/" ([[\0-\255] #\*] | \*+ [[\0-\255] # [\* \/]])* ("*")+"/"                          {\x y -> Comment y (getPos x)}
 
 $white+                             ;
 
@@ -119,9 +123,9 @@ $lett ($lett | $num | ’_’ | ’\’’)*  {\x y -> Label y (getPos x)}
 getPos :: AlexPosn -> Pos
 getPos (AlexPn _ x y) = (x,y)
 
---main = do
---    s <- getContents
---    print (alexScanTokens s)
+main = do
+    s <- getContents
+    print (alexScanTokens s)
 
 }
 

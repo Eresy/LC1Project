@@ -1,6 +1,6 @@
 {
 
-module Parser (main) where
+module Main (main) where
 
 import Lexer (alexScanTokens)
 import Data (Token(..), Type(..))
@@ -12,63 +12,64 @@ import Data (Token(..), Type(..))
 %error { parseError }
 
 %token
-	int_		{ Int $$ }
-	double_	{ Double $$ }
-	char_	{ Char $$ }
-	string_	{ String $$ }
-	label_	{ Label $$ }
-	brakOpen_	{ BrakOpen }
-	brakClose_	{ BrakClose }
-	sBrakOpen_	{ SBrakOpen }
-	sBrakClose_	{ SBrakClose }
-	cBrakOpen_	{ CBrakOpen }
-	cBrakClose_	{ CBrakClose }
-	assignOp_	{ AssignOp }
-	equalsOp_	{ EqualsOp }
-	diffOp_		{ DiffOp }
-	lessThanOp_	{ LessThanOp }
-	greaterThanOp_	{ GreaterThanOp }
-	eLessThanOp_	{ ELessThanOp }
-	eGreaterThanOp_	{ EGreaterThanOp } 
-	addOp_		{ AddOp }
-	subOp_		{ SubOp }
-	mulOp_		{ MulOp	}
-	divOp_		{ DivOp }
-	incOp_		{ IncOp }
-	decOp_		{ DecOp }
-	comma_		{ Comma }
-	semicolon_	{ Semicolon }
-	dereference_	{ Dereference }
-	and_		{ And }
-	or_		{ Or }
-	negOp_		{ NegOp }
-	break_		{ Break }
-	continue_	{ Continue }
-	return_		{ Return }
-	intLabel_	{ IntLabel }
-	floatLabel_	{ FloatLabel }
-	charLabel_	{ CharLabel }
-	stringLabel_	{ StringLabel }
-	voidLabel_	{ VoidLabel }
-	if_		{ If }
-	else_		{ Else }
-	for_		{ For }
-	while_		{ While }
-	readInt_	{ ReadIntPF }
-	writeInt_	{ WriteIntPF }
-	readFloat_	{ WriteFloatPF }
-	writeFloat_	{ WriteFloatPF }
-	readChar_	{ ReadCharPF }
-	writeChar_	{ WriteCharPF }
-	readString_	{ ReadStringPF }
-	writeString_	{ WriteStringPF }
-	valRes_		{ ValRes }
+	int_		{ Int $$ _}
+	double_	{ Double $$ _}
+	char_	{ Char $$ _}
+	string_	{ String $$ _}
+	label_	{ Label $$ _}
+        comment_    { Comment $$ }
+	brakOpen_	{ BrakOpen _}
+	brakClose_	{ BrakClose _}
+	sBrakOpen_	{ SBrakOpen _}
+	sBrakClose_	{ SBrakClose _}
+	cBrakOpen_	{ CBrakOpen _}
+	cBrakClose_	{ CBrakClose _}
+	assignOp_	{ AssignOp _}
+	equalsOp_	{ EqualsOp _}
+	diffOp_		{ DiffOp _}
+	lessThanOp_	{ LessThanOp _}
+	greaterThanOp_	{ GreaterThanOp _}
+	eLessThanOp_	{ ELessThanOp _}
+	eGreaterThanOp_	{ EGreaterThanOp _} 
+	addOp_		{ AddOp _}
+	subOp_		{ SubOp _}
+	mulOp_		{ MulOp	_}
+	divOp_		{ DivOp _}
+	incOp_		{ IncOp _}
+	decOp_		{ DecOp _}
+	comma_		{ Comma _}
+	semicolon_	{ Semicolon _}
+	dereference_	{ Dereference _}
+	and_		{ And _}
+	or_		{ Or _}
+	negOp_		{ NegOp _}
+	break_		{ Break _}
+	continue_	{ Continue _}
+	return_		{ Return _}
+	intLabel_	{ IntLabel _}
+	floatLabel_	{ FloatLabel _}
+	charLabel_	{ CharLabel _}
+	stringLabel_	{ StringLabel _}
+	voidLabel_	{ VoidLabel _}
+	if_		{ If _}
+	else_		{ Else _}
+	for_		{ For _}
+	while_		{ While _}
+	readInt_	{ ReadIntPF _}
+	writeInt_	{ WriteIntPF _}
+	readFloat_	{ WriteFloatPF _}
+	writeFloat_	{ WriteFloatPF _}
+	readChar_	{ ReadCharPF _}
+	writeChar_	{ WriteCharPF _}
+	readString_	{ ReadStringPF _}
+	writeString_	{ WriteStringPF _}
+	valRes_		{ ValRes _}
 	
 %%
 
 S : TopStatements {}
 
-TopStatements	:   TopStatement TopStatements {}
+TopStatements	:   TopStatement TopStatements {"Ciao"}
 TopStatement	:   Definition {}
 
 Statements  :	Statement Statements {}
@@ -117,6 +118,8 @@ PredFunction : readInt_ brakOpen_ brakClose_ {}
 
 FunctionCall :	Label brakOpen_ Parameters brakClose_ semicolon_ {}
 		| PredFunction semicolon_ {}
+
+Comment :       
 
 Parameters  :	Parameter ParameterL {}
 		| {}
@@ -202,15 +205,72 @@ Expression7 :	incOp_ Expression7 {}
 
 {
 
-main = do
-    s <- getContents
-    let tok = alexScanTokens s
-    print parseCLike tok
-    print tok
+--main = do
+--    s <- getContents
+--    let tok = alexScanTokens s
+--    parseCLike tok
+--   print tok
+
+main = getContents >>= print . parseCLike . alexScanTokens
 
 parseError :: [Token] -> a
-parseError tok@(_ t) case t of
-    (x,y) = error "Parse error at " ++ x ++ "," ++ y
+parseError (tok:_) = error ("Parse error: " ++ show tok ++ " at invalid postion")
+parseError [] = error "casini!"
+parseError _ = error "OhOh!"
 
+getTokPos :: Token -> (Int, Int)
+getTokPos x = case x of
+   		(Int _ p) -> p
+                (Double _ p) -> p
+                (Char _ p) -> p
+                (String _ p) -> p
+                (Label _ p) -> p
+                (BrakOpen p)-> p
+                (BrakClose p) -> p
+                (SBrakOpen p) -> p
+                (SBrakClose p) -> p
+                (CBrakOpen p) -> p
+                (CBrakClose p) -> p
+                (AssignOp p) -> p
+                (EqualsOp p) -> p
+                (DiffOp p) -> p
+                (LessThanOp p) -> p
+                (GreaterThanOp p) -> p
+                (ELessThanOp p) -> p
+                (EGreaterThanOp p) -> p
+                (AddOp p) -> p
+                (SubOp p) -> p
+                (MulOp p) -> p
+                (DivOp p) -> p
+                (IncOp p) -> p
+                (DecOp p) -> p
+                (Comma p) -> p
+                (Semicolon p) -> p
+                (Dereference p) -> p
+                (And p) -> p
+                (Or p) -> p
+                (NegOp p) -> p
+                (Break p) -> p
+                (Continue p) -> p
+		(Return p) -> p
+                (IntLabel p) -> p
+                (FloatLabel p) -> p
+                (CharLabel p) -> p
+                (StringLabel p) -> p
+                (VoidLabel p) -> p
+                (ReadIntPF p) -> p
+                (WriteIntPF p) -> p
+                (ReadFloatPF p) -> p
+                (WriteFloatPF p) -> p
+                (ReadCharPF p) -> p
+                (WriteCharPF p) -> p
+                (ReadStringPF p) -> p
+                (WriteStringPF p) -> p
+                (ValRes p) -> p
+                (If p) -> p
+                (Else p) -> p
+                (While p) -> p
+                (For p) -> p
+ 
 
 }
