@@ -1,8 +1,8 @@
 {
 
-module Main(main) where
+--module Main(main) where
 
---module Lexer (alexScanTokens) where
+module Lexer (alexScanTokens) where
 
 import Data (Token(..), Pos(..))
 
@@ -123,9 +123,9 @@ $lett ($lett | $num | ’_’ | ’\’’)*  {\x y -> Label y (getPos x)}
 getPos :: AlexPosn -> Pos
 getPos (AlexPn _ x y) = (x,y)
 
-main = do
-    s <- getContents
-    print (alexScanTokens s)
-
+--main = do
+--    s <- getContents
+--    print (alexScanTokens s)
+--
 }
 
