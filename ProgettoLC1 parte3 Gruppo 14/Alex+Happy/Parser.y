@@ -70,6 +70,7 @@ import Data (Token(..), Type(..))
 S : TopStatements {}
 
 TopStatements	:   TopStatement TopStatements {}
+                    | {}
 TopStatement	:   Definition {}
 
 Statements  :	Statement Statements {}
@@ -163,6 +164,7 @@ Label	:   label_ {}
 Arrays	:   Array Arrays {}
 	    | {}
 Array	:   sBrakOpen_ int_ sBrakClose_ {}
+            | sBrakOpen_ sBrakClose_ {}
 
 ArrayDef    :	cBrakOpen_ ArrayItems cBrakClose_ {}
 ArrayItems  :	ArrayItem ArrayItemL {}
