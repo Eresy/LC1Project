@@ -17,7 +17,7 @@ import Data (Token(..), Type(..))
 	char_	{ Char $$ _}
 	string_	{ String $$ _}
 	label_	{ Label $$ _}
-        comment_    { Comment $$ }
+        comment_    { Comment $$ _}
 	brakOpen_	{ BrakOpen _}
 	brakClose_	{ BrakClose _}
 	sBrakOpen_	{ SBrakOpen _}
@@ -69,7 +69,7 @@ import Data (Token(..), Type(..))
 
 S : TopStatements {}
 
-TopStatements	:   TopStatement TopStatements {"Ciao"}
+TopStatements	:   TopStatement TopStatements {}
 TopStatement	:   Definition {}
 
 Statements  :	Statement Statements {}
@@ -85,6 +85,7 @@ Assignment  :	LValue assignOp_ RValue semicolon_ {}
 Definition  :	TypeLabel LValue semicolon_ {}
 		| TypeLabel Assignment {}
 		| FunctionDef {}
+                | comment_ {}
 
 FunctionDef :	TypeLabel Label brakOpen_ Arguments brakClose_ cBrakOpen_ Statements cBrakClose_ {}
 		| voidLabel_ Label brakOpen_  Arguments brakClose_ cBrakOpen_ Statements cBrakClose_ {}
@@ -118,8 +119,6 @@ PredFunction : readInt_ brakOpen_ brakClose_ {}
 
 FunctionCall :	Label brakOpen_ Parameters brakClose_ semicolon_ {}
 		| PredFunction semicolon_ {}
-
-Comment :       
 
 Parameters  :	Parameter ParameterL {}
 		| {}
@@ -205,13 +204,13 @@ Expression7 :	incOp_ Expression7 {}
 
 {
 
---main = do
---    s <- getContents
---    let tok = alexScanTokens s
---    parseCLike tok
---   print tok
+main = do
+    s <- getContents
+    let tok = alexScanTokens s
+    print (parseCLike tok)
+    print tok
 
-main = getContents >>= print . parseCLike . alexScanTokens
+--main = getContents >>= print . parseCLike . alexScanTokens
 
 parseError :: [Token] -> a
 parseError (tok:_) = error ("Parse error: " ++ show tok ++ " at invalid postion")
