@@ -3,7 +3,7 @@
 module Parser (main) where
 
 import Lexer (alexScanTokens)
-import Data (Token(..), Type(..), Pointer(..))
+import Data (Token(..), Type(..))
 
 }
 
@@ -94,7 +94,7 @@ LValue	    :	Label Arrays {}
 RValue	:	Expression1 {}
 		| Assignment {}
 		| ArrayDef {}
-		| dereference_ {}
+		| dereference_ label_ {}
 
 Type	:	int_ {}
 		| char_ {}
@@ -202,6 +202,15 @@ Expression7 :	incOp_ Expression7 {}
 
 {
 
+main = do
+    s <- getContents
+    let tok = alexScanTokens s
+    print parseCLike tok
+    print tok
+
+parseError :: [Token] -> a
+parseError tok@(_ t) case t of
+    (x,y) = error "Parse error at " ++ x ++ "," ++ y
 
 
 }
