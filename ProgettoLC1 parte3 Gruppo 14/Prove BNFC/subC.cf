@@ -22,6 +22,16 @@ SReturn. Stm    ::= "return" Exp ";" ;
 SWhile.  Stm    ::= "while" "(" Exp ")" Stm ;
 SBlock.  Stm    ::= "{" [Stm] "}" ;
 SIfElse. Stm    ::= "if" "(" Exp ")" Stm "else" Stm ;
+--Statements also include built-in functions
+StmF.	Stm	::= "readInt" "(" ")" ";";
+StmF2.	Stm	::= "writeInt" "(" Exp ")" ";";
+StmF3.	Stm	::= "readFloat" "(" ")" ";";
+StmF4.	Stm	::= "writeFloat" "(" Exp ")" ";";
+StmF5.	Stm	::= "readChar" "(" ")" ";";
+StmF6.	Stm	::= "writeChar" "(" Exp ")" ";";
+StmF7.	Stm	::= "readString" "(" ")" ";";
+StmF8.	Stm	::= "writeString" "(" Exp ")" ";";
+
 
 EInt.    Exp15  ::= Integer ;
 EDouble. Exp15  ::= Double ;
@@ -33,6 +43,7 @@ EPIncr.  Exp14  ::= Exp15 "++" ;
 EPDecr.  Exp14  ::= Exp15 "--" ;
 EIncr.   Exp13  ::= "++" Exp14 ;
 EDecr.   Exp13  ::= "--" Exp14 ;
+EArray.  Exp13	::= Exp13"[" Exp15 "]"; --------
 ETimes.  Exp12  ::= Exp12 "*"  Exp13 ;
 EDiv.    Exp12  ::= Exp12 "/"  Exp13 ;
 EPlus.   Exp11  ::= Exp11 "+"  Exp12 ;
@@ -61,3 +72,13 @@ Tvoid.   Type ::= "void" ;
 --But we can define our identifiers easily by a regular expression:
 token Id (letter (letter | digit | '_')*) ;
 separator nonempty Id ",";
+
+--an array declaration has a type, an identifier followed by the number of arguments in the array
+InitArray.	Stm ::= Type Id"[" Integer "]" ";" ;
+IncoArray.	Stm ::= Type Id"[" "]" ";";
+CompArray.	Stm ::= Type Id"[" "]" "=" "{" [Exp] "}"  ";";
+CompArray1.	Stm ::= Type Id"[" Integer "]" "=" "{" [Exp] "}"  ";";
+--
+InitPointer.	Stm ::= Type "*"Id ";";
+InitPointer2.	Stm ::= Type "*"Id "=" Exp ";";
+Pointer.	Srm ::= "*"Id ";";

@@ -6,12 +6,18 @@ int main () {
   int k ;
   i = 1 ;
   k = i ;
+  int a[2]={1,3,4};
+  double b[];
+  int c[]={12,13};
 
-  while (i < 13) {
+  int *s;
+  int *S= c[0] - 1;
+  int p = c[0] - 1;
+  while (i+p < 13) {
     k = k * i ;
     i++;
-/*    printInt (k) ;
-  */  }
+    writeInt (k) ;
+  }
 
   return 0 ;
 
