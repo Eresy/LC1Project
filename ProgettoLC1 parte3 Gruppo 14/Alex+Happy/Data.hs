@@ -56,10 +56,17 @@ data Token =    Int String Pos
                 
 type Pos = ( Int , Int )
 
-data Type =     IntType Int
-                | DoubleType Double 
-                | CharType Char
-                | StringType String
+data Type =     IntType
+                | DoubleType
+                | CharType
+                | StringType
                 | PointerType Type 
                 | ArrayType Type
+                | VoidType
                 deriving(Eq, Ord, Show)
+
+data TypeResult = TypeCorrect Type | TypeError Type Type | TypeNull deriving (Show)
+
+--instance Eq Type where
+--    (PointerType a) == (PointerType b)  = a == b 
+--    (ArrayType a) == (ArrayType b)      = a == b 

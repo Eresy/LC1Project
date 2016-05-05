@@ -60,6 +60,14 @@ return                              {\x y -> Return (getPos x)}
 
 valres                              {\x y -> ValRes (getPos x)}
 
+for                                 {\x y -> For (getPos x)}
+
+while                               {\x y -> While (getPos x)}
+
+if                                  {\x y -> If (getPos x)}
+
+else                                {\x y -> Else (getPos x)}
+
 ’\’’ ($lett | (’\\’ "\n\t")) ’\’’   {\x y -> Char y (getPos x)}
 
 ’"’ @string ’"’			            {\x y -> String y (getPos x)}
