@@ -77,9 +77,9 @@ data Factor
       | Brack Exp
 
 instance Show Factor where
-   show (Int x) = "$I:=" ++ show x  
-   show (Var x) = "$V:=" ++ x
-   show (Brack x) = "$( \n" ++ show x ++ "\n $)"
+   show (Int x) = "<$Int: " ++ show x ++ ">"
+   show (Var x) = "<$Var: " ++ x ++ ">"
+   show (Brack x) = "$( " ++ show x ++ " $)"
 
 
 
