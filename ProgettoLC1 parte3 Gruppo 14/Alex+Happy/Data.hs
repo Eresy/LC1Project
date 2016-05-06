@@ -65,8 +65,5 @@ data Type =     IntType
                 | VoidType
                 deriving(Eq, Ord, Show)
 
-data TypeResult = TypeCorrect Type | TypeError Type Type | TypeNull deriving (Show)
+data TypeResult = Correct Type | Error Type Type | Null deriving (Show)
 
---instance Eq Type where
---    (PointerType a) == (PointerType b)  = a == b 
---    (ArrayType a) == (ArrayType b)      = a == b 

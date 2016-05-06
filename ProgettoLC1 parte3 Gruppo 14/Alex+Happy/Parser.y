@@ -12,7 +12,7 @@ import Data (Token(..), Type(..), TypeResult(..))
 %error { parseError }
 
 %token
-	int_		{ Int $$ _}
+	int_	{ Int $$ _}
 	double_	{ Double $$ _}
 	char_	{ Char $$ _}
 	string_	{ String $$ _}
@@ -70,11 +70,11 @@ import Data (Token(..), Type(..), TypeResult(..))
 S : TopStatements { $1 }
 
 TopStatements	:   TopStatement TopStatements { isCorrect $1 $2 }
-                    | { TypeNull }
+                    | { Null }
 TopStatement	:   Definition { $1 }
 
 Statements  :	Statement Statements { isCorrect $1 $2 }
-		| { TypeNull }
+		| { Null }
 Statement   :	Assignment { $1 }
 		| Definition  { $1 }
 		| FunctionCall { $1 }
@@ -86,13 +86,13 @@ Assignment  :	LValue assignOp_ RValue semicolon_ { typeCompare $1 $3 }
 Definition  :	TypeLabel LValue semicolon_ { typeCompare $1 $2 } 
 		| TypeLabel Assignment { typeCompare $1 $2 }
 		| FunctionDef { $1 }
-                | comment_ { TypeNull }
+                | comment_ { Null }
 
-FunctionDef :	TypeLabel Label brakOpen_ Arguments brakClose_ cBrakOpen_ Statements cBrakClose_ { typeCompare $1 $1 } --da cambiare
-		| voidLabel_ Label brakOpen_  Arguments brakClose_ cBrakOpen_ Statements cBrakClose_ { infer VoidType }
+FunctionDef :	TypeLabel Label brakOpen_ Arguments brakClose_ cBrakOpen_ Statements cBrakClose_ { $7  } --controllo tipo-return? 
+		| voidLabel_ Label brakOpen_  Arguments brakClose_ cBrakOpen_ Statements cBrakClose_ { $7 }
 
-LValue	    :	Label Arrays { TypeNull } --da cambiare
-		| Pointer Label { TypeNull } --da cambiare
+LValue	    :	Label Arrays { Null } --da cambiare
+		| Pointer Label { Null } --da cambiare
 
 RValue	:	Expression { $1 }
 		| Assignment { $1 }
@@ -118,19 +118,19 @@ PredFunction :  readInt_ brakOpen_ brakClose_ { infer (IntType) }
 		| readString_ brakOpen_ brakClose_ { (infer StringType) }
 		| writeString_ brakOpen_ Parameter brakClose_ { typeCompare (infer StringType) $3 }
 
-FunctionCall :	Label brakOpen_ Parameters brakClose_ semicolon_ {TypeNull}
+FunctionCall :	Label brakOpen_ Parameters brakClose_ semicolon_ {Null}
 		| PredFunction semicolon_ { $1 }
 
-Parameters  :	Parameter ParameterL { isCorrect $1 $2 }
-		| { TypeNull }
-ParameterL  :	comma_ Parameter ParameterL { isCorrect $2 $3 }
-		| {TypeNull }
+Parameters  :	Parameter ParameterL { Null }
+		| { Null }
+ParameterL  :	comma_ Parameter ParameterL { Null }
+		| { Null }
 Parameter   :	RValue { $1 }
 
 Arguments   :	Argument ArgumentsL { isCorrect $1 $2}
-		| { TypeNull }
+		| { Null }
 ArgumentsL  :	comma_ Argument ArgumentsL { isCorrect $2 $3 }
-		| { TypeNull }
+		| { Null }
 Argument    :	PassingType TypeLabel Label { $2 }
 PassingType :	valRes_ {}
 		| {}
@@ -140,9 +140,9 @@ FlowControl :	IfThenElse { $1 }
 		| For { $1 }
 
 FlowStatements :    FlowStatement FlowStatements { isCorrect $1 $2}
-		    | { TypeNull}
-FlowStatement : break_ semicolon_ { TypeNull }
-		| continue_ semicolon_ { TypeNull}
+		    | { Null}
+FlowStatement : break_ semicolon_ { Null }
+		| continue_ semicolon_ { Null}
 		| Statement { $1 }
 
 IfThenElse :	if_ brakOpen_ Expression brakClose_ Then { isCorrect $3 $5 }
@@ -154,30 +154,30 @@ While	:	while_ brakOpen_ Expression brakClose_ cBrakOpen_ FlowStatements cBrakCl
 For	:	for_ brakOpen_ ForInd semicolon_ ForExpression semicolon_ ForExpression brakClose_ cBrakOpen_ FlowStatements cBrakClose_ {isCorrect $3 (isCorrect $5 (isCorrect $7 $10))}
                 | for_ brakOpen_ ForInd semicolon_ ForExpression semicolon_ ForExpression brakClose_ {isCorrect $3 (isCorrect $5 $7) }
 ForInd	:	ForVars { $1 }
-		| { TypeNull }
+		| { Null }
 ForVars :	ForVar comma_ ForVars { isCorrect $1 $3 }
-		| ForVar { TypeNull}
+		| ForVar { Null}
 ForVar	:	LValue assignOp_ RValue { typeCompare $1 $3 }
 ForExpression : Expression { $1 }
-		| { TypeNull }
+		| { Null }
 
-Label	:   label_ { TypeNull }
+Label	:   label_ { Null }
 
-Arrays	:   Array Arrays { TypeNull }
-	    | { TypeNull }
-Array	:   sBrakOpen_ int_ sBrakClose_ { TypeNull}
-            | sBrakOpen_ sBrakClose_ { TypeNull }
+Arrays	:   Array Arrays { Null }
+	    | { Null }
+Array	:   sBrakOpen_ int_ sBrakClose_ { Null}
+            | sBrakOpen_ sBrakClose_ { Null }
 
 ArrayDef    :	cBrakOpen_ ArrayItems cBrakClose_ { $2 }
 ArrayItems  :	ArrayItem ArrayItemL { typeCompare $1 $2 }
-		| { TypeNull }
+		| { Null }
 ArrayItemL  :	comma_ ArrayItem ArrayItemL { typeCompare $2 $3 }
-		| { TypeNull }
+		| { Null }
 ArrayItem   :	RValue { $1 }
 
-Pointers    :   Pointer Pointers { TypeNull}
-                | { TypeNull }
-Pointer	    :	mulOp_ {TypeNull}
+Pointers    :   Pointer Pointers { Null}
+                | { Null }
+Pointer	    :	mulOp_ {Null}
 
 Expression  :	Expression1 { $1 }
 Expression1 :	Expression1 and_ Expression2 { typeCompare $1 $3  }
@@ -223,28 +223,28 @@ parseError (tok:toks) = error ("Parse error: " ++ show tok ++ " at invalid posti
 parseError [] = error "casini!"
 parseError _ = error "OhOh!"
 
---isCorrect :: TypeResult -> TypeResult -> TypeResult
-isCorrect x@(TypeCorrect a) (TypeCorrect b) = x
-isCorrect x@(TypeError _ _) _ = x
-isCorrect _ x@(TypeError _ _) = x
-isCorrect TypeNull x = x
-isCorrect x TypeNull = x
-isCorrect TypeNull TypeNull = TypeNull
+isCorrect :: TypeResult -> TypeResult -> TypeResult
+isCorrect x@(Correct a) (Correct b) = x
+isCorrect x@(Error _ _) _ = x
+isCorrect _ x@(Error _ _) = x
+isCorrect Null x = x
+isCorrect x Null = x
+isCorrect Null Null = Null
 
---typeCompare :: TypeResult -> TypeResult -> TypeResult
-typeCompare (TypeCorrect a) (TypeCorrect b) = comparez a b
-typeCompare x@(TypeError _ _) _ = x
-typeCompare _ x@(TypeError _ _) = x
-typeCompare TypeNull x = x
-typeCompare x TypeNull = x
-typeCompare TypeNull TypeNull = TypeNull
+typeCompare :: TypeResult -> TypeResult -> TypeResult
+typeCompare (Correct a) (Correct b) = comparez a b
+typeCompare x@(Error _ _) _ = x
+typeCompare _ x@(Error _ _) = x
+typeCompare Null x = x
+typeCompare x Null = x
+typeCompare Null Null = Null
 
 comparez :: Type -> Type -> TypeResult
 comparez a b = comp (a == b) where
-    comp True = (TypeCorrect a)
-    comp False = (TypeError a b)
+    comp True = (Correct a)
+    comp False = Error a b
 
-infer x = (TypeCorrect x)
+infer x = (Correct x)
 
 --typeInfer :: Token -> Type
 --typeInfer x = case x of
@@ -280,7 +280,7 @@ infer x = (TypeCorrect x)
 --                (NegOp p) -> NullType
 --                (Break p) -> NullType
 --                (Continue p) -> NullType
---		(Return p) -> NullType
+--		  (Return p) -> NullType
 --                (IntLabel p) -> NullType
 --                (FloatLabel p) -> NullType
 --                (CharLabel p) -> NullType
