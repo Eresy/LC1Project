@@ -213,7 +213,7 @@ Expression7 :	incOp_ Expression7 { $2 }
 main = do
     s <- getContents
     let tok = alexScanTokens s
-    print (parseCLike tok)
+    print $ parseCLike tok
     print tok
 
 --main = getContents >>= print . parseCLike . alexScanTokens
@@ -225,26 +225,39 @@ parseError _ = error "OhOh!"
 
 isCorrect :: TypeResult -> TypeResult -> TypeResult
 isCorrect x@(Correct a) (Correct b) = x
-isCorrect x@(Error _ _) _ = x
-isCorrect _ x@(Error _ _) = x
+isCorrect (Correct _) x@(ReturnT _) = x
+isCorrect x@(ReturnT _) (Correct _) = x
+isCorrect x@(Error _ _) _ = error ("Type error!")
+isCorrect _ x@(Error _ _) = error ("Type error!")
 isCorrect Null x = x
 isCorrect x Null = x
 isCorrect Null Null = Null
 
+instance Monad TypeResult where
+	TypeResult a >>= f = f a
+	return a = (Correct a)
+	fail str = 
+	catch a f = case a of
+		(Correct a) -> (Correct a)
+		(Error a b) -> f a
+
 typeCompare :: TypeResult -> TypeResult -> TypeResult
-typeCompare (Correct a) (Correct b) = comparez a b
+typeCompare (Correct a) (Correct b) = tCompare a b
+typeCompare (ReturnT a) (Correct b) = tCompare a b
+typeCompare (Correct a) (ReturnT b)= tCompare a b
 typeCompare x@(Error _ _) _ = x
 typeCompare _ x@(Error _ _) = x
 typeCompare Null x = x
 typeCompare x Null = x
 typeCompare Null Null = Null
 
-comparez :: Type -> Type -> TypeResult
-comparez a b = comp (a == b) where
+tCompare :: Type -> Type -> TypeResult
+tCompare a b = comp (a == b) where
     comp True = (Correct a)
     comp False = Error a b
 
 infer x = (Correct x)
+ret x = (ReturnT x)
 
 --typeInfer :: Token -> Type
 --typeInfer x = case x of

@@ -65,7 +65,11 @@ data Type =     IntType
                 | VoidType
                 deriving(Eq, Ord, Show)
 
-data TypeResult = Correct Type | Error Type Type | ReturnT Type | Null deriving (Show)
+data TypeResult a = Correct a
+                  | Error String
+                  | ReturnT a
+                  | Null a
+                  deriving (Show)
 
 --instance Monad TypeResult dd
 data Entry = Def String Type
