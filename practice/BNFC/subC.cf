@@ -81,4 +81,4 @@ CompArray1.	Stm ::= Type Id"[" Integer "]" "=" "{" [Exp] "}"  ";";
 --
 InitPointer.	Stm ::= Type "*"Id ";";
 InitPointer2.	Stm ::= Type "*"Id "=" Exp ";";
-Pointer.	Srm ::= "*"Id ";";
+Pointer.	Stm ::= "*"Id ";";

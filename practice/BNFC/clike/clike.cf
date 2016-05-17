@@ -1,0 +1,146 @@
+entrypoints Program, Stmt, RExpr, LExpr ;
+comment "//" ;
+comment "/*" "*/" ;
+
+
+Prog.       Program ::= [Decl] ;
+
+rules Boolean ::= "True" | "False" ;
+
+coercions   RExpr 14 ;
+
+Or.         RExpr ::= RExpr "||" RExpr1 ;
+
+And.        RExpr1 ::= RExpr1 "&&" RExpr2 ;
+
+Not.        RExpr2 ::= "!" RExpr3 ;
+
+Eq.         RExpr5 ::= RExpr6 "==" RExpr6 ;
+Neq.        RExpr5 ::= RExpr6 "!=" RExpr6 ;
+Lt.         RExpr5 ::= RExpr6 "<"  RExpr6 ;
+LtE.        RExpr5 ::= RExpr6 "<=" RExpr6 ;
+Gt.         RExpr5 ::= RExpr6 ">"  RExpr6 ;
+GtE.        RExpr5 ::= RExpr6 ">=" RExpr6 ;
+
+Add.        RExpr7 ::= RExpr7 "+" RExpr8 ;
+Sub.        RExpr7 ::= RExpr7 "-" RExpr8 ;
+
+Mul.        RExpr8 ::= RExpr8 "*" RExpr9 ;
+Div.        RExpr8 ::= RExpr8 "/" RExpr9 ;
+Mod.        RExpr8 ::= RExpr8 "%" RExpr9 ;
+
+Pow.        RExpr9 ::= RExpr10 "^" RExpr9 ;
+
+Neg.        RExpr11 ::= "-" RExpr12 ;
+Ref.        RExpr11 ::= "&" LExpr ;
+
+FCall.      RExpr12 ::= FunCall ;
+
+Int.        RExpr13 ::= Integer ;
+Char.       RExpr13 ::= Char ;
+String.     RExpr13 ::= String ;
+Float.      RExpr13 ::= Double ;
+Bool.       RExpr13 ::= Boolean ;
+
+Lexpr.      RExpr14 ::= LExpr ;
+
+Call.       FunCall ::= Ident "(" [RExpr] ")" ;
+
+separator   RExpr "," ;
+
+coercions   LExpr 2 ;
+
+Deref.      LExpr ::= "*" RExpr ;
+PreInc.     LExpr ::= "++" LExpr1 ;
+PreDecr.    LExpr ::= "--" LExpr1 ;
+
+PostInc.    LExpr1 ::= LExpr2 "++" ;
+PostDecr.   LExpr1 ::= LExpr2 "--" ;
+
+BasLExpr.   LExpr2 ::= BLExpr ;
+
+ArrayEl.    BLExpr ::= BLExpr "[" RExpr "]" ;
+Id.         BLExpr ::= Ident ;
+
+
+
+separator   Decl "" ;
+
+DvarBInit.   Decl ::= BasicType [VarDeclInit] ";" ;
+DvarCInit.   Decl ::= TypeSpec  [VarDeclInit] ";" ;
+
+separator nonempty VarDeclInit "," ;
+
+BasTyp.     TypeSpec ::= BasicType ;
+rules BasicType ::= "bool" | "char" | "float" | "int" | "void" ;
+
+CompType.   TypeSpec ::= CompoundType ;
+ArrDef.     CompoundType ::= TypeSpec "[" Integer "]" ;
+ArrUnDef.   CompoundType ::= TypeSpec "["  "]" ;
+Pointer.    CompoundType ::= TypeSpec "*" ;
+
+VarDeclIn.   VarDeclInit ::= VarDecl ;
+rules VarDecl ::= Ident | Ident "=" ComplexRExpr ;
+
+Simple.      ComplexRExpr ::= RExpr ;
+Array.       ComplexRExpr ::= "[" [ComplexRExpr] "]" ;
+
+separator nonempty ComplexRExpr "," ;
+
+Dfun.       Decl ::= BasicType Ident "(" [Parameter] ")" CompStmt ;
+
+separator   Parameter "," ;
+
+Param.      Parameter ::= Modality TypeSpec Ident ;
+rules       Modality ::= {-empty-} | "val" |  "res" | "valres" ;
+
+rules   CompStmt ::= CompStmtNocolon ";"  | CompStmtNocolon ;
+
+BlockDecl.  CompStmtNocolon ::= "{" [Decl] [Stmt] "}" ;
+
+separator Stmt "" ;
+
+
+-- Statement
+Comp.       Stmt ::= CompStmt ;
+ProcCall.   Stmt ::= FunCall ";" ;
+Jmp.        Stmt ::= JumpStmt ";" ;
+Iter.       Stmt ::= IterStmt ;
+Sel.        Stmt ::= SelectionStmt ;
+Fbuiltin.   Stmt ::= FunctionStmt ";" ;
+Assgn.      Stmt ::= LExpr Assignment_op RExpr ";" ;
+LExprStmt.  Stmt ::= LExpr ";" ;
+
+Assign.     Assignment_op ::= "=" ;
+AssgnMul.   Assignment_op ::= "*=" ;
+AssgnAdd.   Assignment_op ::= "+=" ;
+AssgnDiv.   Assignment_op ::= "/=" ;
+AssgnSub.   Assignment_op ::= "-=" ;
+AssgnPow.   Assignment_op ::= "^=" ;
+AssgnAnd.   Assignment_op ::= "&=" ;
+AssgnOr.    Assignment_op ::= "|=" ;
+
+
+Break.      JumpStmt ::= "break" ;
+Continue.   JumpStmt ::= "continue" ;
+RetExpVoid.     JumpStmt ::= "return" ;
+RetExp.     JumpStmt ::= "return" "(" RExpr ")" ;
+
+
+IfNoElse.   SelectionStmt ::= "if" "(" RExpr ")" Stmt ;
+IfElse.     SelectionStmt ::= "if" "(" RExpr ")" Stmt "else" Stmt ;
+
+
+While.        IterStmt ::= "while" "(" RExpr ")" Stmt ;
+DoWhile.      IterStmt ::= "do" Stmt "while" "(" RExpr ")" ";" ;
+
+--Statements also include built-in functions
+ReadI.	FunctionStmt	::= "readInt" "(" ")" ;
+WriteI.	FunctionStmt	::= "writeInt" "(" RExpr ")" ;
+ReadF.	FunctionStmt	::= "readFloat" "(" ")" ;
+WriteF.	FunctionStmt	::= "writeFloat" "(" RExpr ")" ;
+ReadC.	FunctionStmt	::= "readChar" "(" ")" ;
+WriteC.	FunctionStmt	::= "writeChar" "(" RExpr ")" ;
+ReadS.	FunctionStmt	::= "readString" "(" ")" ;
+WriteS.	FunctionStmt	::= "writeString" "(" RExpr ")" ;
+
