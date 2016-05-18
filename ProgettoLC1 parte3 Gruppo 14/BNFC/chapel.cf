@@ -1,0 +1,108 @@
+
+init.	S		::=	Program;
+
+prgrm. Program		::=	[Statement];
+
+separator Statement "";
+
+stmt1.	Statement	::=	BlockStatement;
+stmt2.	Statement	::=	Expression;
+stmt4.	Statement	::=	Assignment;
+stmt5.	Statement	::=	Declaration ";";
+stmt6.	Statement	::=	FuncDeclaration;
+stmt7.	Statement	::=	WhileDo;
+stmt8.	Statement	::=	DoWhile;
+stmt9.	Statement	::=	For;
+stmt10.	Statement	::=	If;
+stmt11.	Statement	::=	TryCatch;
+stmt12.	Statement	::=	"break" ";";
+stmt13.	Statement	::=	"continue" ";";
+stmt14. Statement	::=	"return" ";";
+
+bstmt.	BlockStatement	::=	"{" [Statement] "}";
+
+fcall1.	FunctionCall	::=	Label ArrayElement;
+
+fdec1.	FuncDeclaration	::=	"proc" Label ParameterDecl Cast BlockStatement;
+fdec2.	FuncDeclaration	::=	"proc" Label ParameterDecl BlockStatement;
+fdec3.	FuncDeclaration	::=	"proc" Label Cast BlockStatement;
+fdec4.	FuncDeclaration	::=	"proc" Label BlockStatement;
+
+parDec.	ParameterDecl	::=	"(" [Parameter] ")";
+par.	Parameter	::=	Mode Label Cast;
+separator Parameter ",";
+
+mode1.	Mode		::=	"val";
+mode2.	Mode		::=	"ref";
+mode3.	Mode		::=	"const";
+mode4.	Mode		::=	;
+
+decl1.	Declaration	::=	"var" Label Cast;
+
+asgmt1.	Assignment	::=	Label "=" RValue ";";
+asgmt2.	Assignment	::=	"var" Label "=" RValue ";";
+asgmt3. Assignment	::=	Declaration "=" RValue ";";
+
+rng1.	Range		::=	Expression ".." Expression;
+rng2.	Range		::=	Expression "..";
+rng3.	Range		::=	 ".." Expression;
+rng4.	Range		::=	 "..";
+
+cast1.	Cast		::=	":" TypeSpec;
+cast2.	Cast		::=	":" "[" Range "]" TypeSpec;
+
+lval1.	LValue		::=	Label;
+lval2.	LValue		::=	Label [ArrayIndex];
+
+rval1.	RValue		::=	Expression;
+
+arr1.	ArrayIndex	::=	"[" Expression "]";
+separator ArrayIndex "";
+
+arrel.	ArrayElement	::=	"(" [LiteralList] ")";
+arrlst.	LiteralList	::=	Expression;
+separator LiteralList ",";
+
+wd.	WhileDo		::=	;
+dw.	DoWhile		::=	;
+if.	If		::=	;
+for.	For		::=	;
+trycat.	TryCatch	::=	;
+
+exp1.	Expression1	::=	Expression1 "&&" Expression2;
+exp2.	Expression1	::=	Expression1 "||" Expression2;
+exp3.	Expression2	::=	"!" Expression3;
+exp4.	Expression3	::=	Expression3 "==" Expression4;
+exp5.	Expression3	::=	Expression3 "<" Expression4;
+exp6.	Expression3	::=	Expression3 ">" Expression4;
+exp7.	Expression3	::=	Expression3 "<=" Expression4;
+exp8.	Expression3	::=	Expression3 ">=" Expression4;
+exp9.	Expression4	::=	Expression4 "+" Expression5;
+exp10.	Expression4	::=	Expression4 "-" Expression5;
+exp11.	Expression4	::=	Expression4 "*" Expression5;
+exp12.	Expression4	::=	Expression4 "/" Expression5;
+exp13.	Expression5	::=	"++" Expression6;
+exp14.	Expression5	::=	"--" Expression6;
+exp15.	Expression5	::=	Expression6 "++";
+exp16.	Expression5	::=	Expression6 "--";
+exp17.	Expression6	::=	LValue;
+exp18.	Expression6	::=	Literal;
+exp19.	Expression6	::=	FunctionCall;
+
+coercions Expression 6;
+
+
+lbl.	Label		::=	Ident;
+
+typel1.	TypeSpec	::=	"int";
+typel2.	TypeSpec	::=	"real";
+typel3.	TypeSpec	::=	"bool";
+typel4.	TypeSpec	::=	"string";
+typel5.	TypeSpec	::=	"char";
+typel6.	TypeSpec	::=	"void";
+
+ltrl1.	Literal		::=	Integer;
+ltrl2.	Literal		::=	Double;
+ltrl3.	Literal		::=	"\'" Char "\'";
+ltrl4.	Literal		::=	"\"" String "\"";
+ltrl5.	Literal		::=	ArrayElement;
