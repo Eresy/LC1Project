@@ -1,0 +1,15 @@
+comment "//";
+comment "/*" "*/";
+
+separator nonempty Identifier "";
+
+Identifie.	Identifier ::= Id;
+
+token Id (letter (letter | digit | '_' | '$')*);
+
+rules Boolean ::= "True" | "False" ;
+
+token LInt digit+;
+
+token LReal (((digit?) '.'digit+)(('e'|'E') ('-')? digit+)?)| (digit+ ('.')?('e'|'E')('-')? digit+);
+
