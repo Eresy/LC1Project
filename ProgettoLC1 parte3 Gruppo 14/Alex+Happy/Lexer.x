@@ -64,6 +64,8 @@ break                                        {\x y -> Break (getPos x)}
 
 continue                                     {\x y -> Continue (getPos x)}
 
+return                                       {\x y -> Return (getPos x)}
+
 try                                          {\x y -> Try (getPos x)}
 
 catch                                        {\x y -> Catch (getPos x)}

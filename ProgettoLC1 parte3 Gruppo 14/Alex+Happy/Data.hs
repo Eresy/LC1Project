@@ -25,6 +25,7 @@ data Token = Comment String Pos
            | Do Pos
            | Break Pos
            | Continue Pos
+           | Return Pos
            | Try Pos
            | Catch Pos
            | PF_readInt Pos
