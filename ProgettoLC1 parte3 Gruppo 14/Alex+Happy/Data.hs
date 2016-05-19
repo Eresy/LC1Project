@@ -1,7 +1,6 @@
 module Data where
 
-data Token = SComment String Pos
-           | MComment String Pos
+data Token = Comment String Pos
            | Int String Pos
            | Real String Pos
            | Char String Pos

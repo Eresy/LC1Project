@@ -18,9 +18,9 @@ $num = [0-9]
 
 $white+                                      ;
 
-"//" [.]*                                    {\x y -> SComment y (getPos x)}
+"//" [.]*                                    {\x y -> Comment y (getPos x)}
 
-"/*" [\0-\255]* "*/"                         {\x y -> MComment y (getPos x)}
+"/*" [\0-\255]* "*/"                         {\x y -> Comment y (getPos x)}
 
 $num+                                        {\x y -> Int y (getPos x)}
 
