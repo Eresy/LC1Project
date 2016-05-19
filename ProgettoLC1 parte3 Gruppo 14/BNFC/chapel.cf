@@ -17,7 +17,7 @@ Stmt11.	Statement	::=	If;
 Stmt12.	Statement	::=	TryCatch;
 Stmt13.	Statement	::=	"break" ";";
 Stmt14.	Statement	::=	"continue" ";";
-Stmt15. Statement	::=	"return" ";";
+Stmt15. Statement	::=	"return" Expression ";";
 
 Bstmt.	BlockStatement	::=	"{" [Statement] "}";
 
@@ -40,10 +40,10 @@ Mode2.	Mode		::=	"ref";
 Mode3.	Mode		::=	"const";
 Mode4.	Mode		::=	;
 
-Decl1.	Declaration	::=	"var" Label Cast;
+Decl1.	Declaration	::=	"var" [Pointer] Label Cast;
 
 Asgmt1.	Assignment	::=	Label "=" RValue ";";
-Asgmt2.	Assignment	::=	"var" Label "=" RValue ";";
+Asgmt2.	Assignment	::=	"var" [Pointer] Label "=" RValue ";";
 Asgmt3. Assignment	::=	Declaration "=" RValue ";";
 
 Rng1.	Range		::=	Expression ".." Expression;
@@ -53,6 +53,9 @@ Rng4.	Range		::=	 "..";
 
 Cast1.	Cast		::=	":" TypeSpec;
 Cast2.	Cast		::=	":" "[" Range "]" TypeSpec;
+
+Ptr.	Pointer		::=	"*";
+separator Pointer "";
 
 Lval1.	LValue		::=	Label;
 Lval2.	LValue		::=	Label [ArrayIndex];
@@ -69,10 +72,8 @@ separator nonempty LiteralList ",";
 Wd.	WhileDo		::=	"while" Expression BlockStatement;
 Dw.	DoWhile		::=	"do" BlockStatement "while" Expression ";";
 
-If1.	If		::=	"if" Expression Then ; 
-If2.	If		::=	"if" Expression Then Else; 
-ThenB1.	Then		::=	"then" Statement;
-ElseB1.	Else		::=	"else" Statement;
+If1.	If		::=	"if" Expression BlockStatement; 
+If2.	If		::=	"if" Expression BlockStatement "else" BlockStatement; 
 
 For1.	For		::=	"for" Label "in" Range BlockStatement;
 For2.	For		::=	"for" Label "in" Range "do" Statement;
@@ -94,8 +95,10 @@ Exp12.	Expression4	::=	Expression4 "/" Expression5;
 Exp13.	Expression5	::=	"++" Expression6;
 Exp14.	Expression5	::=	"--" Expression6;
 Exp15.	Expression5	::=	Expression6 "++";
-Exp16.	Expression5	::=	Expression6 "--";
-Exp17.	Expression6	::=	Value;
+Exp17.	Expression5	::=	Expression6 "--";
+Exp18.	Expression5	::=	"*" Expression6; 
+Exp19.	Expression5	::=	"&" Expression6;
+Exp20.	Expression6	::=	Value;
 
 coercions Expression 6;
 
