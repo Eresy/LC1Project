@@ -3,13 +3,70 @@ comment "/*" "*/";
 
 separator nonempty Identifier "";
 
-Identifie.	Identifier ::= Id;
+{--
+Prog. Prog ::= [Identifier];
+rules	Identifier ::= Id | Boolean | LInt | LReal | LString | TypeSpec;
+--}
 
 token Id (letter (letter | digit | '_' | '$')*);
+separator nonempty Id ","
 
-rules Boolean ::= "True" | "False" ;
+rules Boolean ::= "true" | "false" ;
 
 token LInt digit+;
 
 token LReal (((digit?) '.'digit+)(('e'|'E') ('-')? digit+)?)| (digit+ ('.')?('e'|'E')('-')? digit+);
+
+rules LString ::= Char | String;
+
+rules LRange ::= Exp ".." Exp | Exp ".." | ".." Exp | ".." ;
+
+rules TypeSpec ::= "int"| "real" | "bool" | "string" | "char" | "void" ;
+
+rules LArray ::= "[" [Exp] "]" ;
+
+separator  nonempty Exp ",";
+
+VarDeclS.	Var_Decl_Stmt ::= Parameter [Var_Decl] ";" ;
+
+rules Parameter ::= "const" | "ref" | "value" | "var" ;
+{--	var is used for declaring regular variables in chapel,
+-}
+separator nonempty Var_Decl ","
+
+VarDecTI.	Var_Decl ::= [Id] Type_part Init_part;
+VarDecI.	Var_Decl ::= [Id] Init_part;
+VarDec.		Var_Decl ::= [Id] Type_part;
+
+TAss.	Type_part ::= ":" TypeSpec;
+Init.	Init_part ::= "=" Exp;
+
+ELiteral.	Exp ::= Literal_exp ;
+EVariable.	Exp ::= Variable_exp;
+ECall.		Exp ::= Call_exp;
+ECast.		Exp ::= Cast_exp;
+ELValue.	Exp ::= LValue_exp;
+EParenth.	Exp ::= Paren_exp;
+EUnary.		Exp ::= Unary_exp;
+EBinary.	Exp ::= Binary_exp;
+EIf.		Exp ::= If_exp;
+EFor.		Exp ::= For_exp;
+
+rules Literal_exp ::= Boolean | LInt | LReal | LString | LRange | LArray ;
+
+Label.	Variable_exp ::= Id;
+
+Parens.	Paren_exp ::= "(" Exp ")";
+
+Cast.	Cast_exp ::= Exp ":" TypeSpec;
+
+rules LValue_exp ::= Variable_exp | Call_exp | Paren_exp;
+
+UnaryE.	Unary_exp ::= Unary_op Exp;
+
+rules Unary_op ::= "+" | "-" | "!" ;
+
+BinaryE. Binary_exp ::= Exp  Binary_op Exp;
+
+rules Binary_op ::= "+" | "-" | "*" | "/" | "%" | "**" | "&" | "|" | "^" | "&&" | "==" | "!=" | "<=" | ">=" | "<" | ">" ;
 
