@@ -126,10 +126,6 @@ $alp ($alp | $num | '_' )* \$?               {\x y -> Label (y,(getPos x))}
 
 \/                                           {\x y -> OP_Div (getPos x)}
 
-\+\+                                         {\x y -> OP_Incr (getPos x)}
-
-\-\-                                         {\x y -> OP_Decr (getPos x)}
-
 \,                                           {\x y -> Comma (getPos x)}
 
 \;                                           {\x y -> Semicolon (getPos x)}
@@ -141,6 +137,8 @@ $alp ($alp | $num | '_' )* \$?               {\x y -> Label (y,(getPos x))}
 \|\|                                         {\x y -> OP_Or (getPos x)}
 
 \!                                           {\x y -> OP_Negt (getPos x)}
+
+\.\.                                         {\x y -> CHP_Range (getPos x)}
 
 
 

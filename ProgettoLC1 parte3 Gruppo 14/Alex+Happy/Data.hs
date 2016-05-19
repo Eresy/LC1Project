@@ -50,8 +50,6 @@ data Token = Comment String Pos
            | OP_Sub Pos
            | OP_Mul Pos
            | OP_Div Pos
-           | OP_Incr Pos
-           | OP_Decr Pos
            | OP_Deref Pos
            | OP_And Pos
            | OP_Or Pos
@@ -61,6 +59,7 @@ data Token = Comment String Pos
            | CHP_Var Pos
            | CHP_Func Pos
            | CHP_Cast Pos
+           | CHP_Range Pos
            deriving(Eq, Ord, Show)
 
 type Pos = (Int, Int)
