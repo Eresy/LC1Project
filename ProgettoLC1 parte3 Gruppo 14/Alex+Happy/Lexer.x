@@ -18,13 +18,13 @@ $num = [0-9]
 
 $white+                                      ;
 
-"//" [.]*                                    {\x y -> Comment y (getPos x)}
+"//" [.]*                                    {\x y -> Comment (y,(getPos x))}
 
-"/*" [\0-\255]* "*/"                         {\x y -> Comment y (getPos x)}
+"/*" [\0-\255]* "*/"                         {\x y -> Comment (y,(getPos x))}
 
-$num+                                        {\x y -> Int y (getPos x)}
+$num+                                        {\x y -> Int (y,(getPos x))}
 
-$num+ '.' $num+                              {\x y -> Real y (getPos x)}
+$num+ '.' $num+                              {\x y -> Real (y,(getPos x))}
 
 int                                          {\x y -> TS_Int (getPos x)}
 
@@ -86,11 +86,11 @@ readString                                   {\x y -> PF_readString (getPos x)}
 
 writeString                                  {\x y -> PF_writeString (getPos x)}
 
-'\'' ($alp | ('\\' "\n\t")) '\''             {\x y -> Char y (getPos x)}
+'\'' ($alp | ('\\' "\n\t")) '\''             {\x y -> Char (y,(getPos x))}
 
-'"' @string '"'                              {\x y -> String y (getPos x)}
+'"' @string '"'                              {\x y -> String (y,(getPos x))}
 
-$alp ($alp | $num | '_' )* \$?               {\x y -> Label y (getPos x)} 
+$alp ($alp | $num | '_' )* \$?               {\x y -> Label (y,(getPos x))} 
 
 \(                                           {\x y -> BK_NOpen (getPos x)}
 

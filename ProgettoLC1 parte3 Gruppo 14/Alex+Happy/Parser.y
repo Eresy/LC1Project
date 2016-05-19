@@ -12,201 +12,188 @@ import Data (Token(..), Type(..), TypeResult(..))
 %error { parseError }
 
 %token
-	int_	{ Int $$ _}
-	double_	{ Double $$ _}
-	char_	{ Char $$ _}
-	string_	{ String $$ _}
-	label_	{ Label $$ _}
-        comment_    { Comment $$ _}
-	brakOpen_	{ BrakOpen _}
-	brakClose_	{ BrakClose _}
-	sBrakOpen_	{ SBrakOpen _}
-	sBrakClose_	{ SBrakClose _}
-	cBrakOpen_	{ CBrakOpen _}
-	cBrakClose_	{ CBrakClose _}
-	assignOp_	{ AssignOp _}
-	equalsOp_	{ EqualsOp _}
-	diffOp_		{ DiffOp _}
-	lessThanOp_	{ LessThanOp _}
-	greaterThanOp_	{ GreaterThanOp _}
-	eLessThanOp_	{ ELessThanOp _}
-	eGreaterThanOp_	{ EGreaterThanOp _} 
-	addOp_		{ AddOp _}
-	subOp_		{ SubOp _}
-	mulOp_		{ MulOp	_}
-	divOp_		{ DivOp _}
-	incOp_		{ IncOp _}
-	decOp_		{ DecOp _}
-	comma_		{ Comma _}
-	semicolon_	{ Semicolon _}
-	dereference_	{ Dereference _}
-	and_		{ And _}
-	or_		{ Or _}
-	negOp_		{ NegOp _}
-	break_		{ Break _}
-	continue_	{ Continue _}
-	return_		{ Return _}
-	intLabel_	{ IntLabel _}
-	floatLabel_	{ FloatLabel _}
-	charLabel_	{ CharLabel _}
-	stringLabel_	{ StringLabel _}
-	voidLabel_	{ VoidLabel _}
-	if_		{ If _}
-	else_		{ Else _}
-	for_		{ For _}
-	while_		{ While _}
-	readInt_	{ ReadIntPF _}
-	writeInt_	{ WriteIntPF _}
-	readFloat_	{ WriteFloatPF _}
-	writeFloat_	{ WriteFloatPF _}
-	readChar_	{ ReadCharPF _}
-	writeChar_	{ WriteCharPF _}
-	readString_	{ ReadStringPF _}
-	writeString_	{ WriteStringPF _}
-	valRes_		{ ValRes _}
 	
+	comment_		{ Comment $$}
+	int_			{ Int $$ }
+	real_			{ Real $$ }
+	char_			{ Char $$ }
+	string_			{ String $$ }
+	label_			{ Label $$ }
+	typeInt_		{ TS_Int $$ }
+	typeReal_		{ TS_Real $$ }
+	typeChar_		{ TS_Char $$ }
+	typeString_		{ TS_String $$ }
+	typeVoid_		{TS_Void $$ }
+	value_			{ PM_Value $$ }
+	reference_		{ PM_Reference $$ }
+	constant_		{ PM_Constant $$ }
+	if_			{ If $$ }
+	then_			{ Then $$  }
+	else_			{ Else $$ }
+	for_			{ For $$ }
+	in_			{ In $$ }
+	while_			{ While $$}
+	do_			{ Do $$ }
+	break_			{ Break $$ }
+	continue_		{ Continue $$ }
+	try_			{ Try $$ }
+	catch_			{ Catch $$ }
+	readInt_		{ PF_readInt $$ }
+	writeInt_		{ PF_writeInt $$ }
+	readReal_		{ PF_readReal $$ }
+	writeReal_		{ PF_writeReal $$ }
+	readChar_		{ PF_readChar $$ }
+	writeChar_		{ PF_writeChar $$ }
+	readString_		{ PF_readString $$ }
+	writeString_		{ PF_writeString $$ }
+	bknOpen_		{ BK_NOpen $$ }
+	bknClose_		{ BK_NClos $$ }
+	bksOpen_		{ BK_SOpen $$ }
+	bksClose_		{ BK_SClos $$ }
+	bkcOpen_		{ BK_COpen $$ }
+	bkcClose_		{ BK_CClos $$ }
+	assign_			{ OP_Assign $$ }
+	equals_			{ OP_Equal $$ }
+	nequal_			{ OP_NEqual $$ }
+	lessthan_		{ OP_LesThn $$ }
+	lessthaneq_		{ OP_LesThnEq $$ }
+	greatthan_		{ OP_GrtThn $$ }
+	greatthaneq_		{ OP_GrtThnEq $$ }
+	add_			{ OP_Add $$ }
+	sub_			{ OP_Sub $$ }
+	mul_			{ OP_Mul $$ }
+	div_			{ OP_Div $$ }
+	inc_			{ OP_Incr $$ }
+	dec_			{ OP_Decr $$ }
+	deref_			{ OP_Deref $$ }
+	and_			{ OP_And $$ }
+	or_			{ OP_Or $$ }
+	neg_			{ OP_Negt $$ }
+	comma_			{ OP_Comma $$ }
+	semic_			{ OP_Semicolon $$ }
+	var_			{ CHP_Var $$ }
+	proc_			{ CHP_Func $$ }
+	cast_			{ CHP_Cast $$ }
 %%
 
-S : TopStatements { $1 }
 
-TopStatements	:   TopStatement TopStatements { isCorrect $1 $2 }
-                    | { Null }
-TopStatement	:   Definition { $1 }
+S		:	Program			{ }
+Program		:	ListStatement		{ }
 
-Statements  :	Statement Statements { isCorrect $1 $2 }
-		| { Null }
-Statement   :	Assignment { $1 }
-		| Definition  { $1 }
-		| FunctionCall { $1 }
-		| return_ Expression semicolon_ { $2 }
-		| FlowControl { $1 }
+ListStatement	:	ListStatement Statement { }
+		|				{ }
 
-Assignment  :	LValue assignOp_ RValue semicolon_ { typeCompare $1 $3 }
+Statement	:	BlockStatement		{ }
+		|	Expression ";"		{ }
+		|	Assignment		{ }
+		|	Declaration ";"		{ }
+		|	FuncDeclaration		{ }
+		|	WhileDo			{ }
+		|	DoWhile			{ }
+		|	For			{ }
+		|	If			{ }
+		|	TryCatch		{ }
+		|	"break" ";"		{ }
+		|	"continue" ";"		{ }
+		|	"return" Expression ";"	{ }
 
-Definition  :	TypeLabel LValue semicolon_ { typeCompare $1 $2 } 
-		| TypeLabel Assignment { typeCompare $1 $2 }
-		| FunctionDef { $1 }
-                | comment_ { Null }
+BlockStatement	:	"{" ListStatement "}"		{ }
 
-FunctionDef :	TypeLabel Label brakOpen_ Arguments brakClose_ cBrakOpen_ Statements cBrakClose_ { $7  } --controllo tipo-return? 
-		| voidLabel_ Label brakOpen_  Arguments brakClose_ cBrakOpen_ Statements cBrakClose_ { $7 }
+FunctionCall	:	Label ParameterList		{ }
 
-LValue	    :	Label Arrays { Null } --da cambiare
-		| Pointer Label { Null } --da cambiare
+FuncDeclaration	:	"proc" Label ParameterDecl Cast BlockStatement 	{ }
+FuncDeclaration	:	"proc" Label ParameterDecl BlockStatement 	{ }
+FuncDeclaration	:	"proc" Label Cast BlockStatement 		{ }
+FuncDeclaration	:	"proc" Label BlockStatement 			{ }
 
-RValue	:	Expression { $1 }
-		| Assignment { $1 }
-		| ArrayDef { $1 }
-		| dereference_ label_ { infer IntType }
+ParameterDecl	:	"(" [Parameter] ")" 				{ }
+Parameter	:	Mode Label Cast 				{ }
+"," { }
+.	ParameterList	:	"(" [Expression] ")" 			{ }
+"," { }
 
-Type	:	int_ { infer (IntType) }
-		| char_ { infer (CharType) }
-		| string_ { infer (StringType) }
-		| double_ { infer (DoubleType) }
+Mode		:	"val" 		{ }
+Mode		:	"ref" 		{ }
+Mode		:	"const" 	{ }
+Mode		:	 		{ }
 
-TypeLabel   :	intLabel_       { infer (IntType) }
-		| charLabel_    { infer (CharType) }
-		| floatLabel_   { infer (DoubleType) }
-		| stringLabel_  { infer (StringType) }
+Declaration	:	"var" [Pointer] Label Cast { }
 
-PredFunction :  readInt_ brakOpen_ brakClose_ { infer (IntType) }
-		| writeInt_ brakOpen_ Parameter brakClose_ { typeCompare (infer IntType) $3 }
-		| readFloat_ brakOpen_ brakClose_ { (infer DoubleType) }
-		| writeFloat_ brakOpen_ Parameter brakClose_ { typeCompare (infer DoubleType) $3 }
-		| readChar_ brakOpen_ brakClose_ { (infer CharType)  }
-		| writeChar_ brakOpen_ Parameter brakClose_ { typeCompare (infer CharType) $3 }
-		| readString_ brakOpen_ brakClose_ { (infer StringType) }
-		| writeString_ brakOpen_ Parameter brakClose_ { typeCompare (infer StringType) $3 }
+Assignment	:	Label "=" RValue " { }" { }
+Assignment	:	"var" [Pointer] Label "=" RValue " { }" { }
+Assignment	:	Declaration "=" RValue " { }" { }
 
-FunctionCall :	Label brakOpen_ Parameters brakClose_ semicolon_ {Null}
-		| PredFunction semicolon_ { $1 }
+Range		:	Expression ".." Expression { }
+Range		:	Expression ".." { }
+Range		:	 ".." Expression { }
+Range		:	 ".." { }
 
-Parameters  :	Parameter ParameterL { Null }
-		| { Null }
-ParameterL  :	comma_ Parameter ParameterL { Null }
-		| { Null }
-Parameter   :	RValue { $1 }
+Cast		:	":" TypeSpec { }
+Cast		:	":" "[" Range "]" TypeSpec { }
 
-Arguments   :	Argument ArgumentsL { isCorrect $1 $2}
-		| { Null }
-ArgumentsL  :	comma_ Argument ArgumentsL { isCorrect $2 $3 }
-		| { Null }
-Argument    :	PassingType TypeLabel Label { $2 }
-PassingType :	valRes_ {}
-		| {}
+Pointer		:	"*" { }
+"" { }
 
-FlowControl :	IfThenElse { $1 }
-		| While { $1 }
-		| For { $1 }
+LValue		:	Label { }
+LValue		:	Label [ArrayIndex] { }
 
-FlowStatements :    FlowStatement FlowStatements { isCorrect $1 $2}
-		    | { Null}
-FlowStatement : break_ semicolon_ { Null }
-		| continue_ semicolon_ { Null}
-		| Statement { $1 }
+RValue		:	Expression { }
 
-IfThenElse :	if_ brakOpen_ Expression brakClose_ Then { isCorrect $3 $5 }
-		| if_ brakOpen_ Expression brakClose_ Then Else { isCorrect $3 (isCorrect $5 $6)}
-Then	:	cBrakOpen_ Statements cBrakClose_ { $2 }
-Else	:	else_ Then { $2 }
-While	:	while_ brakOpen_ Expression brakClose_ cBrakOpen_ FlowStatements cBrakClose_ { isCorrect $3 $6 }
-                | while_ brakOpen_ Expression brakClose_ Statement { isCorrect $3 $5 }
-For	:	for_ brakOpen_ ForInd semicolon_ ForExpression semicolon_ ForExpression brakClose_ cBrakOpen_ FlowStatements cBrakClose_ {isCorrect $3 (isCorrect $5 (isCorrect $7 $10))}
-                | for_ brakOpen_ ForInd semicolon_ ForExpression semicolon_ ForExpression brakClose_ {isCorrect $3 (isCorrect $5 $7) }
-ForInd	:	ForVars { $1 }
-		| { Null }
-ForVars :	ForVar comma_ ForVars { isCorrect $1 $3 }
-		| ForVar { Null}
-ForVar	:	LValue assignOp_ RValue { typeCompare $1 $3 }
-ForExpression : Expression { $1 }
-		| { Null }
+ArrayIndex	:	"[" Expression "]" { }
+ArrayIndex "" { }
+ArrayElement	:	"(" [LiteralList] ")" { }
 
-Label	:   label_ { Null }
+LiteralList	:	Value { }
+LiteralList "," { }
 
-Arrays	:   Array Arrays { Null }
-	    | { Null }
-Array	:   sBrakOpen_ int_ sBrakClose_ { Null}
-            | sBrakOpen_ sBrakClose_ { Null }
+WhileDo		:	"while" Expression BlockStatement { }
+DoWhile		:	"do" BlockStatement "while" Expression " { }" { }
 
-ArrayDef    :	cBrakOpen_ ArrayItems cBrakClose_ { $2 }
-ArrayItems  :	ArrayItem ArrayItemL { typeCompare $1 $2 }
-		| { Null }
-ArrayItemL  :	comma_ ArrayItem ArrayItemL { typeCompare $2 $3 }
-		| { Null }
-ArrayItem   :	RValue { $1 }
+If		:	"if" Expression BlockStatement { } 
+If		:	"if" Expression BlockStatement "else" BlockStatement	{ } 
 
-Pointers    :   Pointer Pointers { Null}
-                | { Null }
-Pointer	    :	mulOp_ {Null}
+For		:	"for" Label "in" Range BlockStatement { }
+For		:	"for" Label "in" Range "do" Statement { }
 
-Expression  :	Expression1 { $1 }
-Expression1 :	Expression1 and_ Expression2 { typeCompare $1 $3  }
-		| Expression1 or_ Expression2 { typeCompare $1 $3}
-		| Expression2 { $1 }
-Expression2 :	negOp_ Expression3 { $2 }
-		| Expression3 { $1 }
-Expression3 :	Expression3 equalsOp_ Expression4 { typeCompare $1 $3 }
-		| Expression3 diffOp_ Expression4 { typeCompare $1 $3 }
-		| Expression3 lessThanOp_ Expression4 { typeCompare $1 $3 }
-		| Expression3 greaterThanOp_ Expression4{ typeCompare $1 $3 }
-		| Expression3 eLessThanOp_ Expression4 { typeCompare $1 $3 }
-		| Expression3 eGreaterThanOp_ Expression4 { typeCompare $1 $3 }
-		| Expression4 { $1 }
-Expression4 :	Expression4 addOp_ Expression5 {typeCompare $1 $3}
-		| Expression4 subOp_ Expression5 {typeCompare $1 $3}
-		| Expression5 { $1 }
-Expression5 :	Expression5 mulOp_ Expression6 { typeCompare $1 $3 }
-		| Expression5 divOp_ Expression6 { typeCompare $1 $3 }
-		| Expression6 { $1 }
-Expression6 :	Expression6 incOp_ { $1 }
-		| Expression6 decOp_ { $1 }
-		| Expression7 { $1 }
-Expression7 :	incOp_ Expression7 { $2 }
-		| decOp_ Expression7 { $2 }
-		| Type {$1}
-		| LValue {$1}
-		| FunctionCall {$1}
-		| brakOpen_ Expression1 brakClose_ {$2}
+TryCatch	:	"try" Statement "catch" Statement { }
+
+Expression1	:	Expression1 "&&" Expression2 { }
+Expression1	:	Expression1 "||" Expression2 { }
+Expression2	:	"!" Expression3 { }
+Expression3	:	Expression3 "==" Expression4 { }
+Expression3	:	Expression3 "<" Expression4 { }
+Expression3	:	Expression3 ">" Expression4 { }
+Expression3	:	Expression3 "<=" Expression4 { }
+Expression3	:	Expression3 ">=" Expression4 { }
+Expression4	:	Expression4 "+" Expression5 { }
+Expression4	:	Expression4 "-" Expression5 { }
+Expression4	:	Expression4 "*" Expression5 { }
+Expression4	:	Expression4 "/" Expression5 { }
+Expression5	:	"++" Expression6 { }
+Expression5	:	"--" Expression6 { }
+Expression5	:	Expression6 "++" { }
+Expression5	:	Expression6 "--" { }
+Expression5	:	"*" Expression6 { } 
+Expression5	:	"&" Expression6 { }
+Expression6	:	Value { }
+Expression 6 { }
+
+Value		:	LValue { }
+Value		:	Literal { }
+Value		:	FunctionCall { }
+       
+Label		:	Ident { }
+TypeSpec	:	"int" { }
+TypeSpec	:	"real" { }
+TypeSpec	:	"bool" { }
+TypeSpec	:	"string" { }
+TypeSpec	:	"char" { }
+TypeSpec	:	"void" { }
+Literal		:	Integer { }
+Literal		:	Double { }
+Literal		:	Char { }
+Literal		:	String { }
+Literal		:	ArrayElement { }
 
 {
 
@@ -258,60 +245,5 @@ tCompare a b = comp (a == b) where
 
 infer x = (Correct x)
 ret x = (ReturnT x)
-
---typeInfer :: Token -> Type
---typeInfer x = case x of
---   		(Int _ _) -> IntType 
---                (Double _ p) -> DoubleType
---                (Char _ p) -> CharType
---                (String _ p) -> StringType
---                (Label _ p) -> NullType
---                (BrakOpen p)-> NullType
---                (BrakClose p) -> NullType
---                (SBrakOpen p) -> NullType
---                (SBrakClose p) -> NullType
---                (CBrakOpen p) -> NullType
---                (CBrakClose p) -> NullType
---                (AssignOp p) -> NullType
---                (EqualsOp p) -> NullType
---                (DiffOp p) -> NullType
---                (LessThanOp p) -> NullType
---                (GreaterThanOp p) -> NullType
---                (ELessThanOp p) -> NullType
---                (EGreaterThanOp p) -> NullType
---                (AddOp p) -> NullType
---                (SubOp p) -> NullType
---                (MulOp p) -> NullType
---                (DivOp p) -> NullType
---                (IncOp p) -> NullType
---                (DecOp p) -> NullType
---                (Comma p) -> NullType
---                (Semicolon p) -> NullType
---                (Dereference p) -> NullType
---                (And p) -> NullType
---                (Or p) -> NullType
---                (NegOp p) -> NullType
---                (Break p) -> NullType
---                (Continue p) -> NullType
---		  (Return p) -> NullType
---                (IntLabel p) -> NullType
---                (FloatLabel p) -> NullType
---                (CharLabel p) -> NullType
---                (StringLabel p) -> NullType
---                (VoidLabel p) -> NullType
---                (ReadIntPF p) -> NullType
---                (WriteIntPF p) -> NullType
---                (ReadFloatPF p) -> NullType
---                (WriteFloatPF p) -> NullType
---                (ReadCharPF p) -> NullType
---                (WriteCharPF p) -> NullType
---                (ReadStringPF p) -> NullType
---                (WriteStringPF p) -> NullType
---                (ValRes p) -> NullType
---                (If p) -> NullType
---                (Else p) -> NullType
---                (While p) -> NullType
---                (For p) -> NullType
- 
 
 }
