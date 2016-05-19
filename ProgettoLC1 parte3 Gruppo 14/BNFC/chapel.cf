@@ -13,11 +13,11 @@ Stmt6.	Statement	::=	FuncDeclaration;
 Stmt7.	Statement	::=	WhileDo;
 Stmt8.	Statement	::=	DoWhile;
 Stmt9.	Statement	::=	For;
-Stmt10.	Statement	::=	If;
-Stmt11.	Statement	::=	TryCatch;
-Stmt12.	Statement	::=	"break" ";";
-Stmt13.	Statement	::=	"continue" ";";
-Stmt14. Statement	::=	"return" ";";
+Stmt11.	Statement	::=	If;
+Stmt12.	Statement	::=	TryCatch;
+Stmt13.	Statement	::=	"break" ";";
+Stmt14.	Statement	::=	"continue" ";";
+Stmt15. Statement	::=	"return" ";";
 
 Bstmt.	BlockStatement	::=	"{" [Statement] "}";
 
@@ -62,19 +62,17 @@ Rval1.	RValue		::=	Expression;
 Arr1.	ArrayIndex	::=	"[" Expression "]";
 separator nonempty ArrayIndex "";
 
-Arrel.	ArrayElement	::=	"("  ")";
---Arrel.	ArrayElement	::=	"(" [LiteralList] ")";
---Arrlst.	LiteralList	::=	Expression1;
---separator nonempty LiteralList ",";
+Arrel.	ArrayElement	::=	"(" [LiteralList] ")";
+Arrlst.	LiteralList	::=	Value;
+separator nonempty LiteralList ",";
 
 Wd.	WhileDo		::=	"while" Expression BlockStatement;
 Dw.	DoWhile		::=	"do" BlockStatement "while" Expression ";";
 
-If1.	If		::=	"if" Expression "then" Statement; 
-Else1.	Else		::=	Statement "else" Statement;
-Else2.	Else		::=	Statement;
-If3.	If		::=	"if" Expression BlockStatement;
-If4.	If		::=	"if" Expression BlockStatement "else" BlockStatement;
+If1.	If		::=	"if" Expression Then ; 
+If2.	If		::=	"if" Expression Then Else; 
+ThenB1.	Then		::=	"then" Statement;
+ElseB1.	Else		::=	"else" Statement;
 
 For1.	For		::=	"for" Label "in" Range BlockStatement;
 For2.	For		::=	"for" Label "in" Range "do" Statement;
@@ -97,11 +95,13 @@ Exp13.	Expression5	::=	"++" Expression6;
 Exp14.	Expression5	::=	"--" Expression6;
 Exp15.	Expression5	::=	Expression6 "++";
 Exp16.	Expression5	::=	Expression6 "--";
-Exp17.	Expression6	::=	LValue;
-Exp18.	Expression6	::=	Literal;
-Exp19.	Expression6	::=	FunctionCall;
+Exp17.	Expression6	::=	Value;
 
 coercions Expression 6;
+
+Val1.	Value		::=	LValue;
+Val2.	Value		::=	Literal;
+Val3.	Value		::=	FunctionCall;
 
 Lbl.	Label		::=	Ident;
 
@@ -114,6 +114,6 @@ Typel6.	TypeSpec	::=	"void";
 
 Ltrl1.	Literal		::=	Integer;
 Ltrl2.	Literal		::=	Double;
-Ltrl3.	Literal		::=	"\'" Char "\'";
-Ltrl4.	Literal		::=	"\"" String "\"";
+Ltrl3.	Literal		::=	Char;
+Ltrl4.	Literal		::=	String;
 Ltrl5.	Literal		::=	ArrayElement;
