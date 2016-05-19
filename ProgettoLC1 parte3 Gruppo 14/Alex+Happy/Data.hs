@@ -11,6 +11,7 @@ data Token = Comment String Pos
            | TS_Char Pos
            | TS_String Pos
            | TS_Void Pos
+           | TS_Bool Pos
            | TSB_True Pos
            | TSB_False Pos
            | PM_Value Pos

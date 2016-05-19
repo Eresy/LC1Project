@@ -1,9 +1,9 @@
 {
 -- STAND ALONE
-module Main (main) where
+--module Main (main) where
 
 -- SLAVE 
--- module Lexer (alexScanTokens) where
+module Lexer (alexScanTokens) where
 
 import Data (Token(..), Pos(..))
 }
@@ -35,6 +35,8 @@ char                                         {\x y -> TS_Char (getPos x)}
 string                                       {\x y -> TS_String (getPos x)}
 
 void                                         {\x y -> TS_Void (getPos x)}
+
+bool                                         {\x y -> TS_Bool (getPos x)}
 
 true                                         {\x y -> TSB_True (getPos x)}
 
@@ -154,7 +156,7 @@ $alp ($alp | $num | '_' )* \$?               {\x y -> Label (y,(getPos x))}
 getPos :: AlexPosn -> Pos
 getPos (AlexPn _ x y) = (x,y)
 
-main = do
-   s <-getContents
-   print (alexScanTokens s)
+--main = do
+--   s <-getContents
+--   print (alexScanTokens s)
 }
