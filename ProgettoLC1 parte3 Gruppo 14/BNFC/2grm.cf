@@ -20,7 +20,7 @@ token LReal (((digit?) '.'digit+)(('e'|'E') ('-')? digit+)?)| (digit+ ('.')?('e'
 
 rules LString ::= Char | String;
 
-rules LRange ::= Exp ".." Exp | Exp ".." | ".." Exp | ".." ;
+rules LRange ::= Exp ".." Exp ;
 
 rules TypeSpec ::= "int"| "real" | "bool" | "string" | "char" | "void" ;
 
@@ -43,33 +43,18 @@ TAss.	Type_part ::= ":" TypeSpec;
 Init.	Init_part ::= "=" Exp;
 
 ELiteral.	Exp ::= Literal_exp ;
-EVariable.	Exp ::= Variable_exp;
-ECall.		Exp ::= Call_exp;
 ECast.		Exp ::= Cast_exp;
 ELValue.	Exp ::= LValue_exp;
-EParenth.	Exp ::= Paren_exp;
-EUnary.		Exp ::= Unary_exp;
-EBinary.	Exp ::= Binary_exp;
 EIf.		Exp ::= IF_exp;
 EFor.		Exp ::= For_exp;
 
 rules Literal_exp ::= Boolean | LInt | LReal | LString | LRange | LArray ;
 
-Label.	Variable_exp ::= Id;
-
 Parens.	Paren_exp ::= "(" Exp ")";
 
 Cast.	Cast_exp ::= Exp ":" TypeSpec;
 
-rules LValue_exp ::= Variable_exp | Call_exp | Paren_exp;
-
-UnaryE.	Unary_exp ::= Unary_op Exp;
-
-rules Unary_op ::= "+" | "-" | "!" ;
-
-BinaryE. Binary_exp ::= Exp  Binary_op Exp;
-
-rules Binary_op ::= "+" | "-" | "*" | "/" | "%" | "**" | "&" | "|" | "^" | "&&" | "==" | "!=" | "<=" | ">=" | "<" | ">" ;
+rules LValue_exp ::= Call_exp | Paren_exp;
 
 rules IF_exp ::= "if" Exp "then" Exp "else" Exp | "If" Exp "then" Exp;
 
@@ -89,7 +74,7 @@ SProcDecl.	Stmt ::= Proc_Decl_stmt;
 SVarDecl.	Stmt ::= Var_Decl_stmt;
 STryCatch.	Stmt ::= TryCatch_stmt;
 
-BlockS.	Block_stmt ::= "{" [Stmt] "}";
+rules Block_stmt ::= "{" [Stmt] "}" ;
 
 separator Stmt "" ;
 
