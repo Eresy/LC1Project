@@ -36,6 +36,10 @@ string                                       {\x y -> TS_String (getPos x)}
 
 void                                         {\x y -> TS_Void (getPos x)}
 
+true                                         {\x y -> TSB_True (getPos x)}
+
+false                                        {\x y -> TSB_False (getPos x)}
+
 val                                          {\x y -> PM_Value (getPos x)}
 
 ref                                          {\x y -> PM_Reference (getPos x)}
