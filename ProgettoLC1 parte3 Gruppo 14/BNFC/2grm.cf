@@ -15,8 +15,6 @@ rules LRange ::= Exp ".." Exp ;
 rules LArray ::= "[" [Exp] "]" | "[" [Exp] "]" TypeSpec  ;
 separator  nonempty Exp ",";
 
-rules TypeSpec ::= "int"| "real" | "bool" | "string" | "char" | "void" ;
-
 VarDeclS.	Var_Decl_stmt ::= Parameter [Var_Decl] ";" ;
 rules Parameter ::= "const" | "ref" | "value" | "var" ;
 separator nonempty Var_Decl ",";
@@ -25,16 +23,10 @@ VarDecTI.	Var_Decl ::= [Id] Type_part Init_part;
 VarDecI.	Var_Decl ::= [Id] Init_part;
 VarDec.		Var_Decl ::= [Id] Type_part;
 
+rules TypeSpec ::= "int"| "real" | "bool" | "string" | "char" | "void" ;
+
 TAss.	Type_part ::= ":" TypeSpec;
 Init.	Init_part ::= "=" Exp;
-
-ELiteral.	Exp ::= Literal_exp ;
-ECast.		Exp ::= Cast_exp;
-ELValue.	Exp ::= LValue_exp;
-EIf.		Exp ::= IF_exp;
-EFor.		Exp ::= For_exp;
-
-rules Literal_exp ::= Boolean | LInt | LReal | LString | LRange | LArray ;
 
 Parens.	Paren_exp ::= "(" Exp ")";
 CasT.	Cast_exp ::= Exp ":" TypeSpec;
@@ -46,40 +38,53 @@ FunCall.	Call_exp ::= LValue_exp "(" [Named_exp] ")";
 separator nonempty Named_exp ",";
 rules Named_exp ::= Exp | Id "=" Exp ;
 
-EUnary.		Exp ::= Unary_exp;
 UnaryE.	Unary_exp ::= Unary_op Exp;
 Plus.	Unary_op ::= "+";
 Neg.	Unary_op ::= "-";
 LNeg.	Unary_op ::= "!";
 
-
+EIf.		Exp ::= IF_exp;
 rules IF_exp ::= "if" Exp "then" Exp "else" Exp | "If" Exp "then" Exp;
+
+EFor.		Exp ::= For_exp;
 rules For_exp ::= "for" Id "in" Exp "do" Exp | "for" Exp "do" Exp;
 
-SOr.	Exp  ::= Exp "||" Exp1;
-SAnd.	Exp1 ::= Exp1 "&&" Exp2;
-Eq.	Exp2 ::= Exp3 "==" Exp3;
-Neq.	Exp2 ::= Exp3 "!=" Exp3;
-Gt.	Exp4 ::= Exp5 ">" Exp5;
-GtE.	Exp4 ::= Exp5 ">=" Exp5;
-Lt.	Exp4 ::= Exp5 "<" Exp5;
-LtE.	Exp4 ::= Exp5 "<=" Exp5;
-Add.	Exp6 ::= Exp6 "+" Exp7;
-Sub.	Exp6 ::= Exp6 "-" Exp7;
-Or.	Exp7 ::= Exp7 "|" Exp8;
-Xor.	Exp8 ::= Exp8 "^" Exp9;
-And.	Exp9 ::= Exp9 "&" Exp10;
-Pos.	Exp10 ::= Unary_exp;
-Mul.	Exp11 ::= Exp11 "*" Exp12;
-Div.	Exp11 ::= Exp11 "/" Exp12;
-Mod.	Exp11 ::= Exp11 "%" Exp12;
-Not.	Exp12 ::= "!" Exp13 
-Pow.	Exp13 ::= Exp14 "**" Exp13;
-Cast.	Exp15 ::= Cast_exp;
-Fcall.	Exp16 ::= Call_exp;
+SOr.		Exp  ::= Exp "||" Exp1;
 
-coercions Exp 16;
+SAnd.		Exp1 ::= Exp1 "&&" Exp2;
+Eq.		Exp2 ::= Exp3 "==" Exp3;
 
+Neq.		Exp2 ::= Exp3 "!=" Exp3;
+
+Gt.		Exp4 ::= Exp5 ">" Exp5;
+GtE.		Exp4 ::= Exp5 ">=" Exp5;
+Lt.		Exp4 ::= Exp5 "<" Exp5;
+LtE.		Exp4 ::= Exp5 "<=" Exp5;
+
+Add.		Exp6 ::= Exp6 "+" Exp7;
+Sub.		Exp6 ::= Exp6 "-" Exp7;
+
+Or.		Exp7 ::= Exp7 "|" Exp8;
+Xor.		Exp8 ::= Exp8 "^" Exp9;
+And.		Exp9 ::= Exp9 "&" Exp10;
+EUnary.		Exp10 ::= Unary_exp;
+
+Mul.		Exp11 ::= Exp11 "*" Exp12;
+Div.		Exp11 ::= Exp11 "/" Exp12;
+Mod.		Exp11 ::= Exp11 "%" Exp12;
+
+Not.		Exp12 ::= "!" Exp13 
+Pow.		Exp13 ::= Exp14 "**" Exp13;
+
+Cast.		Exp15 ::= Cast_exp;
+Fcall.		Exp16 ::= Call_exp;
+
+ELiteral.	Exp17 ::= Literal_exp ;
+rules Literal_exp ::= Boolean | LInt | LReal | LString | LRange | LArray ;
+
+ELValue.	Exp17 ::= LValue_exp;
+
+coercions Exp 17;
 
 SBlock.		Stmt ::= Block_stmt;
 SAssign.	Stmt ::= Assign_stmt;
