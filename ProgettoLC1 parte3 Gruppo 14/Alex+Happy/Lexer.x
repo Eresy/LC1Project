@@ -12,7 +12,7 @@ import Data (Token(..), Pos(..), DualData(..))
 
 $alp = [a-zA-Z]
 $num = [0-9]
-
+$univ = [\0-\255]
 
 :-
 
@@ -24,7 +24,7 @@ $white+                                      ;
 
 $num+                                        {\x y -> Int (y,(getPos x))}
 
-$num+ "." $num+                              {\x y -> Real (y,(getPos x))}
+($num+)? "." $num+ ([Ee] '-'? $num+)?        {\x y -> Real (y,(getPos x))}
 
 int                                          {\x y -> TS_Int (getPos x)}
 
@@ -94,9 +94,9 @@ readString                                   {\x y -> PF_readString (getPos x)}
 
 writeString                                  {\x y -> PF_writeString (getPos x)}
 
-'\'' ($alp | ('\\' "\n\t")) '\''             {\x y -> Char (y,(getPos x))}
+\' ($univ #[\"\'\n]) \'                      {\x y -> Char (y,(getPos x))}
 
-'"' @string '"'                              {\x y -> String (y,(getPos x))}
+\" ($univ #[\"\'\n])* \"                     {\x y -> String (y,(getPos x))}
 
 $alp ($alp | $num | '_' )* \$?               {\x y -> Label (y,(getPos x))} 
 

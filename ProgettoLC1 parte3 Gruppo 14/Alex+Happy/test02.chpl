@@ -7,8 +7,10 @@
 
 var myVar = 10;
 var myRealVar : real = 23.999999999;
-var aaa = "strange name for a var";
-
+var myChar1 = 'c';
+var myChar2 = '/';
+var aaa = "strange name for a variable";
+var str : string = "";
 
 proc main() {
 
