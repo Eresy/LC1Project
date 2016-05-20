@@ -3,7 +3,7 @@
 module Main (main) where
 
 import Lexer (alexScanTokens)
-import Data (Token(..))
+import Data (Token(..), Pos(..), DualData(..))
 
 }
 
@@ -13,7 +13,8 @@ import Data (Token(..))
 
 %token
 	
-	comment_		{ Comment $$}
+	scomment_		{ SComment $$}
+	mcomment_		{ MComment $$}
 	int_			{ Int $$ }
 	real_			{ Real $$ }
 	char_			{ Char $$ }
@@ -65,14 +66,16 @@ import Data (Token(..))
 	sub_			{ OP_Sub $$ }
 	mul_			{ OP_Mul $$ }
 	div_			{ OP_Div $$ }
-	inc_			{ OP_Incr $$ }
-	dec_			{ OP_Decr $$ }
+	addassign_		{ OP_AddAssign $$ }
+	subassign_		{ OP_SubAssign $$ }
+	mulassign_		{ OP_MulAssign $$ }
+	divassign_		{ OP_DivAssign $$ } 
 	deref_			{ OP_Deref $$ }
 	and_			{ OP_And $$ }
 	or_			{ OP_Or $$ }
 	neg_			{ OP_Negt $$ }
-	comma_			{ OP_Comma $$ }
-	semic_			{ OP_Semicolon $$ }
+	comma_			{ Comma $$ }
+	semic_			{ Semicolon $$ }
 	var_			{ CHP_Var $$ }
 	proc_			{ CHP_Func $$ }
 	cast_			{ CHP_Cast $$ }
@@ -102,6 +105,10 @@ Statement	:	BlockStatement		{ }
 		|	break_ semic_		{ }
 		|	continue_ semic_		{ }
 		|	return_ Expression semic_	{ }
+		|	Comment				{ }
+
+Comment		:	scomment_ 			{ }
+	 	|	mcomment_			{ }
 
 BlockStatement	:	bkcOpen_ ListStatement bkcClose_		{ }
 
@@ -138,23 +145,27 @@ Range		:	Expression range_ Expression	{ }
 		|	range_ Expression 		{ }
 		|	range_ 				{ }
 
-Cast		:	cast_ TypeSpec { }
-		|	cast_ bksOpen_ Range bksClose_ TypeSpec { }
+Cast		:	cast_ TypeSpec 				{ }
+		|	cast_ MultiDimRange TypeSpec 		{ }
+MultiDimRange	:	bksOpen_ Range MoreRange bksClose_	{ }
+MoreRange	:	comma_ Range MoreRange			{ }
+	  	|						{ }
+
 
 Pointer		:	mul_ { }
 ListPointer	:	ListPointer Pointer		{ }
 		|					{ }
 
-LValue		:	Label ListArrayIndex { }
+LValue		:	Label ListArrayIndex 	{}
 
 RValue		:	Expression { }
 
 ArrayIndex	:	bksOpen_ Expression bksClose_ 	{ }
-ListArrayIndex	:	ArrayIndex ListArrayIndex{ }
-		|					{ }
+ListArrayIndex	:	ArrayIndex ListArrayIndex	{ }
+	        |	ArrayIndex			{ }
 
 ArrayElement	:	bknOpen_ ListValue bknClose_	{ }
-ListValue	:	Value ListValueC		{ }
+ListValue	:	Value comma_ Value ListValueC		{ }
 ListValueC	:	comma_ Value ListValueC		{ }
 		|					{ }
 
