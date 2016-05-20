@@ -98,7 +98,7 @@ writeString                                  {\x y -> PF_writeString (getPos x)}
 
 \" ($univ #[\"\'\n])* \"                     {\x y -> String (y,(getPos x))}
 
-$alp ($alp | $num | '_' )* \$?               {\x y -> Label (y,(getPos x))} 
+$alp ($alp | $num | "_" )* \$?               {\x y -> Label (y,(getPos x))} 
 
 \(                                           {\x y -> BK_NOpen (getPos x)}
 
