@@ -5,7 +5,7 @@
 -- SLAVE 
 module Lexer (alexScanTokens) where
 
-import Data (Token(..), Pos(..))
+import Data (Token(..), Pos(..), DualData(..))
 }
 
 %wrapper "posn"
@@ -133,6 +133,14 @@ $alp ($alp | $num | '_' )* \$?               {\x y -> Label (y,(getPos x))}
 \*                                           {\x y -> OP_Mul (getPos x)}
 
 \/                                           {\x y -> OP_Div (getPos x)}
+
+\+\=                                         {\x y -> OP_AddAssign (getPos x)}
+
+\-\=                                         {\x y -> OP_SubAssign (getPos x)}
+
+\*\=                                         {\x y -> OP_MulAssign (getPos x)}
+
+\/\=                                         {\x y -> OP_DivAssign (getPos x)}
 
 \,                                           {\x y -> Comma (getPos x)}
 
