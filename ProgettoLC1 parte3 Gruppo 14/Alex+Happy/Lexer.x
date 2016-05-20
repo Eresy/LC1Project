@@ -24,7 +24,7 @@ $white+                                      ;
 
 $num+                                        {\x y -> Int (y,(getPos x))}
 
-$num+ '.' $num+                              {\x y -> Real (y,(getPos x))}
+$num+ "." $num+                              {\x y -> Real (y,(getPos x))}
 
 int                                          {\x y -> TS_Int (getPos x)}
 
