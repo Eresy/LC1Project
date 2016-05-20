@@ -94,7 +94,7 @@ ListStatement	:	ListStatement Statement { }
 
 Statement	:	BlockStatement		{ }
 		|	Expression semic_	{ }
-		|	Assignment		{ }
+		|	Assignment semic_	{ }
 		|	Declaration semic_	{ }
 		|	FuncDeclaration		{ }
 		|	WhileDo			{ }
@@ -136,9 +136,9 @@ Mode		:	value_ 		{ }
 
 Declaration	:	var_ ListPointer Label Cast	{ }
 
-Assignment	:	LValue equals_ RValue semic_			{ }
-		|	var_ ListPointer Label equals_ RValue semic_	{ }
-		|	Declaration equals_ RValue semic_		{ }
+Assignment	:	LValue assign_ RValue 				{ }
+		|	var_ ListPointer Label assing_ RValue 		{ }
+		|	Declaration assign_ RValue 			{ }
 
 Range		:	Expression range_ Expression	{ }
 		|	Expression range_ 		{ }
@@ -152,7 +152,7 @@ MoreRange	:	comma_ Range MoreRange			{ }
 	  	|						{ }
 
 
-Pointer		:	mul_ { }
+Pointer		:	mul_ 				{ }
 ListPointer	:	Pointer ListPointer		{ }
 		|					{ }
 
