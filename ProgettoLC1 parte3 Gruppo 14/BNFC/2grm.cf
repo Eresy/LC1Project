@@ -2,20 +2,76 @@ comment "//";
 comment "/*" "*/";
 entrypoints Program;
 
-Progr.	Program ::= [Stmt];
+coercions Exp 17;
+separator Exp ",";
+
+Or.		Exp  ::= Exp "||" Exp1;
+And.		Exp1 ::= Exp1 "&&" Exp2;
+Not.		Exp2 ::= "!" Exp3 ;
+
+Eq.		Exp5 ::= Exp6 "==" Exp6;
+Neq.		Exp5 ::= Exp6 "!=" Exp6;
+Gt.		Exp5 ::= Exp6 ">"  Exp6;
+GtE.		Exp5 ::= Exp6 ">=" Exp6;
+Lt.		Exp5 ::= Exp6 "<"  Exp6;
+LtE.		Exp5 ::= Exp6 "<=" Exp6;
+
+Range.		Exp7 ::= Exp8 ".." Exp8;
+
+Add.		Exp9 ::= Exp9 "+" Exp10;
+Sub.		Exp9 ::= Exp9 "-" Exp10;
+
+Mul.		Exp10 ::= Exp10 "*" Exp11;
+Div.		Exp10 ::= Exp10 "/" Exp11;
+Mod.		Exp10 ::= Exp10 "%" Exp11;
+
+Pow.		Exp11 ::= Exp12 "**" Exp11;
+
+Neg.		Exp13 ::= "-" Exp17;
+
+Cast.		Exp15 ::= Exp ":" TypeSpec;
+
+ELiteral.	Exp16 ::= Constant ;
+
+ELValue.	Exp17 ::= LValue_exp;
+
+rules Constant ::= Boolean | Integer | LReal | LString | LArray ;
 
 token Id (letter (letter | digit | '_' )*'$'?);
 separator nonempty Id ",";
 
 rules Boolean ::= "true" | "false" ;
-token LInt digit+;
 token LReal (((digit?) '.'digit+)(('e'|'E') ('-')? digit+)?)| (digit+ ('.')?('e'|'E')('-')? digit+);
 rules LString ::= Char | String;
-rules LRange ::= Exp ".." Exp ;
 rules LArray ::= "[" [Exp] "]" | "[" [Exp] "]" TypeSpec  ;
-separator  nonempty Exp ",";
 
-VarDeclS.	Var_Decl_stmt ::= Parameter [Var_Decl] ";" ;
+rules TypeSpec ::= "int"| "real" | "bool" | "string" | "char" | "void" ;
+
+Progr.	Program ::= [Stmt];
+
+SBlock.		Stmt ::= Block_stmt;
+SAssign.	Stmt ::= LValue_exp Assignment_op Exp;
+SIO.		Stmt ::= IO_stmt;
+SCondit.	Stmt ::= Cond_stmt;
+SWhileDo.	Stmt ::= While_stmt;
+SDoWhile.	Stmt ::= Do_stmt;
+SFor.		Stmt ::= For_stmt;
+SBreak.		Stmt ::= Break_stmt ";";
+SContinue.	Stmt ::= Continue_stmt ";";
+SReturn.	Stmt ::= Return_stmt ";";
+SProcDecl.	Stmt ::= Proc_Decl_stmt;
+SVarDecl.	Stmt ::= Var_Decl_stmt ";";
+STryCatch.	Stmt ::= TryCatch_stmt;
+
+BlockS.	Block_stmt ::= "{" [Stmt] "}";
+
+rules LValue_exp ::= Id | Id "(" [Named_exp] ")" ;
+separator nonempty Named_exp ",";
+rules Named_exp ::= Exp | Id "=" Exp ;
+
+separator Stmt "" ;
+
+VarDeclS.	Var_Decl_stmt ::= Parameter [Var_Decl] ;
 rules Parameter ::= "const" | "ref" | "value" | "var" ;
 separator nonempty Var_Decl ",";
 
@@ -23,89 +79,10 @@ VarDecTI.	Var_Decl ::= [Id] Type_part Init_part;
 VarDecI.	Var_Decl ::= [Id] Init_part;
 VarDec.		Var_Decl ::= [Id] Type_part;
 
-rules TypeSpec ::= "int"| "real" | "bool" | "string" | "char" | "void" ;
-
-TAss.	Type_part ::= ":" TypeSpec;
-Init.	Init_part ::= "=" Exp;
-
-Parens.	Paren_exp ::= "(" Exp ")";
-CasT.	Cast_exp ::= Exp ":" TypeSpec;
-
-rules LValue_exp ::= Id | Call_exp | Paren_exp;
-
-FunCall.	Call_exp ::= LValue_exp "(" [Named_exp] ")";
-
-separator nonempty Named_exp ",";
-rules Named_exp ::= Exp | Id "=" Exp ;
-
-Plus.	Unary_op ::= "+";
-Neg.	Unary_op ::= "-";
-
-EIf.		Exp ::= IF_exp;
-rules IF_exp ::= "if" Exp "then" Exp "else" Exp | "If" Exp "then" Exp;
-
-EFor.		Exp ::= For_exp;
-rules For_exp ::= "for" Id "in" Exp "do" Exp | "for" Exp "do" Exp;
-
-SOr.		Exp  ::= Exp "||" Exp1;
-
-SAnd.		Exp1 ::= Exp1 "&&" Exp2;
-Eq.		Exp2 ::= Exp3 "==" Exp3;
-
-Neq.		Exp2 ::= Exp3 "!=" Exp3;
-
-Gt.		Exp4 ::= Exp5 ">" Exp5;
-GtE.		Exp4 ::= Exp5 ">=" Exp5;
-Lt.		Exp4 ::= Exp5 "<" Exp5;
-LtE.		Exp4 ::= Exp5 "<=" Exp5;
-
-Add.		Exp6 ::= Exp6 "+" Exp7;
-Sub.		Exp6 ::= Exp6 "-" Exp7;
-
-Or.		Exp7 ::= Exp7 "|" Exp8;
-Xor.		Exp8 ::= Exp8 "^" Exp9;
-And.		Exp9 ::= Exp9 "&" Exp10;
-
-EUnary.		Exp11 ::= Unary_op Exp10;
-
-Mul.		Exp12 ::= Exp12 "*" Exp13;
-Div.		Exp12 ::= Exp12 "/" Exp13;
-Mod.		Exp12 ::= Exp12 "%" Exp13;
-
-Not.		Exp14 ::= "!" Exp15 ;
-Pow.		Exp15 ::= Exp16 "**" Exp15;
-
-Cast.		Exp17 ::= Cast_exp;
-Fcall.		Exp18 ::= Call_exp;
-
-ELiteral.	Exp19 ::= Literal_exp ;
-rules Literal_exp ::= Boolean | LInt | LReal | LString | LRange | LArray ;
-
-ELValue.	Exp20 ::= LValue_exp;
-
-coercions Exp 20;
-
-SBlock.		Stmt ::= Block_stmt;
-SAssign.	Stmt ::= Assign_stmt;
-SIO.		Stmt ::= IO_stmt;
-SCondit.	Stmt ::= Cond_stmt;
-SWhileDo.	Stmt ::= While_stmt;
-SDoWhile.	Stmt ::= Do_stmt;
-SFor.		Stmt ::= For_stmt;
-SBreak.		Stmt ::= Break_stmt;
-SContinue.	Stmt ::= Continue_stmt;
-SReturn.	Stmt ::= Return_stmt;
-SProcDecl.	Stmt ::= Proc_Decl_stmt;
-SVarDecl.	Stmt ::= Var_Decl_stmt;
-STryCatch.	Stmt ::= TryCatch_stmt;
-
-BlockS.	Block_stmt ::= "{" [Stmt] "}";
-
-separator Stmt "" ;
+TAss.		Type_part ::= ":" TypeSpec;
+Init.		Init_part ::= "=" Exp;
 
 TryCatch.	TryCatch_stmt ::= "try" Stmt "catch" Stmt ; 
-
-AssignS.	Assign_stmt ::= LValue_exp Assignment_op Exp; 
 
 Assign.		Assignment_op ::= "=" ;
 AssgnAdd.	Assignment_op ::= "+=" ;
@@ -141,9 +118,9 @@ ForIn.		For_stmt ::= "for" Id "in" Exp Block_stmt;
 ForDo.		For_stmt ::= "for" Exp "do" Stmt;
 For.		For_stmt ::= "for" Exp Block_stmt;
 
-rules Break_stmt ::= "break" ";" | "break" Id ";" ;
-rules Continue_stmt ::= "continue" ";" | "continue" Id ";";
-rules Return_stmt ::= "return" ";" | "return" Exp ";" ;
+rules Break_stmt ::= "break" | "break" Id ;
+rules Continue_stmt ::= "continue" | "continue" Id ;
+rules Return_stmt ::= "return" | "return" Exp ;
 
 
 ProcDef.	Proc_Decl_stmt ::= "proc" Id Func_body;
