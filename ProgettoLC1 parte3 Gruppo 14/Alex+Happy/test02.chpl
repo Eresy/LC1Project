@@ -6,7 +6,7 @@ proc main() {
 
    proc foo(z : real, s : string) {
       while(z >= 0.0) {
-         z--;
+         z += 1;
       }
    }
 }
