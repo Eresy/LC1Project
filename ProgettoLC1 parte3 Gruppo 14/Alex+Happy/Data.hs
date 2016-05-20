@@ -1,11 +1,11 @@
 module Data where
 
-data Token = Comment String Pos
-           | Int String Pos
-           | Real String Pos
-           | Char String Pos
-           | String String Pos
-           | Label String Pos
+data Token = Comment DualData
+           | Int DualData
+           | Real DualData
+           | Char DualData
+           | String DualData
+           | Label DualData
            | TS_Int Pos
            | TS_Real Pos       
            | TS_Char Pos
@@ -67,3 +67,5 @@ data Token = Comment String Pos
            deriving(Eq, Ord, Show)
 
 type Pos = (Int, Int)
+
+type DualData = (String, Pos)
