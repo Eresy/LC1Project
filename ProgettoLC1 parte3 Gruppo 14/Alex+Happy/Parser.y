@@ -3,11 +3,11 @@
 module Main (main) where
 
 import Lexer (alexScanTokens)
-import Data (Token(..), Type(..), TypeResult(..))
+import Data (Token(..))
 
 }
 
-%name parseCLike
+%name parseChapel
 %tokentype { Token }
 %error { parseError }
 
@@ -23,7 +23,8 @@ import Data (Token(..), Type(..), TypeResult(..))
 	typeReal_		{ TS_Real $$ }
 	typeChar_		{ TS_Char $$ }
 	typeString_		{ TS_String $$ }
-	typeVoid_		{TS_Void $$ }
+	typeVoid_		{ TS_Void $$ }
+	typeBool_		{ TS_Bool $$ }
 	value_			{ PM_Value $$ }
 	reference_		{ PM_Reference $$ }
 	constant_		{ PM_Constant $$ }
@@ -36,6 +37,7 @@ import Data (Token(..), Type(..), TypeResult(..))
 	do_			{ Do $$ }
 	break_			{ Break $$ }
 	continue_		{ Continue $$ }
+	return_			{ Return $$ }
 	try_			{ Try $$ }
 	catch_			{ Catch $$ }
 	readInt_		{ PF_readInt $$ }
@@ -74,142 +76,155 @@ import Data (Token(..), Type(..), TypeResult(..))
 	var_			{ CHP_Var $$ }
 	proc_			{ CHP_Func $$ }
 	cast_			{ CHP_Cast $$ }
+	range_			{ CHP_Range $$ } 
+	true_			{ TSB_True $$ }
+	false_			{ TSB_False $$ }
 %%
 
 
 S		:	Program			{ }
+
 Program		:	ListStatement		{ }
 
 ListStatement	:	ListStatement Statement { }
 		|				{ }
 
 Statement	:	BlockStatement		{ }
-		|	Expression ";"		{ }
+		|	Expression semic_	{ }
 		|	Assignment		{ }
-		|	Declaration ";"		{ }
+		|	Declaration semic_	{ }
 		|	FuncDeclaration		{ }
 		|	WhileDo			{ }
 		|	DoWhile			{ }
-		|	For			{ }
 		|	If			{ }
+		|	For			{ }
 		|	TryCatch		{ }
-		|	"break" ";"		{ }
-		|	"continue" ";"		{ }
-		|	"return" Expression ";"	{ }
+		|	break_ semic_		{ }
+		|	continue_ semic_		{ }
+		|	return_ Expression semic_	{ }
 
-BlockStatement	:	"{" ListStatement "}"		{ }
+BlockStatement	:	bkcOpen_ ListStatement bkcClose_		{ }
 
-FunctionCall	:	Label ParameterList		{ }
+FunctionCall	:	Label ParameterA		{ }
 
-FuncDeclaration	:	"proc" Label ParameterDecl Cast BlockStatement 	{ }
-FuncDeclaration	:	"proc" Label ParameterDecl BlockStatement 	{ }
-FuncDeclaration	:	"proc" Label Cast BlockStatement 		{ }
-FuncDeclaration	:	"proc" Label BlockStatement 			{ }
+FuncDeclaration	:	proc_ Label ParameterFDecl Cast BlockStatement 	{ }
+		|	proc_ Label ParameterFDecl BlockStatement 	{ }
+		|	proc_ Label Cast BlockStatement 		{ }
+		|	proc_ Label BlockStatement 			{ }
 
-ParameterDecl	:	"(" [Parameter] ")" 				{ }
-Parameter	:	Mode Label Cast 				{ }
-"," { }
-.	ParameterList	:	"(" [Expression] ")" 			{ }
-"," { }
+ParameterFDecl	:	bknOpen_ ListParameterF bknClose_ 	{ }
+ParameterF	:	Mode Label Cast 			{ }
+ListParameterF	:	ListParameterF ParameterF			{ }
+		|						{ }
 
-Mode		:	"val" 		{ }
-Mode		:	"ref" 		{ }
-Mode		:	"const" 	{ }
-Mode		:	 		{ }
+ParameterA	:	bknOpen_ ListExpression bknClose_ 	{ }
+ListExpression	:	Expression ListExpressionC 		{ }
+ListExpressionC :	comma_ Expression ListExpressionC	{ }
+		|						{ }
 
-Declaration	:	"var" [Pointer] Label Cast { }
+Mode		:	value_ 		{ }
+		|	reference_	{ }
+		|	constant_ 	{ }
+ 		|			{ }
 
-Assignment	:	Label "=" RValue " { }" { }
-Assignment	:	"var" [Pointer] Label "=" RValue " { }" { }
-Assignment	:	Declaration "=" RValue " { }" { }
+Declaration	:	var_ ListPointer Label Cast	{ }
 
-Range		:	Expression ".." Expression { }
-Range		:	Expression ".." { }
-Range		:	 ".." Expression { }
-Range		:	 ".." { }
+Assignment	:	Label equals_ RValue semic_			{ }
+		|	var_ ListPointer Label equals_ RValue semic_	{ }
+		|	Declaration equals_ RValue semic_		{ }
 
-Cast		:	":" TypeSpec { }
-Cast		:	":" "[" Range "]" TypeSpec { }
+Range		:	Expression range_ Expression	{ }
+		|	Expression range_ 		{ }
+		|	range_ Expression 		{ }
+		|	range_ 				{ }
 
-Pointer		:	"*" { }
-"" { }
+Cast		:	cast_ TypeSpec { }
+		|	cast_ bksOpen_ Range bksClose_ TypeSpec { }
 
-LValue		:	Label { }
-LValue		:	Label [ArrayIndex] { }
+Pointer		:	mul_ { }
+ListPointer	:	ListPointer Pointer		{ }
+		|					{ }
+
+LValue		:	Label ListArrayIndex { }
 
 RValue		:	Expression { }
 
-ArrayIndex	:	"[" Expression "]" { }
-ArrayIndex "" { }
-ArrayElement	:	"(" [LiteralList] ")" { }
+ArrayIndex	:	bksOpen_ Expression bksClose_ 	{ }
+ListArrayIndex	:	ArrayIndex ListArrayIndex{ }
+		|					{ }
 
-LiteralList	:	Value { }
-LiteralList "," { }
+ArrayElement	:	bknOpen_ ListValue bknClose_	{ }
+ListValue	:	Value ListValueC		{ }
+ListValueC	:	comma_ Value ListValueC		{ }
+		|					{ }
 
-WhileDo		:	"while" Expression BlockStatement { }
-DoWhile		:	"do" BlockStatement "while" Expression " { }" { }
+WhileDo		:	while_ Expression BlockStatement { }
+DoWhile		:	do_ BlockStatement while_ Expression semic_ { }
 
-If		:	"if" Expression BlockStatement { } 
-If		:	"if" Expression BlockStatement "else" BlockStatement	{ } 
+If		:	if_ Expression BlockStatement { } 
+		|	if_ Expression BlockStatement else_ BlockStatement	{ } 
 
-For		:	"for" Label "in" Range BlockStatement { }
-For		:	"for" Label "in" Range "do" Statement { }
+For		:	for_ Label in_ Range BlockStatement 	{ }
+		|	for_ Label in_ Range do_ Statement 	{ }
 
-TryCatch	:	"try" Statement "catch" Statement { }
+TryCatch	:	try_ Statement catch_ Statement { }
 
-Expression1	:	Expression1 "&&" Expression2 { }
-Expression1	:	Expression1 "||" Expression2 { }
-Expression2	:	"!" Expression3 { }
-Expression3	:	Expression3 "==" Expression4 { }
-Expression3	:	Expression3 "<" Expression4 { }
-Expression3	:	Expression3 ">" Expression4 { }
-Expression3	:	Expression3 "<=" Expression4 { }
-Expression3	:	Expression3 ">=" Expression4 { }
-Expression4	:	Expression4 "+" Expression5 { }
-Expression4	:	Expression4 "-" Expression5 { }
-Expression4	:	Expression4 "*" Expression5 { }
-Expression4	:	Expression4 "/" Expression5 { }
-Expression5	:	"++" Expression6 { }
-Expression5	:	"--" Expression6 { }
-Expression5	:	Expression6 "++" { }
-Expression5	:	Expression6 "--" { }
-Expression5	:	"*" Expression6 { } 
-Expression5	:	"&" Expression6 { }
-Expression6	:	Value { }
-Expression 6 { }
+Expression	:	Expression1				{ }
+Expression1	:	Expression1 and_ Expression2 		{ }
+		|	Expression1 or_ Expression2 		{ }
+		|	Expression2				{ }
+Expression2	:	neg_ Expression3 			{ }
+	    	|	Expression3				{ }
+Expression3	:	Expression3 equals_ Expression4 	{ }
+		|	Expression3 lessthan_ Expression4 	{ }
+		|	Expression3 greatthan_ Expression4 	{ }
+		|	Expression3 lessthaneq_ Expression4 	{ }
+		|	Expression3 greatthaneq_ Expression4 	{ }
+		|	Expression4				{ }
+Expression4	:	Expression4 add_ Expression5 	{ }
+		|	Expression4 sub_ Expression5 	{ }
+		|	Expression4 mul_ Expression5 	{ }
+		|	Expression4 div_ Expression5 	{ }
+		|	Expression5			{ }
+Expression5	:	mul_ Expression6 		{ } 
+		|	deref_ Expression6		{ }
+		|	Expression6			{ }
+Expression6	:	Value 				{ }
+		|	bknOpen_ Expression1 bknClose_	{ }
 
-Value		:	LValue { }
-Value		:	Literal { }
-Value		:	FunctionCall { }
+Value		:	LValue		{ }
+		|	Literal 	{ }
+		|	FunctionCall 	{ }
        
-Label		:	Ident { }
-TypeSpec	:	"int" { }
-TypeSpec	:	"real" { }
-TypeSpec	:	"bool" { }
-TypeSpec	:	"string" { }
-TypeSpec	:	"char" { }
-TypeSpec	:	"void" { }
-Literal		:	Integer { }
-Literal		:	Double { }
-Literal		:	Char { }
-Literal		:	String { }
-Literal		:	ArrayElement { }
+Label		:	label_		{ }
 
+TypeSpec	:	typeInt_	{ }
+		|	typeReal_	{ }
+		|	typeBool_	{ }
+		|	typeString_	{ }
+		|	typeChar_	{ }
+		|	typeVoid_	{ }
+
+Literal		:	int_ 		{ }
+		|	real_ 		{ }
+		|	char_ 		{ }
+		|	string_ 	{ }
+		|	ArrayElement 	{ }
+		|	true_		{ }
+		|	false_		{ }
 {
 
 main = do
     s <- getContents
     let tok = alexScanTokens s
-    print $ parseCLike tok
+    print $ parseChapel tok
     print tok
-
---main = getContents >>= print . parseCLike . alexScanTokens
 
 parseError :: [Token] -> a
 parseError (tok:toks) = error ("Parse error: " ++ show tok ++ " at invalid postion.\n\nStack Trace:\n "++ show toks ++ "\n")
 parseError [] = error "casini!"
 parseError _ = error "OhOh!"
-
+{-
 isCorrect :: TypeResult -> TypeResult -> TypeResult
 isCorrect x@(Correct a) (Correct b) = x
 isCorrect (Correct _) x@(ReturnT _) = x
@@ -245,5 +260,5 @@ tCompare a b = comp (a == b) where
 
 infer x = (Correct x)
 ret x = (ReturnT x)
-
+-}
 }
