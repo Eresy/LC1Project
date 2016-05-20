@@ -57,7 +57,7 @@ import Data
 	bkcClose_		{ BK_CClos $$ }
 	assign_			{ OP_Assign $$ }
 	equals_			{ OP_Equal $$ }
-	nequal_			{ OP_NEqual $$ }
+	nequals_		{ OP_NEqual $$ }
 	lessthan_		{ OP_LesThn $$ }
 	lessthaneq_		{ OP_LesThnEq $$ }
 	greatthan_		{ OP_GrtThn $$ }
@@ -184,7 +184,7 @@ RValue		:	Expression	{ }
 
 ArrayIndex	:	bksOpen_ Expression bksClose_ 	{ }
 ListArrayIndex	:	ArrayIndex ListArrayIndex	{ }
-	|	ArrayIndex			{ }
+		|	ArrayIndex			{ }
 
 ArrayElement	:	bknOpen_ ListValue bknClose_	{ }
 ListValue	:	Value comma_ Value ListValueC		{ }
@@ -194,8 +194,9 @@ ListValueC	:	comma_ Value ListValueC		{ }
 WhileDo		:	while_ Expression BlockStatement { }
 DoWhile		:	do_ BlockStatement while_ Expression semic_ { }
 
-If		:	if_ Expression BlockStatement { } 
+If		:	if_ Expression BlockStatement 				{ } 
 		|	if_ Expression BlockStatement else_ BlockStatement	{ } 
+		|	if_ Expression then_ Statement				{ }
 
 For		:	for_ Label in_ Range BlockStatement 	{ }
 		|	for_ Label in_ Range do_ Statement 	{ }
@@ -209,6 +210,7 @@ Expression1	:	Expression1 and_ Expression2 		{ }
 Expression2	:	neg_ Expression3 			{ }
 	    	|	Expression3				{ }
 Expression3	:	Expression3 equals_ Expression4 	{ }
+		|	Expression3 nequals_ Expression4	{ }
 		|	Expression3 lessthan_ Expression4 	{ }
 		|	Expression3 greatthan_ Expression4 	{ }
 		|	Expression3 lessthaneq_ Expression4 	{ }
@@ -230,7 +232,6 @@ Expression7	:	Value 				{ }
 
 Value		:	LValue		{ }
 		|	Literal 	{ }
-
 		|	FunctionCall 	{ }
        
 Label		:	label_		{ }
