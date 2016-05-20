@@ -1,38 +1,24 @@
 comment "//";
 comment "/*" "*/";
-
 entrypoints Program;
 
 Progr.	Program ::= [Stmt];
-{--
-separator nonempty Test "";
-Prog. Prog ::= [Test];
-rules	Test ::= Id | Boolean | LInt | LReal | LString | TypeSpec;
---}
+
 token Id (letter (letter | digit | '_' )*'$'?);
 separator nonempty Id ",";
 
 rules Boolean ::= "true" | "false" ;
-
 token LInt digit+;
-
 token LReal (((digit?) '.'digit+)(('e'|'E') ('-')? digit+)?)| (digit+ ('.')?('e'|'E')('-')? digit+);
-
 rules LString ::= Char | String;
-
 rules LRange ::= Exp ".." Exp ;
+rules LArray ::= "[" [Exp] "]" | "[" [Exp] "]" TypeSpec  ;
+separator  nonempty Exp ",";
 
 rules TypeSpec ::= "int"| "real" | "bool" | "string" | "char" | "void" ;
 
-rules LArray ::= "[" [Exp] "]" | "[" [Exp] "]" TypeSpec  ;
-
-separator  nonempty Exp ",";
-
 VarDeclS.	Var_Decl_stmt ::= Parameter [Var_Decl] ";" ;
-
 rules Parameter ::= "const" | "ref" | "value" | "var" ;
---	var is used for declaring regular variables in chapel
-
 separator nonempty Var_Decl ",";
 
 VarDecTI.	Var_Decl ::= [Id] Type_part Init_part;
@@ -51,14 +37,49 @@ EFor.		Exp ::= For_exp;
 rules Literal_exp ::= Boolean | LInt | LReal | LString | LRange | LArray ;
 
 Parens.	Paren_exp ::= "(" Exp ")";
+CasT.	Cast_exp ::= Exp ":" TypeSpec;
 
-Cast.	Cast_exp ::= Exp ":" TypeSpec;
+rules LValue_exp ::= Id | Call_exp | Paren_exp;
 
-rules LValue_exp ::= Call_exp | Paren_exp;
+FunCall.	Call_exp ::= LValue_exp "(" [Named_exp] ")";
+
+separator nonempty Named_exp ",";
+rules Named_exp ::= Exp | Id "=" Exp ;
+
+EUnary.		Exp ::= Unary_exp;
+UnaryE.	Unary_exp ::= Unary_op Exp;
+Plus.	Unary_op ::= "+";
+Neg.	Unary_op ::= "-";
+LNeg.	Unary_op ::= "!";
+
 
 rules IF_exp ::= "if" Exp "then" Exp "else" Exp | "If" Exp "then" Exp;
-
 rules For_exp ::= "for" Id "in" Exp "do" Exp | "for" Exp "do" Exp;
+
+SOr.	Exp  ::= Exp "||" Exp1;
+SAnd.	Exp1 ::= Exp1 "&&" Exp2;
+Eq.	Exp2 ::= Exp3 "==" Exp3;
+Neq.	Exp2 ::= Exp3 "!=" Exp3;
+Gt.	Exp4 ::= Exp5 ">" Exp5;
+GtE.	Exp4 ::= Exp5 ">=" Exp5;
+Lt.	Exp4 ::= Exp5 "<" Exp5;
+LtE.	Exp4 ::= Exp5 "<=" Exp5;
+Add.	Exp6 ::= Exp6 "+" Exp7;
+Sub.	Exp6 ::= Exp6 "-" Exp7;
+Or.	Exp7 ::= Exp7 "|" Exp8;
+Xor.	Exp8 ::= Exp8 "^" Exp9;
+And.	Exp9 ::= Exp9 "&" Exp10;
+Pos.	Exp10 ::= Unary_exp;
+Mul.	Exp11 ::= Exp11 "*" Exp12;
+Div.	Exp11 ::= Exp11 "/" Exp12;
+Mod.	Exp11 ::= Exp11 "%" Exp12;
+Not.	Exp12 ::= "!" Exp13 
+Pow.	Exp13 ::= Exp14 "**" Exp13;
+Cast.	Exp15 ::= Cast_exp;
+Fcall.	Exp16 ::= Call_exp;
+
+coercions Exp 16;
+
 
 SBlock.		Stmt ::= Block_stmt;
 SAssign.	Stmt ::= Assign_stmt;
@@ -74,7 +95,7 @@ SProcDecl.	Stmt ::= Proc_Decl_stmt;
 SVarDecl.	Stmt ::= Var_Decl_stmt;
 STryCatch.	Stmt ::= TryCatch_stmt;
 
-rules Block_stmt ::= "{" [Stmt] "}" ;
+BlockS.	Block_stmt ::= "{" [Stmt] "}";
 
 separator Stmt "" ;
 
@@ -120,11 +141,6 @@ rules Break_stmt ::= "break" ";" | "break" Id ";" ;
 rules Continue_stmt ::= "continue" ";" | "continue" Id ";";
 rules Return_stmt ::= "return" ";" | "return" Exp ";" ;
 
-FunCall.	Call_exp ::= LValue_exp "(" [Named_exp] ")";
-Fname.		Call_exp ::= Id ;
-
-separator nonempty Named_exp ",";
-rules Named_exp ::= Exp | Id "=" Exp ;
 
 ProcDef.	Proc_Decl_stmt ::= "proc" Id Func_body;
 ProcDefArg.	Proc_Decl_stmt ::= "proc" Id Arg_list Func_body;
