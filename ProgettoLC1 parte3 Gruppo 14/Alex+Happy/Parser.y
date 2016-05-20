@@ -137,7 +137,7 @@ Mode		:	value_ 		{ }
 Declaration	:	var_ ListPointer Label Cast	{ }
 
 Assignment	:	LValue assign_ RValue 				{ }
-		|	var_ ListPointer Label assing_ RValue 		{ }
+		|	var_ ListPointer Label assign_ RValue 		{ }
 		|	Declaration assign_ RValue 			{ }
 
 Range		:	Expression range_ Expression	{ }
