@@ -20,8 +20,8 @@ data Stmt = Stmt1 BlockStmt Pos
           | Stmt14 Cmt Pos
           deriving(Eq, Ord, Show)
 
-data FlCtr  = Continue 
-            | Break
+data FlCtr  = Cont 
+            | Brk
             deriving(Eq, Ord, Show) 
 
 data Rtrn = Ret1 Exp

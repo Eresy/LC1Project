@@ -4,6 +4,7 @@ module Main (main) where
 
 import Lexer (alexScanTokens)
 import Data 
+import AST
 
 }
 
