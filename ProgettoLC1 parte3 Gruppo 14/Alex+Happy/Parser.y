@@ -136,7 +136,7 @@ Mode		:	value_ 		{ }
 
 Declaration	:	var_ ListPointer Label Cast	{ }
 
-Assignment	:	Label equals_ RValue semic_			{ }
+Assignment	:	LValue equals_ RValue semic_			{ }
 		|	var_ ListPointer Label equals_ RValue semic_	{ }
 		|	Declaration equals_ RValue semic_		{ }
 
@@ -153,10 +153,11 @@ MoreRange	:	comma_ Range MoreRange			{ }
 
 
 Pointer		:	mul_ { }
-ListPointer	:	ListPointer Pointer		{ }
+ListPointer	:	Pointer ListPointer		{ }
 		|					{ }
 
-LValue		:	Label ListArrayIndex 	{}
+LValue		:	Label ListArrayIndex 	{ }
+		|	Label			{ }
 
 RValue		:	Expression { }
 
@@ -228,8 +229,8 @@ Literal		:	int_ 		{ }
 main = do
     s <- getContents
     let tok = alexScanTokens s
-    print $ parseChapel tok
     print tok
+    print $ parseChapel tok
 
 parseError :: [Token] -> a
 parseError (tok:toks) = error ("Parse error: " ++ show tok ++ " at invalid postion.\n\nStack Trace:\n "++ show toks ++ "\n")
