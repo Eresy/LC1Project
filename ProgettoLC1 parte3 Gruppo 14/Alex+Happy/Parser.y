@@ -3,7 +3,7 @@
 module Main (main) where
 
 import Lexer (alexScanTokens)
-import Data (Token(..), Pos(..), DualData(..))
+import Data 
 
 }
 
@@ -105,6 +105,7 @@ Statement	:	BlockStatement		{ }
 		|	break_ semic_		{ }
 		|	continue_ semic_		{ }
 		|	return_ Expression semic_	{ }
+		|	return_ NamedAssignment semic_	{ }
 		|	Comment				{ }
 
 Comment		:	scomment_ 			{ }
@@ -112,7 +113,15 @@ Comment		:	scomment_ 			{ }
 
 BlockStatement	:	bkcOpen_ ListStatement bkcClose_		{ }
 
-FunctionCall	:	Label ParameterA		{ }
+FunctionCall	:	Label ParameterA				{ }
+		|	readInt_ bknOpen_ bknClose_			{ }
+		|	writeInt_ bknOpen_ Expression bknClose_		{ }
+		|	readReal_ bknOpen_ bknClose_			{ }
+		|	writeReal_ bknOpen_ Expression bknClose_	{ }
+		|	readChar_ bknOpen_ bknClose_			{ }
+		|	writeChar_ bknOpen_ Expression bknClose_	{ }
+		|	readString_ bknOpen_ bknClose_			{ }
+		|	writeString_ bknOpen_ Expression bknClose_	{ }
 
 FuncDeclaration	:	proc_ Label ParameterFDecl Cast BlockStatement 	{ }
 		|	proc_ Label ParameterFDecl BlockStatement 	{ }
@@ -128,6 +137,7 @@ ListParameterFC	:	comma_ ParameterF ListParameterFC	{ }
 
 ParameterA	:	bknOpen_ ListExpression bknClose_ 	{ }
 ListExpression	:	Expression ListExpressionC 		{ }
+	        |						{ }
 ListExpressionC :	comma_ Expression ListExpressionC	{ }
 		|						{ }
 
@@ -138,9 +148,17 @@ Mode		:	value_ 		{ }
 
 Declaration	:	var_ ListPointer Label Cast	{ }
 
-Assignment	:	LValue assign_ RValue 				{ }
-		|	var_ ListPointer Label assign_ RValue 		{ }
+Assignment	:	NamedAssignment 				{ }
+		|	var_ ListPointer Label assign_ RValue		{ }
 		|	Declaration assign_ RValue 			{ }
+
+NamedAssignment	:	LValue AssignOps RValue 	{ }
+
+AssignOps	:	assign_		{ }
+	 	|	addassign_	{ }
+		|	subassign_	{ }
+		|	mulassign_	{ }
+		|	divassign_	{ }
 
 Range		:	Expression range_ Expression	{ }
 		|	Expression range_ 		{ }
@@ -161,11 +179,12 @@ ListPointer	:	Pointer ListPointer		{ }
 LValue		:	Label ListArrayIndex 	{ }
 		|	Label			{ }
 
-RValue		:	Expression { }
+RValue		:	Expression	{ }
+		|	NamedAssignment	{ }
 
 ArrayIndex	:	bksOpen_ Expression bksClose_ 	{ }
 ListArrayIndex	:	ArrayIndex ListArrayIndex	{ }
-	        |	ArrayIndex			{ }
+	|	ArrayIndex			{ }
 
 ArrayElement	:	bknOpen_ ListValue bknClose_	{ }
 ListValue	:	Value comma_ Value ListValueC		{ }
@@ -195,15 +214,13 @@ Expression3	:	Expression3 equals_ Expression4 	{ }
 		|	Expression3 lessthaneq_ Expression4 	{ }
 		|	Expression3 greatthaneq_ Expression4 	{ }
 		|	Expression4				{ }
-Expression4	:	Expression4 addassign_ Expression5	{ }
-		|	Expression4 subassign_ Expression5	{ }
-		|	Expression4 mulassign_ Expression5	{ }
-		|	Expression4 divassign_ Expression5	{ }
-		|	Expression5				{ }
-Expression5	:	Expression5 add_ Expression6 	{ }
-		|	Expression5 sub_ Expression6 	{ }
-		|	Expression5 mul_ Expression6 	{ }
-		|	Expression5 div_ Expression6 	{ }
+Expression4	:	Expression4 add_ Expression5 	{ }
+		|	Expression4 sub_ Expression5 	{ }
+		|	Expression4 mul_ Expression5 	{ }
+		|	Expression4 div_ Expression5 	{ }
+		|	Expression5			{ }
+Expression5	:	sub_ Expression6		{ }
+	    	|	add_ Expression6		{ }
 		|	Expression6			{ }
 Expression6	:	mul_ Expression7 		{ } 
 		|	deref_ Expression7		{ }
@@ -213,6 +230,7 @@ Expression7	:	Value 				{ }
 
 Value		:	LValue		{ }
 		|	Literal 	{ }
+
 		|	FunctionCall 	{ }
        
 Label		:	label_		{ }
@@ -239,45 +257,7 @@ main = do
     print tok
     print $ parseChapel tok
 
-parseError :: [Token] -> a
-parseError (tok:toks) = error ("Parse error: " ++ show tok ++ " at invalid postion.\n\nStack Trace:\n "++ show toks ++ "\n")
-parseError [] = error "casini!"
-parseError _ = error "OhOh!"
-{-
-isCorrect :: TypeResult -> TypeResult -> TypeResult
-isCorrect x@(Correct a) (Correct b) = x
-isCorrect (Correct _) x@(ReturnT _) = x
-isCorrect x@(ReturnT _) (Correct _) = x
-isCorrect x@(Error _ _) _ = error ("Type error!")
-isCorrect _ x@(Error _ _) = error ("Type error!")
-isCorrect Null x = x
-isCorrect x Null = x
-isCorrect Null Null = Null
+parseError (tok:toks) = error ("Parser Error:" ++ show tok ++ " at invalid position.")
 
-instance Monad TypeResult where
-	TypeResult a >>= f = f a
-	return a = (Correct a)
-	fail str = 
-	catch a f = case a of
-		(Correct a) -> (Correct a)
-		(Error a b) -> f a
 
-typeCompare :: TypeResult -> TypeResult -> TypeResult
-typeCompare (Correct a) (Correct b) = tCompare a b
-typeCompare (ReturnT a) (Correct b) = tCompare a b
-typeCompare (Correct a) (ReturnT b)= tCompare a b
-typeCompare x@(Error _ _) _ = x
-typeCompare _ x@(Error _ _) = x
-typeCompare Null x = x
-typeCompare x Null = x
-typeCompare Null Null = Null
-
-tCompare :: Type -> Type -> TypeResult
-tCompare a b = comp (a == b) where
-    comp True = (Correct a)
-    comp False = Error a b
-
-infer x = (Correct x)
-ret x = (ReturnT x)
--}
 }
