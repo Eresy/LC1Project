@@ -58,6 +58,10 @@ data Token = Comment DualData
            | OP_And Pos
            | OP_Or Pos
            | OP_Negt Pos
+           | OP_AddAssign Pos
+           | OP_SubAssign Pos
+           | OP_MulAssign Pos
+           | OP_DivAssign Pos
            | Comma Pos
            | Semicolon Pos
            | CHP_Var Pos
