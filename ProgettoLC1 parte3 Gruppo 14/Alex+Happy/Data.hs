@@ -1,6 +1,7 @@
 module Data where
 
-data Token = Comment DualData
+data Token = SComment DualData
+           | MComment DualData
            | Int DualData
            | Real DualData
            | Char DualData
