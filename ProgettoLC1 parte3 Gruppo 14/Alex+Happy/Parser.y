@@ -121,7 +121,9 @@ FuncDeclaration	:	proc_ Label ParameterFDecl Cast BlockStatement 	{ }
 
 ParameterFDecl	:	bknOpen_ ListParameterF bknClose_ 	{ }
 ParameterF	:	Mode Label Cast 			{ }
-ListParameterF	:	ListParameterF ParameterF			{ }
+ListParameterF	:	ParameterF ListParameterFC		{ }
+	        |						{ }
+ListParameterFC	:	comma_ ParameterF ListParameterFC	{ }
 		|						{ }
 
 ParameterA	:	bknOpen_ ListExpression bknClose_ 	{ }
@@ -193,15 +195,20 @@ Expression3	:	Expression3 equals_ Expression4 	{ }
 		|	Expression3 lessthaneq_ Expression4 	{ }
 		|	Expression3 greatthaneq_ Expression4 	{ }
 		|	Expression4				{ }
-Expression4	:	Expression4 add_ Expression5 	{ }
-		|	Expression4 sub_ Expression5 	{ }
-		|	Expression4 mul_ Expression5 	{ }
-		|	Expression4 div_ Expression5 	{ }
-		|	Expression5			{ }
-Expression5	:	mul_ Expression6 		{ } 
-		|	deref_ Expression6		{ }
+Expression4	:	Expression4 addassign_ Expression5	{ }
+		|	Expression4 subassign_ Expression5	{ }
+		|	Expression4 mulassign_ Expression5	{ }
+		|	Expression4 divassign_ Expression5	{ }
+		|	Expression5				{ }
+Expression5	:	Expression5 add_ Expression6 	{ }
+		|	Expression5 sub_ Expression6 	{ }
+		|	Expression5 mul_ Expression6 	{ }
+		|	Expression5 div_ Expression6 	{ }
 		|	Expression6			{ }
-Expression6	:	Value 				{ }
+Expression6	:	mul_ Expression7 		{ } 
+		|	deref_ Expression7		{ }
+		|	Expression7			{ }
+Expression7	:	Value 				{ }
 		|	bknOpen_ Expression1 bknClose_	{ }
 
 Value		:	LValue		{ }

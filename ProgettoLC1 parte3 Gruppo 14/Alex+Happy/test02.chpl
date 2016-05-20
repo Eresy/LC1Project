@@ -1,5 +1,5 @@
 var a$ = 79;
-var b = "dio" : string
+var b = "dio";
 
 proc main() {
    var loc : int;
