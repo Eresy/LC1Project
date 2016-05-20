@@ -38,10 +38,8 @@ FunCall.	Call_exp ::= LValue_exp "(" [Named_exp] ")";
 separator nonempty Named_exp ",";
 rules Named_exp ::= Exp | Id "=" Exp ;
 
-UnaryE.	Unary_exp ::= Unary_op Exp;
 Plus.	Unary_op ::= "+";
 Neg.	Unary_op ::= "-";
-LNeg.	Unary_op ::= "!";
 
 EIf.		Exp ::= IF_exp;
 rules IF_exp ::= "if" Exp "then" Exp "else" Exp | "If" Exp "then" Exp;
@@ -67,24 +65,25 @@ Sub.		Exp6 ::= Exp6 "-" Exp7;
 Or.		Exp7 ::= Exp7 "|" Exp8;
 Xor.		Exp8 ::= Exp8 "^" Exp9;
 And.		Exp9 ::= Exp9 "&" Exp10;
-EUnary.		Exp10 ::= Unary_exp;
 
-Mul.		Exp11 ::= Exp11 "*" Exp12;
-Div.		Exp11 ::= Exp11 "/" Exp12;
-Mod.		Exp11 ::= Exp11 "%" Exp12;
+EUnary.		Exp11 ::= Unary_op Exp10;
 
-Not.		Exp12 ::= "!" Exp13 
-Pow.		Exp13 ::= Exp14 "**" Exp13;
+Mul.		Exp12 ::= Exp12 "*" Exp13;
+Div.		Exp12 ::= Exp12 "/" Exp13;
+Mod.		Exp12 ::= Exp12 "%" Exp13;
 
-Cast.		Exp15 ::= Cast_exp;
-Fcall.		Exp16 ::= Call_exp;
+Not.		Exp14 ::= "!" Exp15 ;
+Pow.		Exp15 ::= Exp16 "**" Exp15;
 
-ELiteral.	Exp17 ::= Literal_exp ;
+Cast.		Exp17 ::= Cast_exp;
+Fcall.		Exp18 ::= Call_exp;
+
+ELiteral.	Exp19 ::= Literal_exp ;
 rules Literal_exp ::= Boolean | LInt | LReal | LString | LRange | LArray ;
 
-ELValue.	Exp17 ::= LValue_exp;
+ELValue.	Exp20 ::= LValue_exp;
 
-coercions Exp 17;
+coercions Exp 20;
 
 SBlock.		Stmt ::= Block_stmt;
 SAssign.	Stmt ::= Assign_stmt;
