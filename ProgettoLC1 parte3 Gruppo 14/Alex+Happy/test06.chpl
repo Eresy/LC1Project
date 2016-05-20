@@ -11,7 +11,6 @@ proc main() {
    }
 
    if (user_input$ != -1) then print(user_input$);
-   else return -1; 
 }
 
 proc print(v : int) {
