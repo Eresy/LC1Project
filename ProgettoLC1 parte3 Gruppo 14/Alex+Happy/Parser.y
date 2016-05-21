@@ -105,8 +105,8 @@ Statement	:	BlockStatement		{ Stmt1 $1 }
 		|	TryCatch		{ Stmt10 $1 }
 		|	break_ semic_		{ Stmt11 Brk }
 		|	continue_ semic_		{ Stmt11 Cont }
-		|	return_ Expression semic_	{ Stmt12 $2 }
-		|	return_ NamedAssignment semic_	{ Stmt12 $2 }
+		|	return_ Expression semic_	{ Stmt12 (Ret1 $2) }
+		|	return_ NamedAssignment semic_	{ Stmt12 (Ret2 $2) }
 		|	Comment				{ Stmt13 $1 }
 
 Comment		:	scomment_ 			{ SCmt (fst $1) }
@@ -115,14 +115,14 @@ Comment		:	scomment_ 			{ SCmt (fst $1) }
 BlockStatement	:	bkcOpen_ ListStatement bkcClose_		{ Blk $2 }
 
 FunctionCall	:	Label ParameterA				{ FCall $1 $2 }
-		|	readInt_ bknOpen_ bknClose_			{ ReadInt (snd $1) }
-		|	writeInt_ bknOpen_ Expression bknClose_		{ WriteInt $3 (snd $1) }
-		|	readReal_ bknOpen_ bknClose_			{ ReadReal (snd $1) }
-		|	writeReal_ bknOpen_ Expression bknClose_	{ WriteReal $3 (snd $1) }
-		|	readChar_ bknOpen_ bknClose_			{ ReadChar (snd $1) }
-		|	writeChar_ bknOpen_ Expression bknClose_	{ WriteChar $3 (snd $1) }
-		|	readString_ bknOpen_ bknClose_			{ ReadString (snd $1) }
-		|	writeString_ bknOpen_ Expression bknClose_	{ WriteString $3 (snd $1) }
+		|	readInt_ bknOpen_ bknClose_			{ ReadInt $1 }
+		|	writeInt_ bknOpen_ Expression bknClose_		{ WriteInt $3 $1 }
+		|	readReal_ bknOpen_ bknClose_			{ ReadReal $1 }
+		|	writeReal_ bknOpen_ Expression bknClose_	{ WriteReal $3 $1 }
+		|	readChar_ bknOpen_ bknClose_			{ ReadChar $1 }
+		|	writeChar_ bknOpen_ Expression bknClose_	{ WriteChar $3 $1 }
+		|	readString_ bknOpen_ bknClose_			{ ReadString $1 }
+		|	writeString_ bknOpen_ Expression bknClose_	{ WriteString $3 $1 }
 
 FuncDeclaration	:	proc_ Label ParameterFDecl Cast BlockStatement 	{ FullDecl $2 $3 $4 $5 }
 		|	proc_ Label ParameterFDecl BlockStatement 	{ NoCastDecl $2 $3 $4 }
@@ -195,9 +195,9 @@ ListValueC	:	comma_ Value ListValueC		{ $2 : $3}
 WhileDo		:	while_ Expression BlockStatement { WD $2 $3 }
 DoWhile		:	do_ BlockStatement while_ Expression semic_ { DW $2 $4 }
 
-If		:	if_ Expression BlockStatement 				{ OneLineIf $2 $3 } 
+If		:	if_ Expression BlockStatement 				{ IfBlock $2 $3 } 
 		|	if_ Expression BlockStatement else_ BlockStatement	{ IfElseBlock $2 $3 $5} 
-		|	if_ Expression then_ Statement				{ IfBlock $2 $4}
+		|	if_ Expression then_ Statement				{ OneLineIf $2 $4}
 
 For		:	for_ Label in_ Range BlockStatement 	{ ForBlk $2 $4 $5 }
 		|	for_ Label in_ Range do_ Statement 	{ ForSmp $2 $4 $6 }
@@ -237,20 +237,20 @@ Value		:	LValue		{ VExp3 $1 }
        
 Label		:	label_		{ (fst $1) }
 
-TypeSpec	:	typeInt_	{ Int' (fst $1) (snd $1) }
-		|	typeReal_	{ Real' (fst $1) (snd $1) }
-		|	typeBool_	{ Bool' (fst $1) (snd $1) }
-		|	typeString_	{ String' (fst $1) (snd $1) }
-		|	typeChar_	{ Char' (fst $1) (snd $1) }
-		|	typeVoid_	{ Void' (fst $1) (snd $1) }
+TypeSpec	:	typeInt_	{ IntSpec $1 }
+		|	typeReal_	{ RealSpec $1 }
+		|	typeBool_	{ BoolSpec $1 }
+		|	typeString_	{ StringSpec $1 }
+		|	typeChar_	{ CharSpec $1 }
+		|	typeVoid_	{ VoidSpec $1 }
 
 Literal		:	int_ 		{ Int' (fst $1) (snd $1) }
 		|	real_ 		{ Real' (fst $1) (snd $1) }
 		|	char_ 		{ Char' (fst $1) (snd $1) }
 		|	string_ 	{ String' (fst $1) (snd $1) }
-		|	ArrayElement 	{ $1 }
-		|	true_		{ Bool' (fst $1) (snd $1) }
-		|	false_		{ Bool' (fst $1) (snd $1) }
+		|	ArrayElement 	{ Array' $1 }
+		|	true_		{ Bool' $1 }
+		|	false_		{ Bool' $1 }
 {
 
 main = do

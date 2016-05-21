@@ -112,10 +112,18 @@ data Type   = Int' String Pos
             | Char' String Pos
             | String' String Pos
             | Bool' String Pos
-            | Array' Type Pos
-            | Pointer' Type Pos
+            | Array' [Type]
+            | Pointer' Type
             | Void'
             deriving(Eq, Ord)
+
+data TypeSpec = IntSpec Pos
+              | RealSpec Pos
+              | CharSpec Pos
+              | StringSpec Pos
+              | BoolSpec Pos
+              | VoidSpec Pos
+              deriving(Eq, Ord)
 
 data BlockStmt = Blk [Stmt] 
                deriving(Eq, Ord)
