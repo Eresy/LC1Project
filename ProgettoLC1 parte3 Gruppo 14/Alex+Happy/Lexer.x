@@ -146,7 +146,7 @@ $alp ($alp | $num | "_" )* \$?               {\x y -> Label (y,(getPos x))}
 
 \;                                           {\x y -> Semicolon (getPos x)}
 
-\&                                           {\x y -> OP_Deref (getPos x) }
+\&                                           {\x y -> OP_Ref (getPos x) }
 
 \&\&                                         {\x y -> OP_And (getPos x)} 
 

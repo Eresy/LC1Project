@@ -71,7 +71,7 @@ import AST
 	subassign_		{ OP_SubAssign $$ }
 	mulassign_		{ OP_MulAssign $$ }
 	divassign_		{ OP_DivAssign $$ } 
-	deref_			{ OP_Deref $$ }
+	ref_			{ OP_Ref $$ }
 	and_			{ OP_And $$ }
 	or_			{ OP_Or $$ }
 	neg_			{ OP_Negt $$ }
@@ -86,171 +86,171 @@ import AST
 %%
 
 
-S		:	Program			{ }
+S		:	Program			{ $1  }
 
-Program		:	ListStatement		{ }
+Program		:	ListStatement		{ Program $1 }
 
-ListStatement	:	ListStatement Statement { }
-		|				{ }
+ListStatement	:	Statement ListStatement { $1 : $2 }
+		|				{ [] }
 
-Statement	:	BlockStatement		{ }
-		|	Expression semic_	{ }
-		|	Assignment semic_	{ }
-		|	Declaration semic_	{ }
-		|	FuncDeclaration		{ }
-		|	WhileDo			{ }
-		|	DoWhile			{ }
-		|	If			{ }
-		|	For			{ }
-		|	TryCatch		{ }
-		|	break_ semic_		{ }
-		|	continue_ semic_		{ }
-		|	return_ Expression semic_	{ }
-		|	return_ NamedAssignment semic_	{ }
-		|	Comment				{ }
+Statement	:	BlockStatement		{ Stmt1 $1 }
+		|	Expression semic_	{ Stmt2 $1 }
+		|	Assignment semic_	{ Stmt3 $1 }
+		|	Declaration semic_	{ Stmt4 $1 }
+		|	FuncDeclaration		{ Stmt5 $1 }
+		|	WhileDo			{ Stmt6 $1 }
+		|	DoWhile			{ Stmt7 $1 }
+		|	If			{ Stmt8 $1 }
+		|	For			{ Stmt9 $1 }
+		|	TryCatch		{ Stmt10 $1 }
+		|	break_ semic_		{ Stmt11 Brk }
+		|	continue_ semic_		{ Stmt11 Cont }
+		|	return_ Expression semic_	{ Stmt12 $2 }
+		|	return_ NamedAssignment semic_	{ Stmt12 $2 }
+		|	Comment				{ Stmt13 $1 }
 
-Comment		:	scomment_ 			{ }
-	 	|	mcomment_			{ }
+Comment		:	scomment_ 			{ SCmt (fst $1) }
+	 	|	mcomment_			{ MCmt (fst $1) }
 
-BlockStatement	:	bkcOpen_ ListStatement bkcClose_		{ }
+BlockStatement	:	bkcOpen_ ListStatement bkcClose_		{ Blk $2 }
 
-FunctionCall	:	Label ParameterA				{ }
-		|	readInt_ bknOpen_ bknClose_			{ }
-		|	writeInt_ bknOpen_ Expression bknClose_		{ }
-		|	readReal_ bknOpen_ bknClose_			{ }
-		|	writeReal_ bknOpen_ Expression bknClose_	{ }
-		|	readChar_ bknOpen_ bknClose_			{ }
-		|	writeChar_ bknOpen_ Expression bknClose_	{ }
-		|	readString_ bknOpen_ bknClose_			{ }
-		|	writeString_ bknOpen_ Expression bknClose_	{ }
+FunctionCall	:	Label ParameterA				{ FCall $1 $2 }
+		|	readInt_ bknOpen_ bknClose_			{ ReadInt (snd $1) }
+		|	writeInt_ bknOpen_ Expression bknClose_		{ WriteInt $3 (snd $1) }
+		|	readReal_ bknOpen_ bknClose_			{ ReadReal (snd $1) }
+		|	writeReal_ bknOpen_ Expression bknClose_	{ WriteReal $3 (snd $1) }
+		|	readChar_ bknOpen_ bknClose_			{ ReadChar (snd $1) }
+		|	writeChar_ bknOpen_ Expression bknClose_	{ WriteChar $3 (snd $1) }
+		|	readString_ bknOpen_ bknClose_			{ ReadString (snd $1) }
+		|	writeString_ bknOpen_ Expression bknClose_	{ WriteString $3 (snd $1) }
 
-FuncDeclaration	:	proc_ Label ParameterFDecl Cast BlockStatement 	{ }
-		|	proc_ Label ParameterFDecl BlockStatement 	{ }
-		|	proc_ Label Cast BlockStatement 		{ }
-		|	proc_ Label BlockStatement 			{ }
+FuncDeclaration	:	proc_ Label ParameterFDecl Cast BlockStatement 	{ FullDecl $2 $3 $4 $5 }
+		|	proc_ Label ParameterFDecl BlockStatement 	{ NoCastDecl $2 $3 $4 }
+		|	proc_ Label Cast BlockStatement 		{ NoParamDecl $2 $3 $4 }
+		|	proc_ Label BlockStatement 			{ NakedDecl $2 $3 }
 
-ParameterFDecl	:	bknOpen_ ListParameterF bknClose_ 	{ }
-ParameterF	:	Mode Label Cast 			{ }
-ListParameterF	:	ParameterF ListParameterFC		{ }
-	        |						{ }
-ListParameterFC	:	comma_ ParameterF ListParameterFC	{ }
-		|						{ }
+ParameterFDecl	:	bknOpen_ ListParameterF bknClose_ 	{ $2 }
+ParameterF	:	Mode Label Cast 			{ FParam $1 $2 $3 }
+ListParameterF	:	ParameterF ListParameterFC		{ $1 : $2 }
+	        |						{ [] }
+ListParameterFC	:	comma_ ParameterF ListParameterFC	{ $2 : $3 }
+		|						{ [] }
 
-ParameterA	:	bknOpen_ ListExpression bknClose_ 	{ }
-ListExpression	:	Expression ListExpressionC 		{ }
-	        |						{ }
-ListExpressionC :	comma_ Expression ListExpressionC	{ }
-		|						{ }
+ParameterA	:	bknOpen_ ListExpression bknClose_ 	{ $2 }
+ListExpression	:	Expression ListExpressionC 		{ $1 : $2 }
+	        |						{ [] }
+ListExpressionC :	comma_ Expression ListExpressionC	{ $2 : $3 }
+		|						{ [] }
 
-Mode		:	value_ 		{ }
-		|	reference_	{ }
-		|	constant_ 	{ }
- 		|			{ }
+Mode		:	value_ 		{ Value }
+		|	reference_	{ Reference }
+		|	constant_ 	{ Constant }
+ 		|			{ Unspec }
 
-Declaration	:	var_ ListPointer Label Cast	{ }
+Declaration	:	var_ ListPointer Label Cast	{ SimpleDecl $2 $3 $4 }
 
-Assignment	:	NamedAssignment 				{ }
-		|	var_ ListPointer Label assign_ RValue		{ }
-		|	Declaration assign_ RValue 			{ }
+Assignment	:	NamedAssignment 				{ SimpleAssign $1  }
+		|	var_ ListPointer Label assign_ RValue		{ GenericAssign $2 $3 $5 }
+		|	Declaration assign_ RValue 			{ DeclAssign $1 $3 }
 
-NamedAssignment	:	LValue AssignOps RValue 	{ }
+NamedAssignment	:	LValue AssignOps RValue 	{ Ass $1 $2 $3 }
 
-AssignOps	:	assign_		{ }
-	 	|	addassign_	{ }
-		|	subassign_	{ }
-		|	mulassign_	{ }
-		|	divassign_	{ }
+AssignOps	:	assign_		{ Assign }
+	 	|	addassign_	{ AddAssign }
+		|	subassign_	{ SubAssign }
+		|	mulassign_	{ MulAssign }
+		|	divassign_	{ DivAssign }
 
-Range		:	Expression range_ Expression	{ }
-		|	Expression range_ 		{ }
-		|	range_ Expression 		{ }
-		|	range_ 				{ }
+Range		:	Expression range_ Expression	{CRange $1 $3 }
+		|	Expression range_ 		{ NURange $1 }
+		|	range_ Expression 		{ NLRange $2 }
+		|	range_ 				{ ULRange }
 
-Cast		:	cast_ TypeSpec 				{ }
-		|	cast_ MultiDimRange TypeSpec 		{ }
-MultiDimRange	:	bksOpen_ Range MoreRange bksClose_	{ }
-MoreRange	:	comma_ Range MoreRange			{ }
-	  	|						{ }
+Cast		:	cast_ TypeSpec 				{ SCast $2 }
+		|	cast_ MultiDimRange TypeSpec 		{ MCast $2 $3 }
+MultiDimRange	:	bksOpen_ Range MoreRange bksClose_	{ $2 : $3 }
+MoreRange	:	comma_ Range MoreRange			{ $2 : $3}
+	  	|						{ [] }
 
 
-Pointer		:	mul_ 				{ }
-ListPointer	:	Pointer ListPointer		{ }
-		|					{ }
+Pointer		:	mul_ 				{ Ptr }
+ListPointer	:	Pointer ListPointer		{ $1 : $2 }
+		|					{ [] }
 
-LValue		:	Label ListArrayIndex 	{ }
-		|	Label			{ }
+LValue		:	Label ListArrayIndex 	{ ArrayLV $1 $2 }
+		|	Label			{ LV $1 }
 
-RValue		:	Expression	{ }
-		|	NamedAssignment	{ }
+RValue		:	Expression	{ SimpleRV $1 }
+		|	NamedAssignment	{ ComplexRV $1 }
 
-ArrayIndex	:	bksOpen_ Expression bksClose_ 	{ }
-ListArrayIndex	:	ArrayIndex ListArrayIndex	{ }
-		|	ArrayIndex			{ }
+ArrayIndex	:	bksOpen_ Expression bksClose_ 	{ $2 }
+ListArrayIndex	:	ArrayIndex ListArrayIndex	{ $1 : $2 }
+		|	ArrayIndex			{ $1 }
 
-ArrayElement	:	bknOpen_ ListValue bknClose_	{ }
-ListValue	:	Value comma_ Value ListValueC		{ }
-ListValueC	:	comma_ Value ListValueC		{ }
-		|					{ }
+ArrayElement	:	bknOpen_ ListValue bknClose_	{ $2 }
+ListValue	:	Value comma_ Value ListValueC	{ $1 : $3 : $4 }
+ListValueC	:	comma_ Value ListValueC		{ $2 : $3}
+		|					{ [] }
 
-WhileDo		:	while_ Expression BlockStatement { }
-DoWhile		:	do_ BlockStatement while_ Expression semic_ { }
+WhileDo		:	while_ Expression BlockStatement { WD $2 $3 }
+DoWhile		:	do_ BlockStatement while_ Expression semic_ { DW $2 $4 }
 
-If		:	if_ Expression BlockStatement 				{ } 
-		|	if_ Expression BlockStatement else_ BlockStatement	{ } 
-		|	if_ Expression then_ Statement				{ }
+If		:	if_ Expression BlockStatement 				{ OneLineIf $2 $3 } 
+		|	if_ Expression BlockStatement else_ BlockStatement	{ IfElseBlock $2 $3 $5} 
+		|	if_ Expression then_ Statement				{ IfBlock $2 $4}
 
-For		:	for_ Label in_ Range BlockStatement 	{ }
-		|	for_ Label in_ Range do_ Statement 	{ }
+For		:	for_ Label in_ Range BlockStatement 	{ ForBlk $2 $4 $5 }
+		|	for_ Label in_ Range do_ Statement 	{ ForSmp $2 $4 $6 }
 
-TryCatch	:	try_ Statement catch_ Statement { }
+TryCatch	:	try_ Statement catch_ Statement { TrCh $2 $4 }
 
-Expression	:	Expression1				{ }
-Expression1	:	Expression1 and_ Expression2 		{ }
-		|	Expression1 or_ Expression2 		{ }
-		|	Expression2				{ }
-Expression2	:	neg_ Expression3 			{ }
-	    	|	Expression3				{ }
-Expression3	:	Expression3 equals_ Expression4 	{ }
-		|	Expression3 nequals_ Expression4	{ }
-		|	Expression3 lessthan_ Expression4 	{ }
-		|	Expression3 greatthan_ Expression4 	{ }
-		|	Expression3 lessthaneq_ Expression4 	{ }
-		|	Expression3 greatthaneq_ Expression4 	{ }
-		|	Expression4				{ }
-Expression4	:	Expression4 add_ Expression5 	{ }
-		|	Expression4 sub_ Expression5 	{ }
-		|	Expression4 mul_ Expression5 	{ }
-		|	Expression4 div_ Expression5 	{ }
-		|	Expression5			{ }
-Expression5	:	sub_ Expression6		{ }
-	    	|	add_ Expression6		{ }
-		|	Expression6			{ }
-Expression6	:	mul_ Expression7 		{ } 
-		|	deref_ Expression7		{ }
-		|	Expression7			{ }
-Expression7	:	Value 				{ }
-		|	bknOpen_ Expression1 bknClose_	{ }
+Expression	:	Expression1				{ $1 }
+Expression1	:	Expression1 and_ Expression2 		{ AndExp $1 $3 }
+		|	Expression1 or_ Expression2 		{ OrExp $1 $3 }
+		|	Expression2				{ $1 }
+Expression2	:	neg_ Expression3 			{ NegExp $2 }
+	    	|	Expression3				{ $1 }
+Expression3	:	Expression3 equals_ Expression4 	{ EqExp $1 $3 }
+		|	Expression3 nequals_ Expression4	{ NEqExp $1 $3}
+		|	Expression3 lessthan_ Expression4 	{ LTExp $1 $3 }
+		|	Expression3 greatthan_ Expression4 	{ GTExp $1 $3 }
+		|	Expression3 lessthaneq_ Expression4 	{ LETExp $1 $3 }
+		|	Expression3 greatthaneq_ Expression4 	{ $GETExp $1 $3 }
+		|	Expression4				{ $1 }
+Expression4	:	Expression4 add_ Expression5 	{ AddExp $1 $3 }
+		|	Expression4 sub_ Expression5 	{ SubExp $1 $3 }
+		|	Expression4 mul_ Expression5 	{ MulExp $1 $3 }
+		|	Expression4 div_ Expression5 	{ DivExp $1 $3 }
+		|	Expression5			{ $1 }
+Expression5	:	sub_ Expression6		{ NegExp $2 }
+	    	|	add_ Expression6		{ PosExp $2 }
+		|	Expression6			{ $1 }
+Expression6	:	mul_ Expression7 		{ DerExp $2 } 
+		|	ref_ Expression7		{ RefExp $2 }
+		|	Expression7			{ $1 }
+Expression7	:	Value 				{ $1 }
+		|	bknOpen_ Expression1 bknClose_	{ $2 }
 
-Value		:	LValue		{ }
-		|	Literal 	{ }
-		|	FunctionCall 	{ }
+Value		:	LValue		{ VExp3 $1 }
+		|	Literal 	{ VExp1 $1 }
+		|	FunctionCall 	{ VExp2 $1 }
        
-Label		:	label_		{ }
+Label		:	label_		{ (fst $1) }
 
-TypeSpec	:	typeInt_	{ }
-		|	typeReal_	{ }
-		|	typeBool_	{ }
-		|	typeString_	{ }
-		|	typeChar_	{ }
-		|	typeVoid_	{ }
+TypeSpec	:	typeInt_	{ Int' (fst $1) (snd $1) }
+		|	typeReal_	{ Real' (fst $1) (snd $1) }
+		|	typeBool_	{ Bool' (fst $1) (snd $1) }
+		|	typeString_	{ String' (fst $1) (snd $1) }
+		|	typeChar_	{ Char' (fst $1) (snd $1) }
+		|	typeVoid_	{ Void' (fst $1) (snd $1) }
 
-Literal		:	int_ 		{ }
-		|	real_ 		{ }
-		|	char_ 		{ }
-		|	string_ 	{ }
-		|	ArrayElement 	{ }
-		|	true_		{ }
-		|	false_		{ }
+Literal		:	int_ 		{ Int' (fst $1) (snd $1) }
+		|	real_ 		{ Real' (fst $1) (snd $1) }
+		|	char_ 		{ Char' (fst $1) (snd $1) }
+		|	string_ 	{ String' (fst $1) (snd $1) }
+		|	ArrayElement 	{ $1 }
+		|	true_		{ Bool' (fst $1) (snd $1) }
+		|	false_		{ Bool' (fst $1) (snd $1) }
 {
 
 main = do
@@ -260,6 +260,5 @@ main = do
     print $ parseChapel tok
 
 parseError (tok:toks) = error ("Parser Error:" ++ show tok ++ " at invalid position.")
-
 
 }

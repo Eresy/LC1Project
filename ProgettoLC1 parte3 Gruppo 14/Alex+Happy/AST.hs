@@ -5,19 +5,19 @@ import Data
 data AST = Program [Stmt]
          deriving(Eq, Ord)
 
-data Stmt = Stmt1 BlockStmt Pos
-          | Stmt2 Exp Pos
-          | Stmt3 Assign Pos
-          | Stmt4 Declaration Pos
-          | Stmt5 FnDecl Pos
-          | Stmt6 WhDo Pos
-          | Stmt7 DoWh Pos
-          | Stmt8 Iff Pos
-          | Stmt9 Forr Pos
-          | Stmt10 TrCatch Pos
-          | Stmt11 FlCtr Pos
-          | Stmt13 Rtrn Pos
-          | Stmt14 Cmt Pos
+data Stmt = Stmt1 BlockStmt
+          | Stmt2 Exp
+          | Stmt3 Assign
+          | Stmt4 Declaration
+          | Stmt5 FnDecl
+          | Stmt6 WhDo
+          | Stmt7 DoWh
+          | Stmt8 Iff
+          | Stmt9 Forr
+          | Stmt10 TrCatch
+          | Stmt11 FlCtr
+          | Stmt12 Rtrn
+          | Stmt13 Cmt
           deriving(Eq, Ord)
 
 data FlCtr  = Cont 
@@ -32,7 +32,7 @@ data Cmt  = SCmt String
           | MCmt String
           deriving(Eq, Ord)
 
-data FnCall = FCall String [Exp] Pos
+data FnCall = FCall String [Exp]
             | ReadInt Pos
             | ReadReal Pos
             | ReadChar Pos
@@ -55,30 +55,31 @@ data FormParam = FParam Mode String Cast
 data Mode   = Value 
             | Reference 
             | Constant 
+            | Unspec
             deriving(Eq, Ord)
 
 data Cast   = SCast Type 
             | MCast [Range] Type
             deriving(Eq, Ord)
 
-data Range  = CRange String String
-            | NURange String
-            | NLRange String
+data Range  = CRange Exp Exp 
+            | NURange Exp
+            | NLRange Exp
             | ULRange
             deriving(Eq, Ord)
 
-data Assign   = SimpleAssign NamedAssign Pos
-                  | GenericAssign [Pointer] String RVal Pos
-                  | DeclAssign Declaration RVal Pos
-                  deriving(Eq, Ord)
+data Assign   = SimpleAssign NamedAssign
+              | GenericAssign [Pointer] String RVal
+              | DeclAssign Declaration RVal
+              deriving(Eq, Ord)
 
-data Declaration  = SimpleDecl [Pointer] String Cast Pos
+data Declaration  = SimpleDecl [Pointer] String Cast
                   deriving(Eq, Ord)
 
 data Pointer = Ptr
              deriving(Eq, Ord)
 
-data NamedAssign  = Ass LVal AssignOp RVal Pos
+data NamedAssign  = Ass LVal AssignOp RVal
                   deriving(Eq, Ord)
 
 data AssignOp = Assign
@@ -88,58 +89,60 @@ data AssignOp = Assign
               | DivAssign
               deriving(Eq, Ord)
 
-data WhDo  = WD Exp BlockStmt Pos
+data WhDo  = WD Exp BlockStmt
            deriving(Eq, Ord)
 
-data DoWh  = DW BlockStmt Exp Pos
+data DoWh  = DW BlockStmt Exp
            deriving(Eq, Ord)
 
-data Iff  = OneLineIf Exp BlockStmt Pos
-          | IfBlock BlockStmt Pos
-          | IfElseBlock BlockStmt BlockStmt Pos
+data Iff  = OneLineIf Exp Stmt
+          | IfBlock Exp BlockStmt
+          | IfElseBlock Exp BlockStmt BlockStmt
           deriving(Eq, Ord)
 
-data Forr = ForBlk String Range BlockStmt Pos
-          | ForSmp  String Range Stmt Pos
+data Forr = ForBlk String Range BlockStmt
+          | ForSmp  String Range Stmt
           deriving(Eq, Ord)
 
-data TrCatch  = TrCh Stmt Stmt Pos
+data TrCatch  = TrCh Stmt Stmt
               deriving(Eq, Ord)
 
-data Type   = Int' 
-            | Real' 
-            | Char' 
-            | String' 
-            | Array' Type 
-            | Pointer' Type 
+data Type   = Int' String Pos 
+            | Real' String Pos 
+            | Char' String Pos
+            | String' String Pos
+            | Bool' String Pos
+            | Array' Type Pos
+            | Pointer' Type Pos
             | Void'
             deriving(Eq, Ord)
 
 data BlockStmt = Blk [Stmt] 
                deriving(Eq, Ord)
 
-data Exp   = AddExp Exp Exp Pos
-           | SubExp Exp Exp Pos
-           | MulExp Exp Exp Pos
-           | DivExp Exp Exp Pos
-           | PosExp Exp Pos
-           | RefExp Exp Pos
-           | EqExp Exp Exp Pos
-           | NEqExp Exp Exp Pos
-           | LTExp Exp Exp Pos
-           | GTExp Exp Exp Pos
-           | LETExp Exp Exp Pos
-           | GETExp Exp Exp Pos
-           | AndExp Exp Exp Pos
-           | OrExp Exp Exp Pos
-           | NegExp Exp Pos
-           | VExp1 String
+data Exp   = AddExp Exp Exp
+           | SubExp Exp Exp
+           | MulExp Exp Exp
+           | DivExp Exp Exp
+           | PosExp Exp
+           | RefExp Exp
+           | DerExp Exp
+           | EqExp Exp Exp
+           | NEqExp Exp Exp
+           | LTExp Exp Exp
+           | GTExp Exp Exp
+           | LETExp Exp Exp
+           | GETExp Exp Exp
+           | AndExp Exp Exp
+           | OrExp Exp Exp
+           | NegExp Exp
+           | VExp1 Type 
            | VExp2 FnCall
            | VExp3 LVal
            deriving(Eq, Ord)
 
-data LVal = LV String Pos
-          | ArrayLV String [String] Pos
+data LVal = LV String
+          | ArrayLV String [Exp]
           deriving(Eq, Ord)
 
 data RVal = SimpleRV Exp 

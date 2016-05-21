@@ -55,7 +55,7 @@ data Token = SComment DualData
            | OP_Sub Pos
            | OP_Mul Pos
            | OP_Div Pos
-           | OP_Deref Pos
+           | OP_Ref Pos
            | OP_And Pos
            | OP_Or Pos
            | OP_Negt Pos
