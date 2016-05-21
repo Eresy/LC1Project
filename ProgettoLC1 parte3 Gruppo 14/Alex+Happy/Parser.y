@@ -149,7 +149,7 @@ Mode		:	value_ 		{ Value }
 
 Declaration	:	var_ ListPointer Label Cast	{ SimpleDecl $2 $3 $4 }
 
-Assignment	:	NamedAssignment 				{ SimpleAssign $1  }
+Assignment	:	NamedAssignment 				{ SimpleAssign $1 }
 		|	var_ ListPointer Label assign_ RValue		{ GenericAssign $2 $3 $5 }
 		|	Declaration assign_ RValue 			{ DeclAssign $1 $3 }
 
@@ -161,7 +161,7 @@ AssignOps	:	assign_		{ Assign }
 		|	mulassign_	{ MulAssign }
 		|	divassign_	{ DivAssign }
 
-Range		:	Expression range_ Expression	{CRange $1 $3 }
+Range		:	Expression range_ Expression	{ CRange $1 $3 }
 		|	Expression range_ 		{ NURange $1 }
 		|	range_ Expression 		{ NLRange $2 }
 		|	range_ 				{ ULRange }

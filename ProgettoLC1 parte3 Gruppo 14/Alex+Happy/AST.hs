@@ -33,14 +33,14 @@ data Cmt  = SCmt String
           deriving(Eq, Ord)
 
 data FnCall = FCall String [Exp]
-            | ReadInt
-            | ReadReal
-            | ReadChar
-            | ReadString
-            | WriteInt Exp
-            | WriteReal Exp
-            | WriteChar Exp
-            | WriteString Exp
+            | ReadInt Pos
+            | ReadReal Pos
+            | ReadChar Pos
+            | ReadString Pos
+            | WriteInt Exp Pos
+            | WriteReal Exp Pos
+            | WriteChar Exp Pos
+            | WriteString Exp Pos
             deriving(Eq, Ord)
 
 data FnDecl  = FullDecl String [FormParam] Cast BlockStmt
