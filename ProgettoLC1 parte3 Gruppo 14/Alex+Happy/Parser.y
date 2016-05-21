@@ -211,11 +211,11 @@ Expression1	:	Expression1 and_ Expression2 		{ AndExp $1 $3 }
 Expression2	:	neg_ Expression3 			{ NegExp $2 }
 	    	|	Expression3				{ $1 }
 Expression3	:	Expression3 equals_ Expression4 	{ EqExp $1 $3 }
-		|	Expression3 nequals_ Expression4	{ NEqExp $1 $3}
+		|	Expression3 nequals_ Expression4	{ NEqExp $1 $3 }
 		|	Expression3 lessthan_ Expression4 	{ LTExp $1 $3 }
 		|	Expression3 greatthan_ Expression4 	{ GTExp $1 $3 }
 		|	Expression3 lessthaneq_ Expression4 	{ LETExp $1 $3 }
-		|	Expression3 greatthaneq_ Expression4 	{ $GETExp $1 $3 }
+		|	Expression3 greatthaneq_ Expression4 	{ GETExp $1 $3 }
 		|	Expression4				{ $1 }
 Expression4	:	Expression4 add_ Expression5 	{ AddExp $1 $3 }
 		|	Expression4 sub_ Expression5 	{ SubExp $1 $3 }
