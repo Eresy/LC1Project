@@ -112,7 +112,7 @@ data Type   = Int' String Pos
             | Char' String Pos
             | String' String Pos
             | Bool' Pos
-            | Array' [Type]
+            | Array' [Exp]
             | Pointer' Type
             | Void'
             deriving(Eq, Ord)
