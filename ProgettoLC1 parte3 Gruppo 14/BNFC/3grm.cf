@@ -43,25 +43,18 @@ ECast.		Exp ::= Cast_exp;
 ELValue.	Exp ::= LValue_exp;
 EUnary.		Exp ::= Unary_exp;
 EBinary.	Exp ::= Binary_exp;
-EIf.		Exp ::= IF_exp;
-EFor.		Exp ::= For_exp;
-ERange.		Exp ::= Range_exp;
-EConstant.	Exp ::= Constant;
-
-rules Constant ::= Boolean | Integer | Double | Char | String ;
 
 rules Literal_exp ::= Boolean | LInt | LReal | LString ;
-
-rules Range_exp ::= Exp ".." Exp | Exp ".." | ".." Exp | ".." ;
 
 Cast.	Cast_exp ::= Exp ":" TypeSpec;
 
 FunCall.	LValue_exp ::= LValue_exp "(" [Named_exp] ")";
 Fname.		LValue_exp ::= Id ;
 Parens.		LValue_exp ::= "(" Exp ")";
-Array.		LValue_exp ::= LArray ;
-rules LArray ::= Id ":" "[" [Range_exp] "]" | Id ":" "[" [Range_exp] "]" TypeSpec  ;
-separator nonempty Range_exp ",";
+ArrayI.		LValue_exp ::= Id ":" "[" [Range_exp] "]" ;
+ArrayIT.	LValue_exp ::= Id ":" "[" [Range_exp] "]" TypeSpec  ;
+separator Range_exp ",";
+rules Range_exp ::= Exp ".." Exp | Exp ".." | ".." Exp | ".." ;
 
 separator nonempty Named_exp ",";
 rules Named_exp ::= Exp | Id "=" Exp ;
@@ -72,12 +65,9 @@ rules Unary_op ::= "+" | "-" | "!" ;
 
 BinaryE. Binary_exp ::= Exp  Binary_op Exp;
 
-rules Binary_op ::= "+" | "-" | "*" | "/" | "%" | "**" | "&" | "|" | "^" | "&&" | "==" | "!=" | "<=" | ">=" | "<" | ">" ;
+rules Binary_op ::= "||" | "&&" | "!=" | "==" | ">" | "<" | ">=" | "<=" | "+" | "-" | "|" | "^" | "&" | "*" | "/" | "%" | "**"; 
 
-rules IF_exp ::= "if" Exp "then" Exp "else" Exp | "If" Exp "then" Exp;
-
-rules For_exp ::= "for" Id "in" Exp "do" Exp | "for" Exp "do" Exp;
-
+SExp.		Stmt ::= LValue_exp; 
 SBlock.		Stmt ::= Block_stmt;
 SAssign.	Stmt ::= Assign_stmt;
 SIO.		Stmt ::= IO_stmt;

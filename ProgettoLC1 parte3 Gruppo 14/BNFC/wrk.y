@@ -42,63 +42,72 @@ import ErrM
   '==' { PT _ (TS _ 27) }
   '>' { PT _ (TS _ 28) }
   '>=' { PT _ (TS _ 29) }
-  'If' { PT _ (TS _ 30) }
-  '[' { PT _ (TS _ 31) }
-  ']' { PT _ (TS _ 32) }
-  '^' { PT _ (TS _ 33) }
-  '^=' { PT _ (TS _ 34) }
-  'bool' { PT _ (TS _ 35) }
-  'break' { PT _ (TS _ 36) }
-  'catch' { PT _ (TS _ 37) }
-  'char' { PT _ (TS _ 38) }
-  'const' { PT _ (TS _ 39) }
-  'continue' { PT _ (TS _ 40) }
-  'do' { PT _ (TS _ 41) }
-  'else' { PT _ (TS _ 42) }
-  'false' { PT _ (TS _ 43) }
-  'for' { PT _ (TS _ 44) }
-  'if' { PT _ (TS _ 45) }
-  'in' { PT _ (TS _ 46) }
-  'int' { PT _ (TS _ 47) }
-  'proc' { PT _ (TS _ 48) }
-  'readChar' { PT _ (TS _ 49) }
-  'readInt' { PT _ (TS _ 50) }
-  'readString' { PT _ (TS _ 51) }
-  'real' { PT _ (TS _ 52) }
-  'ref' { PT _ (TS _ 53) }
-  'return' { PT _ (TS _ 54) }
-  'string' { PT _ (TS _ 55) }
-  'then' { PT _ (TS _ 56) }
-  'true' { PT _ (TS _ 57) }
-  'try' { PT _ (TS _ 58) }
-  'value' { PT _ (TS _ 59) }
-  'var' { PT _ (TS _ 60) }
-  'void' { PT _ (TS _ 61) }
-  'while' { PT _ (TS _ 62) }
-  'writeChar' { PT _ (TS _ 63) }
-  'writeInt' { PT _ (TS _ 64) }
-  'writeReal' { PT _ (TS _ 65) }
-  'writeString' { PT _ (TS _ 66) }
-  '{' { PT _ (TS _ 67) }
-  '|' { PT _ (TS _ 68) }
-  '|=' { PT _ (TS _ 69) }
+  '[' { PT _ (TS _ 30) }
+  ']' { PT _ (TS _ 31) }
+  '^' { PT _ (TS _ 32) }
+  '^=' { PT _ (TS _ 33) }
+  'bool' { PT _ (TS _ 34) }
+  'break' { PT _ (TS _ 35) }
+  'catch' { PT _ (TS _ 36) }
+  'char' { PT _ (TS _ 37) }
+  'const' { PT _ (TS _ 38) }
+  'continue' { PT _ (TS _ 39) }
+  'do' { PT _ (TS _ 40) }
+  'else' { PT _ (TS _ 41) }
+  'false' { PT _ (TS _ 42) }
+  'for' { PT _ (TS _ 43) }
+  'if' { PT _ (TS _ 44) }
+  'in' { PT _ (TS _ 45) }
+  'int' { PT _ (TS _ 46) }
+  'proc' { PT _ (TS _ 47) }
+  'readChar' { PT _ (TS _ 48) }
+  'readInt' { PT _ (TS _ 49) }
+  'readString' { PT _ (TS _ 50) }
+  'real' { PT _ (TS _ 51) }
+  'ref' { PT _ (TS _ 52) }
+  'return' { PT _ (TS _ 53) }
+  'string' { PT _ (TS _ 54) }
+  'then' { PT _ (TS _ 55) }
+  'true' { PT _ (TS _ 56) }
+  'try' { PT _ (TS _ 57) }
+  'value' { PT _ (TS _ 58) }
+  'var' { PT _ (TS _ 59) }
+  'void' { PT _ (TS _ 60) }
+  'while' { PT _ (TS _ 61) }
+  'writeChar' { PT _ (TS _ 62) }
+  'writeInt' { PT _ (TS _ 63) }
+  'writeReal' { PT _ (TS _ 64) }
+  'writeString' { PT _ (TS _ 65) }
+  '{' { PT _ (TS _ 66) }
+  '|' { PT _ (TS _ 67) }
+  '|=' { PT _ (TS _ 68) }
+  '||' { PT _ (TS _ 69) }
   '}' { PT _ (TS _ 70) }
 
 L_charac { PT _ (TC $$) }
 L_quoted { PT _ (TL $$) }
-L_integ  { PT _ (TI $$) }
-L_doubl  { PT _ (TD $$) }
 L_Id { PT _ (T_Id $$) }
 L_LInt { PT _ (T_LInt $$) }
 L_LReal { PT _ (T_LReal $$) }
 
+%left 'if' 'for'
+%left '||'
+%left '!=' '==' 
+%left '<' '>' '>=' '<=' 
+%left '+' '-' 
+%left '|'
+%left '^'
+%left '&'
+%right POS NEG
+%left '*' '/' '%'
+%right '!'
+%right '**'
+%left ':'
 
 %%
 
 Char    :: { Char }    : L_charac { (read ( $1)) :: Char }
 String  :: { String }  : L_quoted {  $1 }
-Integer :: { Integer } : L_integ  { (read ( $1)) :: Integer }
-Double  :: { Double }  : L_doubl  { (read ( $1)) :: Double }
 Id    :: { Id} : L_Id { Id ($1)}
 LInt    :: { LInt} : L_LInt { LInt ($1)}
 LReal    :: { LReal} : L_LReal { LReal ($1)}
@@ -146,16 +155,6 @@ Exp : Literal_exp { AbsGrm.ELiteral $1 }
     | LValue_exp { AbsGrm.ELValue $1 }
     | Unary_exp { AbsGrm.EUnary $1 }
     | Binary_exp { AbsGrm.EBinary $1 }
-    | IF_exp { AbsGrm.EIf $1 }
-    | For_exp { AbsGrm.EFor $1 }
-    | Range_exp { AbsGrm.ERange $1 }
-    | Constant { AbsGrm.EConstant $1 }
-Constant :: { Constant }
-Constant : Boolean { AbsGrm.ConstantBoolean $1 }
-         | Integer { AbsGrm.ConstantInteger $1 }
-         | Double { AbsGrm.ConstantDouble $1 }
-         | Char { AbsGrm.ConstantChar $1 }
-         | String { AbsGrm.ConstantString $1 }
 Literal_exp :: { Literal_exp }
 Literal_exp : Boolean { AbsGrm.Literal_expBoolean $1 }
             | LInt { AbsGrm.Literal_expLInt $1 }
@@ -172,12 +171,13 @@ LValue_exp :: { LValue_exp }
 LValue_exp : LValue_exp '(' ListNamed_exp ')' { AbsGrm.FunCall $1 $3 }
            | Id { AbsGrm.Fname $1 }
            | '(' Exp ')' { AbsGrm.Parens $2 }
-           | LArray { AbsGrm.Array $1 }
+           | LArray { AbsGrm.ArrayI $1 }
 LArray :: { LArray }
 LArray : Id ':' '[' ListRange_exp ']' { AbsGrm.LArray1 $1 $4 }
        | Id ':' '[' ListRange_exp ']' TypeSpec { AbsGrm.LArray2 $1 $4 $6 }
 ListRange_exp :: { [Range_exp] }
-ListRange_exp : Range_exp { (:[]) $1 }
+ListRange_exp : {- empty -} { [] }
+              | Range_exp { (:[]) $1 }
               | Range_exp ',' ListRange_exp { (:) $1 $3 }
 ListNamed_exp :: { [Named_exp] }
 ListNamed_exp : Named_exp { (:[]) $1 }
@@ -188,36 +188,32 @@ Named_exp : Exp { AbsGrm.Named_expExp $1 }
 Unary_exp :: { Unary_exp }
 Unary_exp : Unary_op Exp { AbsGrm.UnaryE $1 $2 }
 Unary_op :: { Unary_op }
-Unary_op : '+' { AbsGrm.Unary_op1 }
-         | '-' { AbsGrm.Unary_op2 }
+Unary_op : '+' %prec POS { AbsGrm.Unary_op1 }
+         | '-' %prec NEG { AbsGrm.Unary_op2 }
          | '!' { AbsGrm.Unary_op3 }
 Binary_exp :: { Binary_exp }
 Binary_exp : Exp Binary_op Exp { AbsGrm.BinaryE $1 $2 $3 }
 Binary_op :: { Binary_op }
-Binary_op : '+' { AbsGrm.Binary_op1 }
-          | '-' { AbsGrm.Binary_op2 }
-          | '*' { AbsGrm.Binary_op3 }
-          | '/' { AbsGrm.Binary_op4 }
-          | '%' { AbsGrm.Binary_op5 }
-          | '**' { AbsGrm.Binary_op6 }
-          | '&' { AbsGrm.Binary_op7 }
-          | '|' { AbsGrm.Binary_op8 }
-          | '^' { AbsGrm.Binary_op9 }
-          | '&&' { AbsGrm.Binary_op10 }
-          | '==' { AbsGrm.Binary_op11 }
-          | '!=' { AbsGrm.Binary_op12 }
-          | '<=' { AbsGrm.Binary_op13 }
-          | '>=' { AbsGrm.Binary_op14 }
-          | '<' { AbsGrm.Binary_op15 }
-          | '>' { AbsGrm.Binary_op16 }
-IF_exp :: { IF_exp }
-IF_exp : 'if' Exp 'then' Exp 'else' Exp { AbsGrm.IF_exp1 $2 $4 $6 }
-       | 'If' Exp 'then' Exp { AbsGrm.IF_exp2 $2 $4 }
-For_exp :: { For_exp }
-For_exp : 'for' Id 'in' Exp 'do' Exp { AbsGrm.For_exp1 $2 $4 $6 }
-        | 'for' Exp 'do' Exp { AbsGrm.For_exp2 $2 $4 }
+Binary_op : '||' { AbsGrm.Binary_op1 }
+          | '&&' { AbsGrm.Binary_op2 }
+          | '!=' { AbsGrm.Binary_op3 }
+          | '==' { AbsGrm.Binary_op4 }
+          | '>' { AbsGrm.Binary_op5 }
+          | '<' { AbsGrm.Binary_op6 }
+          | '>=' { AbsGrm.Binary_op7 }
+          | '<=' { AbsGrm.Binary_op8 }
+          | '+' { AbsGrm.Binary_op9 }
+          | '-' { AbsGrm.Binary_op10 }
+          | '|' { AbsGrm.Binary_op11 }
+          | '^' { AbsGrm.Binary_op12 }
+          | '&' { AbsGrm.Binary_op13 }
+          | '*' { AbsGrm.Binary_op14 }
+          | '/' { AbsGrm.Binary_op15 }
+          | '%' { AbsGrm.Binary_op16 }
+          | '**' { AbsGrm.Binary_op17 }
 Stmt :: { Stmt }
-Stmt : Block_stmt { AbsGrm.SBlock $1 }
+Stmt : LValue_exp { AbsGrm.SExp $1 }
+     | Block_stmt { AbsGrm.SBlock $1 }
      | Assign_stmt { AbsGrm.SAssign $1 }
      | IO_stmt { AbsGrm.SIO $1 }
      | Cond_stmt { AbsGrm.SCondit $1 }
