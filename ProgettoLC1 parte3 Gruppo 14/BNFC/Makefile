@@ -1,12 +1,12 @@
 all:
-	happy -gca ParBnfcProva.y
-	alex -g LexBnfcProva.x
-	ghc --make TestBnfcProva.hs -o TestBnfcProva
+	happy -gca ParChapel.y
+	alex -g LexChapel.x
+	ghc --make TestChapel.hs -o TestChapel
 
 clean:
 	-rm -f *.log *.aux *.hi *.o *.dvi
 
 distclean: clean
-	-rm -f DocBnfcProva.* LexBnfcProva.* ParBnfcProva.* LayoutBnfcProva.* SkelBnfcProva.* PrintBnfcProva.* TestBnfcProva.* AbsBnfcProva.* TestBnfcProva ErrM.* SharedString.* ComposOp.* bnfcProva.dtd XMLBnfcProva.* Makefile*
+	-rm -f DocChapel.* LexChapel.* ParChapel.* LayoutChapel.* SkelChapel.* PrintChapel.* TestChapel.* AbsChapel.* TestChapel ErrM.* SharedString.* ComposOp.* chapel.dtd XMLChapel.* Makefile*
 	
 

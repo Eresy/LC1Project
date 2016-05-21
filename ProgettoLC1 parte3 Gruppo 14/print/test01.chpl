@@ -1,4 +1,4 @@
-var glob = 5,epsilon = 0.001;
+var glob = 5;epsilon = 0.001;
 
 proc main() {
 
@@ -9,7 +9,7 @@ proc main() {
 		return 2;
 	}else{
 		var c = 3+2;
-	};
+	}
 	var b : int = 3;
    }
 }
