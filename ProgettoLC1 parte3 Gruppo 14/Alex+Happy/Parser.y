@@ -142,10 +142,10 @@ ListExpression	:	Expression ListExpressionC 		{ $1 : $2 }
 ListExpressionC :	comma_ Expression ListExpressionC	{ $2 : $3 }
 		|						{ [] }
 
-Mode		:	value_ 		{ Value }
-		|	reference_	{ Reference }
-		|	constant_ 	{ Constant }
- 		|			{ Unspec }
+Mode		:	value_ 		{ Val }
+		|	reference_	{ Ref }
+		|	constant_ 	{ Con }
+ 		|			{ Uns }
 
 Declaration	:	var_ ListPointer Label Cast	{ SimpleDecl $2 $3 $4 }
 
@@ -185,7 +185,7 @@ RValue		:	Expression	{ SimpleRV $1 }
 
 ArrayIndex	:	bksOpen_ Expression bksClose_ 	{ $2 }
 ListArrayIndex	:	ArrayIndex ListArrayIndex	{ $1 : $2 }
-		|	ArrayIndex			{ $1 }
+		|	ArrayIndex			{ $1 : [] }
 
 ArrayElement	:	bknOpen_ ListValue bknClose_	{ $2 }
 ListValue	:	Value comma_ Value ListValueC	{ $1 : $3 : $4 }

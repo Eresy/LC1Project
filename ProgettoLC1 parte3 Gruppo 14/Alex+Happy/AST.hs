@@ -52,14 +52,14 @@ data FnDecl  = FullDecl String [FormParam] Cast BlockStmt
 data FormParam = FParam Mode String Cast
                       deriving(Eq, Ord)
 
-data Mode   = Value 
-            | Reference 
-            | Constant 
-            | Unspec
+data Mode   = Val 
+            | Ref 
+            | Con 
+            | Uns
             deriving(Eq, Ord)
 
-data Cast   = SCast Type 
-            | MCast [Range] Type
+data Cast   = SCast TypeSpec
+            | MCast [Range] TypeSpec
             deriving(Eq, Ord)
 
 data Range  = CRange Exp Exp 
@@ -111,7 +111,7 @@ data Type   = Int' String Pos
             | Real' String Pos 
             | Char' String Pos
             | String' String Pos
-            | Bool' String Pos
+            | Bool' Pos
             | Array' [Type]
             | Pointer' Type
             | Void'
