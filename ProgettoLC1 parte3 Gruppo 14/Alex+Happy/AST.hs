@@ -2,12 +2,13 @@ module AST where
 
 import Data 
 
+{- DATA TYPES -}
+
 data AST = Program [Stmt]
          deriving(Eq, Ord)
 
 instance Show AST where
-   show (Program xs) = "program starts here: " ++ show xs
-
+   show (Program xs) = "\n\nYour program:\n " ++ takeProg( show xs )
 
 
 data Stmt = Stmt1 BlockStmt
@@ -162,9 +163,9 @@ data Assign   = SimpleAssign NamedAssign
               deriving(Eq, Ord)
 
 instance Show Assign where
-   show (SimpleAssign x) = show x ++ ";"
-   show (GenericAssign xs y z) = show xs ++ y ++ " = " ++ show z ++ ";"
-   show (DeclAssign x y) = show x ++ " = " ++ show y ++ ";"
+   show (SimpleAssign x) = show x -- ++ ";"
+   show (GenericAssign xs y z) = show xs ++ y ++ " = " ++ show z -- ++ ";"
+   show (DeclAssign x y) = show x ++ " = " ++ show y -- ++ ";"
 
 
 
@@ -172,7 +173,7 @@ data Declaration  = SimpleDecl [Pointer] String Cast
                   deriving(Eq, Ord)
 
 instance Show Declaration where
-   show (SimpleDecl xs y z) = "var " ++ show xs ++ y ++ show z ++ ";"
+   show (SimpleDecl xs y z) = "var " ++ show xs ++ y ++ show z -- ++ ";"
 
 
 
@@ -361,3 +362,15 @@ data RVal = SimpleRV Exp
 instance Show RVal where
    show (SimpleRV x) = show x
    show (ComplexRV x) = show x
+
+
+
+{- FUNCTIONS -}
+takeProg :: String -> String
+takeProg txt = dropFirst $ dropLast txt
+
+dropFirst :: String -> String
+dropFirst x = drop 1 x
+
+dropLast :: String -> String
+dropLast x = take ((length x) - 1) x
