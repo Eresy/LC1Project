@@ -263,7 +263,7 @@ main = do
     putStrLn "Linearized Tree:\n"
     putStrLn $ (indent 0) $ readAST ast
 
-parseError (tok:toks) = error ("Error, " ++ show tok ++ " at invalid position.")
+parseError (tok:toks) = error ("Error " ++ show tok ++ " at invalid position.")
 
 data TypeCorrect	= Correct Type
 			| Error Type Type
@@ -327,13 +327,9 @@ typeCheckTrCatch (TrCh x y) = typeCheckStmt (Stmt1 (Blk [x,y])
 
 --typeCheckFnDecl :: FnDecl -> TypeCorrect Type
 typeCheckFnDecl dcl = case dcl of
-<<<<<<< HEAD
 	(FullDecl _ _ cast (Blk lst))	->	compareTypeMis (typeCheckCast cast) (getReturn lst)
 	_				->	(Null Void')
-=======
-	(FullDecl _ _ cast block)	->	compareTypeMis (typeCheckCast cast) (getReturn block)
 
->>>>>>> parent of 646974b... modified:   Parser.y
 
 --getReturn :: [Stmt] -> TypeCorrect Type
 getReturn (x:xs) = case x of
@@ -351,29 +347,8 @@ typeCheckAssign assign = case assign of
 
 --typeCheckCast :: Cast -> TypeCorrect Type
 typeCheckCast cst = case cst of
-<<<<<<< HEAD
-	(SCast x)	->	(Correct (specConvert x))
-	(MCast lst x)	->	(Correct (Array' (specConvert x)))
-
-checkArray z@(x:xs) a = case (foldr1 (typeCheckExp) z) of
-	(Correct a)	->	(Correct a)
-	(Error a b)	->	
-
-formArray (x:xs) b = (Array' (formArray
-
-specConvert x = case x of
-	IntSpec a	->	(Int' "int" a)
-	RealSpec a	->	(Real' "real" a)
-	CharSpec a	->	(Char' "char" a)
-	StringSpec a	->	(String' "string" a)
-	BoolSpec a	->	(Bool' "bool" a)
-	VoidSpec a	->	(Void')
-	
-=======
 	(SCast x)	->	(Correct x)
 	(MCast _ x)	->	(Correct x)
-
->>>>>>> parent of 646974b... modified:   Parser.y
 --typeCheckRVal :: RVal -> TypeCorrect Type
 typeCheckRVal rv =  case rv of
 	(SimpleRV x)	->	typeCheckExp x
