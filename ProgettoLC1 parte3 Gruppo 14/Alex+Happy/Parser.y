@@ -251,6 +251,7 @@ Literal		:	int_ 		{ Int' (fst $1) (snd $1) }
 		|	ArrayElement 	{ Array' $1 }
 		|	true_		{ Bool' "true" $1 }
 		|	false_		{ Bool' "false" $1 }
+
 {
 
 main = do
@@ -262,124 +263,105 @@ main = do
 
 parseError (tok:toks) = error ("Parser Error:" ++ show tok ++ " at invalid position.")
 
+data TypeCorrect a 	= Correct a 
+			| Error a a
+			| Mismatch a a
+			| Null a
+			| Ret a
+			| Unknown
+			deriving (Eq, Show, Ord)
+
+checkTypeProgram :: AST -> String
+checkTypeProgram (Program lst) =  foldr (++) [] (map (checkTypeStmt . typeCheck) lst)
+
+checkTypeStmt :: TypeCorrect -> String
+checkTypeStmt stmt = case typeCheck stmt of
+	(Correct a)	->	[]
+	(Mismatch a b)	->	"Type Error: " ++ show a ++ " " ++ show (getPos a) ++ " and " ++ show b ++ " " ++ show (getPos b) ++ "are of incompatible types."
+	(Error a b)	->	"Type Error: at " ++ show (getPos a) ++ " type given: "++ show a ++", expected "++ show b++"."
+	(Ret a)		->	[]
+	(Unknown)	->	[]
+	(Null a)	->	[]
+
+typeCheck :: Stmt -> TypeCorrect
 typeCheck a = case a of
-    (Program x) 	-> foldr (++) [] (map typeCheck x)
-    (Stmt1 x)	        -> foldr (++) [] (map typeCheck x)
-    (Stmt2 x)           -> expTypeCheck x 
-    (Stmt3 x)		-> typeCheck x
-    (Stmt5 x)		-> typeCheck x
-    (Stmt6 x)		-> typeCheck x
-    (Stmt7 x)		-> typeCheck x
-    (Stmt8 x)		-> typeCheck x
-    (Stmt9 x)		-> typeCheck x
-    (Stmt10 x)		-> typeCheck x
-    (FullDecl _ param cast body)	-> (returnCheck cast body) ++ "\n" ++ (typeCheck body)
-    (NoCastDecl _ _ body)		-> (typeCheck body)
-    (NoParamDecl _ cast body)	-> returnCheck cast body
-    (NakedDecl _ body)		-> typeCheck body
-    (DeclAssign decl lval)	-> compareTypes (inferType decl) (inferType lval)
-    (WD condition body)		-> (boolCheck condition) ++ (typeCheck body)
-    (DW body condition)		-> (boolCheck condition) ++ (typeCheck body)
-    (OneLineIf condition stm)	-> (boolCheck condition) ++ (typeCheck stm) 
-    (IfBlock condition blk)	-> (boolCheck condition) ++ (typeCheck blk) 
-    (IfElseBlock condition blkThen blkElse)	-> (boolCheck condition) ++ (typeCheck blkThen) ++ (typeCheck blkElse)
-    (ForBlk _ _ block)		-> (typeCheck block)
-    (ForSmp _ _ stmt)		-> (typeCheck stmt)
-    (TrCh stmt1 stmt2)		-> (typeCheck stmt1) ++ (typeCheck stmt2)
-    _                           -> []
+    (Stmt1 x)	        -> foldr (++) [] (map typeCheckStmt x)
+    (Stmt2 x)           -> typeCheckExp x
+    (Stmt3 x)		-> typeCheckAssign x
+    (Stmt5 x)		-> typeCheckFnDecl x
+    (Stmt6 x)		-> typeCheckWhDo x
+    (Stmt7 x)		-> typeCheckDoWh x
+    (Stmt8 x)		-> typeCheckIf x
+    (Stmt9 x)		-> typeCheckFor x
+    (Stmt10 x)		-> typeCheckTryCatch x
+    (Stmt12 x)		-> (Ret x)
+    _                   -> []
 
-inferType a = case a of
-    (AddExp x y)    ->  
-    (SubExp x y)    ->
-    (MulExp x y)    ->
-    (DivExp x y)    ->
-    (PosExp x)      ->
-    (NegExp x)      ->
-    (RefExp x)      ->
-    (EqExp x y)     ->
-    (NEqExp x y)    ->
-    (LTExp x y)     ->
-    (GTExp x y)     ->
-    (LETExp x y)    ->
-    (GETExp x y)    ->
-    (AndExp x y)    ->
-    (OrExp x y)     ->
-    (NotExp x)      ->
-    (VExp1 x)       -> 
-    (VExp2 x)       -> inferType x
-    (VExp3 x)       -> inferType x
 
-data TReturnType = Correct Type | Error Type | Ignore deriving (Eq, Ord, Show)
+typeCheckExp :: Exp -> TypeCorrect
+typeCheckExp exp = case exp of
+	(AddExp x y _)    ->	compareTypeMis (typeCheckExp x) (typeCheckExp y)	
+        (SubExp x y _)    ->	compareTypeMis (typeCheckExp x) (typeCheckExp y)	
+        (MulExp x y _)    ->	compareTypeMis (typeCheckExp x) (typeCheckExp y)	
+        (DivExp x y _)    ->	compareTypeMis (typeCheckExp x) (typeCheckExp y)	
+        (PosExp x _)      ->	compareTypeErr (typeCheckExp x) (Int' "" (0,0))	
+        (NegExp x _)      ->	compareTypeErr (typeCheckExp x) (Int' "" (0,0))	
+        (RefExp x _)      ->	compareTypeErr (typeCheckExp x) (Pointer' [])	
+        (EqExp x y pos)   ->	compareTypeForce (typeCheckExp x) (typeCheckExp y) (Bool' (show exp) pos)	
+        (NEqExp x y pos)    ->	compareTypeForce (typeCheckExp x) (typeCheckExp y) (Bool' (show exp) pos)
+        (LTExp x y pos)     ->	compareTypeForce (typeCheckExp x) (typeCheckExp y) (Bool' (show exp) pos)
+        (GTExp x y pos)     ->	compareTypeForce (typeCheckExp x) (typeCheckExp y) (Bool' (show exp) pos)
+        (LETExp x y pos)    ->	compareTypeForce (typeCheckExp x) (typeCheckExp y) (Bool' (show exp) pos)
+        (GETExp x y pos)    ->	compareTypeForce (typeCheckExp x) (typeCheckExp y) (Bool' (show exp) pos)
+        (AndExp x y pos)    ->	compareTypeErr (compareTypeMis (typeCheckExp x) (typeCheckExp y)) (Bool' (show exp) pos)
+        (OrExp x y pos)     ->	compareTypeErr (compareTypeMis (typeCheckExp x) (typeCheckExp y)) (Bool' (show exp) pos)
+        (NotExp x pos)      ->	compareTypeErr x (Bool' (show exp) pos)
+        (VExp1 x)         ->	(Correct x)
+        (VExp2 x)         ->	(Unknown)
+        (VExp3 x)         ->	(Unknown)
 
-expTypeCheck a = let 
-	getOp a = fst $ expTypeCheck a
-	getErr a = snd $ expTypeCheck a
-	result a b = evaluate (getOp a) (getOp b)
-	throwErr a b = errMsg (getOp a) (getOp b)
-		in case a of
-			(AddExp x y _)    ->	(result x y (), concatErrMsg x y)
-			(SubExp x y _)    ->	(result x y (), concatErrMsg x y)
-			(MulExp x y _)    ->	(result x y (), concatErrMsg x y)
-			(DivExp x y _)    ->	(result x y (), concatErrMsg x y)
-			(PosExp x _)      ->	(result x (Bool "" (0,0)) (), concatErrMsg x (Bool' "" (0,0)) $ ++ posErrMsg x )
-			(NegExp x _)      ->
-			(RefExp x _)      ->
-			(EqExp x y pos)   ->	(result x y (Bool' "" pos), )
-			(NEqExp x y _)    ->	(result x y (Bool' "" pos), ) 
-			(LTExp x y _)     ->	(result x y (Bool' "" pos), )	
-			(GTExp x y _)     ->	(result x y (Bool' "" pos), )	
-			(LETExp x y _)    ->	(result x y (Bool' "" pos), )	
-			(GETExp x y _)    ->	(result x y (Bool' "" pos), )	
-			(AndExp x y _)    ->	(result x y (Bool' "" pos), )	
-			(OrExp x y _)     ->	(result x y (Bool' "" pos), )	
-			(NotExp x _)      ->	(result x y (Bool' "" pos), )
-			(VExp1 x)         ->	(x, "")
-			(VExp2 x)         ->	((), "")
-			(VExp3 x)         ->	((), "")
-	where 	evaluate x y type = case compareTypes a b of
-			True	->	retType a b
-			False 	->	()
-			_	->	()
-			where   retType a b type = type
-				retType a b _ = case (a,b) of
-					((Real' _ _ ),(Int' _ _))	->	a
-					((Int' _ _ ),(Real' _ _))	->	b
-					_				->	a
-		errMsg a b = case compareTypes a b of
-			False	->	"Type Error: "++show a++" type is incompatible with "++show b
-			_	->	[]
-		concatErrMsg a b = (getErr a) ++ (getErr b) ++ throwErr a b
-		posErrMsg a b = 
+compareTypeMis :: TypeCorrect -> TypeCorrect -> TypeCorrect
+compareTypeMis a b = case (a,b) of
+	(Correct (Int' _ _), Correct (Int' _ _))       	-> Correct a
+	(Correct (Real' _ _), Correct (Real' _ _))     	-> Correct a
+	(Correct (Char' _ _), Correct (Char' _ _))     	-> Correct a
+	(Correct (String' _ _), Correct (String' _ _)) 	-> Correct a
+	(Correct (Bool' _ _), Correct (Bool' _ _))     	-> Correct a
+	(Correct (Array' lst1 _), Correct (Array' lst2 _)) -> compareArrays a b
+	(Correct (Pointer' t), Correct (Pointer' d))   	-> compare t d
+	(Correct (Void'), Correct (Void'))             	-> Correct a 
+	(Correct (Int' _ _), Correct (Real' _ _))      	-> Correct b
+	(Correct (Real' _ _), Correct (Int' _ _))      	-> Correct a
+	(Error a b, _)					-> Error a b
+	(_, Error a b)					-> Error a b
+	(Unknown, a)					-> Correct a
+	(a, Unknown)					-> Correct a
+        _                              -> (Mismatch a b)
 
-returnCheck cast body = case (compareTypes (inferType cast) (getReturn body)) of
-    True -> []
-    False -> "Type Error: Return YOYO"
-    where getReturn b = case b of
-                        (a@(Ret1 x),_)  -> inferType a
-                        (a@(Ret2 x),_)  -> inferType a
-                        (_,x)           -> getReturn x
-                        _       	-> Void' 
+compareTypeForce a b force = case compareTypes a b of
+	(Correct a)	->	(Correct force)
+	(Mismatch a b)	->	(Mismatch a b)
+	(Error a b)	->	(Error a b)
+	(Unknown)	->	(Unknown)
 
-compareTypes a b = case compare a b of
-    True -> []
-    False -> "SADASDASD"
-    where compare a b = case (a,b) of
-            ((Int' _ _), (Int' _ _))       -> True
-            ((Real' _ _), (Real' _ _))     -> True
-            ((Char' _ _), (Char' _ _))     -> True
-            ((String' _ _), (String' _ _)) -> True
-            ((Bool' _ _), (Bool' _ _))     -> True
-            ((Array' lst1), (Array' lst2)) -> compareTypes lst1 lst2
-            ((Pointer' t), (Pointer' d))   -> compareTypes t d
-            ((Void'), (Void'))             -> True
-            ((Int' _ _), (Real' _ _))      -> True
-            ((Real' _ _), (Int' _ _))      -> True
-	    ((),_)			   -> True
-	    (-,())			   -> True
-	    ((x:xs),(y:ys))		   -> (compareTypes x y) && (compareTypes xs ys)
-	    ((x:_)),(y:_))		   -> compareTypes x y
-            _                              -> False
+compareTypeErr a b = case compareTypes a b of
+	(Correct a)	->	(Correct a)
+	(Mismatch a b)	->	(Error a b)
+	(Error a b)	->	(Error a b)
 
-boolCheck a = compareTypes (inferType a) (Bool' "" (0,0)) 
+compareArrays :: Type -> Type -> TypeCorrect
+compareArrays (Array' (x:xs)) (Array' (y:ys)) = case compareTypes x y of
+	(Correct x)	->	compareArrays xs ys
+	(Error a b)	->	(Error a b)
+
+getTypePos x = case x of
+	Int' _ pos	-> show pos
+        Real' _ pos	-> show pos
+        Char' _ pos	-> show pos
+        String' _ pos	-> show pos
+        Bool' _ pos	-> show pos
+        Array' _ pos	-> show pos
+        Pointer' t	-> ""
+        Void'		-> ""
 
 }
