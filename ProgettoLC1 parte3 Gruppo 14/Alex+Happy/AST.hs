@@ -339,9 +339,9 @@ instance Show Exp where
    show (AndExp x y _) = show x ++ " && " ++ show y
    show (OrExp x y _) = show x ++ " || " ++ show y
    show (NotExp x _) = "!" ++ show x
-   show (VExp1 x _) = show x
-   show (VExp2 x _) = show x
-   show (VExp3 x _) = show x
+   show (VExp1 x) = show x
+   show (VExp2 x) = show x
+   show (VExp3 x) = show x
 
 
 
