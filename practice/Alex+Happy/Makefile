@@ -1,12 +1,12 @@
 ALEX = alex -g
-HAPPY= happy -gca -iinfo
+HAPPY= happy -gca
 GHC  = ghc
 
 SRC= $(patsubst %.y,%.hs,$(wildcard *.y)) $(patsubst %.x,%.hs,$(wildcard *.x))
 
 
 all: $(SRC)
-	$(GHC) --make $< -o TestParser
+	$(GHC) Parser.hs
 
 #testsymm: Lexer.hs ParserI.hs TestSymm.hs
 #	$(GHC) -w -main-is TestSymm --make TestSymm.hs
@@ -25,6 +25,6 @@ clean :
 
 distclean : clean
 	echo cleaning all
-	-rm -f $(SRC) TestParser 
+	-rm -f $(SRC) 
 
 .PHONY: all clean distclean demo

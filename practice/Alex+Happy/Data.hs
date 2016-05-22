@@ -1,73 +1,76 @@
 module Data where
 
-data Token =    Int String Pos
-                | Double String Pos
-                | Char String Pos
-                | String String Pos
-                | Label String Pos
-                | Comment String Pos
-                | BrakOpen Pos
-                | BrakClose Pos
-                | SBrakOpen Pos
-                | SBrakClose Pos
-                | CBrakOpen Pos
-                | CBrakClose Pos
-                | AssignOp Pos
-                | EqualsOp Pos
-                | DiffOp Pos
-                | LessThanOp Pos
-                | GreaterThanOp Pos
-                | ELessThanOp Pos
-                | EGreaterThanOp Pos
-                | AddOp Pos
-                | SubOp Pos
-                | MulOp Pos
-                | DivOp Pos
-                | IncOp Pos
-                | DecOp Pos
-                | Comma Pos
-                | Semicolon Pos
-                | Dereference Pos
-                | And Pos
-                | Or Pos
-                | NegOp Pos
-                | Break Pos
-                | Continue Pos
-                | Return Pos
-                | IntLabel Pos
-                | FloatLabel Pos
-                | CharLabel Pos
-                | StringLabel Pos
-                | VoidLabel Pos
-                | ReadIntPF Pos
-                | WriteIntPF Pos
-                | ReadFloatPF Pos
-                | WriteFloatPF Pos
-                | ReadCharPF Pos
-                | WriteCharPF Pos
-                | ReadStringPF Pos
-                | WriteStringPF Pos
-                | ValRes Pos
-                | If Pos
-                | Else Pos
-                | While Pos
-                | For Pos
-                deriving (Eq, Ord, Show)
-                
-type Pos = ( Int , Int )
+data Token = SComment DualData
+           | MComment DualData
+           | Int DualData
+           | Real DualData
+           | Char DualData
+           | String DualData
+           | Label DualData
+           | TS_Int Pos
+           | TS_Real Pos       
+           | TS_Char Pos
+           | TS_String Pos
+           | TS_Void Pos
+           | TS_Bool Pos
+           | TSB_True Pos
+           | TSB_False Pos
+           | PM_Value Pos
+           | PM_Reference Pos
+           | PM_Constant Pos
+           | If Pos
+           | Then Pos
+           | Else Pos
+           | For Pos
+           | In Pos
+           | While Pos
+           | Do Pos
+           | Break Pos
+           | Continue Pos
+           | Return Pos
+           | Try Pos
+           | Catch Pos
+           | PF_readInt Pos
+           | PF_writeInt Pos
+           | PF_readReal Pos
+           | PF_writeReal Pos
+           | PF_readChar Pos
+           | PF_writeChar Pos
+           | PF_readString Pos
+           | PF_writeString Pos
+           | BK_NOpen Pos
+           | BK_NClos Pos
+           | BK_SOpen Pos
+           | BK_SClos Pos
+           | BK_COpen Pos
+           | BK_CClos Pos
+           | OP_Assign Pos
+           | OP_Equal Pos
+           | OP_NEqual Pos
+           | OP_LesThn Pos
+           | OP_LesThnEq Pos
+           | OP_GrtThn Pos
+           | OP_GrtThnEq Pos
+           | OP_Add Pos
+           | OP_Sub Pos
+           | OP_Mul Pos
+           | OP_Div Pos
+           | OP_Ref Pos
+           | OP_And Pos
+           | OP_Or Pos
+           | OP_Negt Pos
+           | OP_AddAssign Pos
+           | OP_SubAssign Pos
+           | OP_MulAssign Pos
+           | OP_DivAssign Pos
+           | Comma Pos
+           | Semicolon Pos
+           | CHP_Var Pos
+           | CHP_Func Pos
+           | CHP_Cast Pos
+           | CHP_Range Pos
+           deriving(Eq, Ord, Show)
 
-data Type =     IntType
-                | DoubleType
-                | CharType
-                | StringType
-                | PointerType Type 
-                | ArrayType Type
-                | VoidType
-                deriving(Eq, Ord, Show)
+type Pos = (Int, Int)
 
-data TypeResult = Correct Type | Error Type Type | ReturnT Type | Null deriving (Show)
-
---instance Monad TypeResult dd
-data Entry = Def String Type
-
-type EntryTable = [Entry]
+type DualData = (String, Pos)

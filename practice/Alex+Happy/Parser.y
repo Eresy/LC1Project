@@ -3,315 +3,265 @@
 module Main (main) where
 
 import Lexer (alexScanTokens)
-import Data (Token(..), Type(..), TypeResult(..))
+import Data 
+import AST
 
 }
 
-%name parseCLike
+%name parseChapel
 %tokentype { Token }
 %error { parseError }
 
 %token
-	int_	{ Int $$ _}
-	double_	{ Double $$ _}
-	char_	{ Char $$ _}
-	string_	{ String $$ _}
-	label_	{ Label $$ _}
-        comment_    { Comment $$ _}
-	brakOpen_	{ BrakOpen _}
-	brakClose_	{ BrakClose _}
-	sBrakOpen_	{ SBrakOpen _}
-	sBrakClose_	{ SBrakClose _}
-	cBrakOpen_	{ CBrakOpen _}
-	cBrakClose_	{ CBrakClose _}
-	assignOp_	{ AssignOp _}
-	equalsOp_	{ EqualsOp _}
-	diffOp_		{ DiffOp _}
-	lessThanOp_	{ LessThanOp _}
-	greaterThanOp_	{ GreaterThanOp _}
-	eLessThanOp_	{ ELessThanOp _}
-	eGreaterThanOp_	{ EGreaterThanOp _} 
-	addOp_		{ AddOp _}
-	subOp_		{ SubOp _}
-	mulOp_		{ MulOp	_}
-	divOp_		{ DivOp _}
-	incOp_		{ IncOp _}
-	decOp_		{ DecOp _}
-	comma_		{ Comma _}
-	semicolon_	{ Semicolon _}
-	dereference_	{ Dereference _}
-	and_		{ And _}
-	or_		{ Or _}
-	negOp_		{ NegOp _}
-	break_		{ Break _}
-	continue_	{ Continue _}
-	return_		{ Return _}
-	intLabel_	{ IntLabel _}
-	floatLabel_	{ FloatLabel _}
-	charLabel_	{ CharLabel _}
-	stringLabel_	{ StringLabel _}
-	voidLabel_	{ VoidLabel _}
-	if_		{ If _}
-	else_		{ Else _}
-	for_		{ For _}
-	while_		{ While _}
-	readInt_	{ ReadIntPF _}
-	writeInt_	{ WriteIntPF _}
-	readFloat_	{ WriteFloatPF _}
-	writeFloat_	{ WriteFloatPF _}
-	readChar_	{ ReadCharPF _}
-	writeChar_	{ WriteCharPF _}
-	readString_	{ ReadStringPF _}
-	writeString_	{ WriteStringPF _}
-	valRes_		{ ValRes _}
 	
+	scomment_		{ SComment $$}
+	mcomment_		{ MComment $$}
+	int_			{ Int $$ }
+	real_			{ Real $$ }
+	char_			{ Char $$ }
+	string_			{ String $$ }
+	label_			{ Label $$ }
+	typeInt_		{ TS_Int $$ }
+	typeReal_		{ TS_Real $$ }
+	typeChar_		{ TS_Char $$ }
+	typeString_		{ TS_String $$ }
+	typeVoid_		{ TS_Void $$ }
+	typeBool_		{ TS_Bool $$ }
+	value_			{ PM_Value $$ }
+	reference_		{ PM_Reference $$ }
+	constant_		{ PM_Constant $$ }
+	if_			{ If $$ }
+	then_			{ Then $$  }
+	else_			{ Else $$ }
+	for_			{ For $$ }
+	in_			{ In $$ }
+	while_			{ While $$}
+	do_			{ Do $$ }
+	break_			{ Break $$ }
+	continue_		{ Continue $$ }
+	return_			{ Return $$ }
+	try_			{ Try $$ }
+	catch_			{ Catch $$ }
+	readInt_		{ PF_readInt $$ }
+	writeInt_		{ PF_writeInt $$ }
+	readReal_		{ PF_readReal $$ }
+	writeReal_		{ PF_writeReal $$ }
+	readChar_		{ PF_readChar $$ }
+	writeChar_		{ PF_writeChar $$ }
+	readString_		{ PF_readString $$ }
+	writeString_		{ PF_writeString $$ }
+	bknOpen_		{ BK_NOpen $$ }
+	bknClose_		{ BK_NClos $$ }
+	bksOpen_		{ BK_SOpen $$ }
+	bksClose_		{ BK_SClos $$ }
+	bkcOpen_		{ BK_COpen $$ }
+	bkcClose_		{ BK_CClos $$ }
+	assign_			{ OP_Assign $$ }
+	equals_			{ OP_Equal $$ }
+	nequals_		{ OP_NEqual $$ }
+	lessthan_		{ OP_LesThn $$ }
+	lessthaneq_		{ OP_LesThnEq $$ }
+	greatthan_		{ OP_GrtThn $$ }
+	greatthaneq_		{ OP_GrtThnEq $$ }
+	add_			{ OP_Add $$ }
+	sub_			{ OP_Sub $$ }
+	mul_			{ OP_Mul $$ }
+	div_			{ OP_Div $$ }
+	addassign_		{ OP_AddAssign $$ }
+	subassign_		{ OP_SubAssign $$ }
+	mulassign_		{ OP_MulAssign $$ }
+	divassign_		{ OP_DivAssign $$ } 
+	ref_			{ OP_Ref $$ }
+	and_			{ OP_And $$ }
+	or_			{ OP_Or $$ }
+	neg_			{ OP_Negt $$ }
+	comma_			{ Comma $$ }
+	semic_			{ Semicolon $$ }
+	var_			{ CHP_Var $$ }
+	proc_			{ CHP_Func $$ }
+	cast_			{ CHP_Cast $$ }
+	range_			{ CHP_Range $$ } 
+	true_			{ TSB_True $$ }
+	false_			{ TSB_False $$ }
 %%
 
-S : TopStatements { $1 }
 
-TopStatements	:   TopStatement TopStatements { isCorrect $1 $2 }
-                    | { Null }
-TopStatement	:   Definition { $1 }
+S		:	Program			{ $1  }
 
-Statements  :	Statement Statements { isCorrect $1 $2 }
-		| { Null }
-Statement   :	Assignment { $1 }
-		| Definition  { $1 }
-		| FunctionCall { $1 }
-		| return_ Expression semicolon_ { $2 }
-		| FlowControl { $1 }
+Program		:	ListStatement		{ Program $1 }
 
-Assignment  :	LValue assignOp_ RValue semicolon_ { typeCompare $1 $3 }
+ListStatement	:	Statement ListStatement { $1 : $2 }
+		|				{ [] }
 
-Definition  :	TypeLabel LValue semicolon_ { typeCompare $1 $2 } 
-		| TypeLabel Assignment { typeCompare $1 $2 }
-		| FunctionDef { $1 }
-                | comment_ { Null }
+Statement	:	BlockStatement		{ Stmt1 $1 }
+		|	Expression semic_	{ Stmt2 $1 }
+		|	Assignment semic_	{ Stmt3 $1 }
+		|	Declaration semic_	{ Stmt4 $1 }
+		|	FuncDeclaration		{ Stmt5 $1 }
+		|	WhileDo			{ Stmt6 $1 }
+		|	DoWhile			{ Stmt7 $1 }
+		|	If			{ Stmt8 $1 }
+		|	For			{ Stmt9 $1 }
+		|	TryCatch		{ Stmt10 $1 }
+		|	break_ semic_		{ Stmt11 Brk }
+		|	continue_ semic_		{ Stmt11 Cont }
+		|	return_ Expression semic_	{ Stmt12 (Ret1 $2) }
+		|	return_ NamedAssignment semic_	{ Stmt12 (Ret2 $2) }
+		|	Comment				{ Stmt13 $1 }
 
-FunctionDef :	TypeLabel Label brakOpen_ Arguments brakClose_ cBrakOpen_ Statements cBrakClose_ { $7  } --controllo tipo-return? 
-		| voidLabel_ Label brakOpen_  Arguments brakClose_ cBrakOpen_ Statements cBrakClose_ { $7 }
+Comment		:	scomment_ 			{ SCmt (fst $1) }
+	 	|	mcomment_			{ MCmt (fst $1) }
 
-LValue	    :	Label Arrays { Null } --da cambiare
-		| Pointer Label { Null } --da cambiare
+BlockStatement	:	bkcOpen_ ListStatement bkcClose_		{ Blk $2 }
 
-RValue	:	Expression { $1 }
-		| Assignment { $1 }
-		| ArrayDef { $1 }
-		| dereference_ label_ { infer IntType }
+FunctionCall	:	Label ParameterA				{ FCall $1 $2 }
+		|	readInt_ bknOpen_ bknClose_			{ ReadInt $1 }
+		|	writeInt_ bknOpen_ Expression bknClose_		{ WriteInt $3 $1 }
+		|	readReal_ bknOpen_ bknClose_			{ ReadReal $1 }
+		|	writeReal_ bknOpen_ Expression bknClose_	{ WriteReal $3 $1 }
+		|	readChar_ bknOpen_ bknClose_			{ ReadChar $1 }
+		|	writeChar_ bknOpen_ Expression bknClose_	{ WriteChar $3 $1 }
+		|	readString_ bknOpen_ bknClose_			{ ReadString $1 }
+		|	writeString_ bknOpen_ Expression bknClose_	{ WriteString $3 $1 }
 
-Type	:	int_ { infer (IntType) }
-		| char_ { infer (CharType) }
-		| string_ { infer (StringType) }
-		| double_ { infer (DoubleType) }
+FuncDeclaration	:	proc_ Label ParameterFDecl Cast BlockStatement 	{ FullDecl $2 $3 $4 $5 }
+		|	proc_ Label ParameterFDecl BlockStatement 	{ NoCastDecl $2 $3 $4 }
+		|	proc_ Label Cast BlockStatement 		{ NoParamDecl $2 $3 $4 }
+		|	proc_ Label BlockStatement 			{ NakedDecl $2 $3 }
 
-TypeLabel   :	intLabel_       { infer (IntType) }
-		| charLabel_    { infer (CharType) }
-		| floatLabel_   { infer (DoubleType) }
-		| stringLabel_  { infer (StringType) }
+ParameterFDecl	:	bknOpen_ ListParameterF bknClose_ 	{ $2 }
+ParameterF	:	Mode Label Cast 			{ FParam $1 $2 $3 }
+ListParameterF	:	ParameterF ListParameterFC		{ $1 : $2 }
+	        |						{ [] }
+ListParameterFC	:	comma_ ParameterF ListParameterFC	{ $2 : $3 }
+		|						{ [] }
 
-PredFunction :  readInt_ brakOpen_ brakClose_ { infer (IntType) }
-		| writeInt_ brakOpen_ Parameter brakClose_ { typeCompare (infer IntType) $3 }
-		| readFloat_ brakOpen_ brakClose_ { (infer DoubleType) }
-		| writeFloat_ brakOpen_ Parameter brakClose_ { typeCompare (infer DoubleType) $3 }
-		| readChar_ brakOpen_ brakClose_ { (infer CharType)  }
-		| writeChar_ brakOpen_ Parameter brakClose_ { typeCompare (infer CharType) $3 }
-		| readString_ brakOpen_ brakClose_ { (infer StringType) }
-		| writeString_ brakOpen_ Parameter brakClose_ { typeCompare (infer StringType) $3 }
+ParameterA	:	bknOpen_ ListExpression bknClose_ 	{ $2 }
+ListExpression	:	Expression ListExpressionC 		{ $1 : $2 }
+	        |						{ [] }
+ListExpressionC :	comma_ Expression ListExpressionC	{ $2 : $3 }
+		|						{ [] }
 
-FunctionCall :	Label brakOpen_ Parameters brakClose_ semicolon_ {Null}
-		| PredFunction semicolon_ { $1 }
+Mode		:	value_ 		{ Val }
+		|	reference_	{ Ref }
+		|	constant_ 	{ Con }
+ 		|			{ Uns }
 
-Parameters  :	Parameter ParameterL { Null }
-		| { Null }
-ParameterL  :	comma_ Parameter ParameterL { Null }
-		| { Null }
-Parameter   :	RValue { $1 }
+Declaration	:	var_ ListPointer Label Cast	{ SimpleDecl $2 $3 $4 }
 
-Arguments   :	Argument ArgumentsL { isCorrect $1 $2}
-		| { Null }
-ArgumentsL  :	comma_ Argument ArgumentsL { isCorrect $2 $3 }
-		| { Null }
-Argument    :	PassingType TypeLabel Label { $2 }
-PassingType :	valRes_ {}
-		| {}
+Assignment	:	NamedAssignment 				{ SimpleAssign $1 }
+		|	var_ ListPointer Label assign_ RValue		{ GenericAssign $2 $3 $5 }
+		|	Declaration assign_ RValue 			{ DeclAssign $1 $3 }
 
-FlowControl :	IfThenElse { $1 }
-		| While { $1 }
-		| For { $1 }
+NamedAssignment	:	LValue AssignOps RValue 	{ Ass $1 $2 $3 }
 
-FlowStatements :    FlowStatement FlowStatements { isCorrect $1 $2}
-		    | { Null}
-FlowStatement : break_ semicolon_ { Null }
-		| continue_ semicolon_ { Null}
-		| Statement { $1 }
+AssignOps	:	assign_		{ Assign }
+	 	|	addassign_	{ AddAssign }
+		|	subassign_	{ SubAssign }
+		|	mulassign_	{ MulAssign }
+		|	divassign_	{ DivAssign }
 
-IfThenElse :	if_ brakOpen_ Expression brakClose_ Then { isCorrect $3 $5 }
-		| if_ brakOpen_ Expression brakClose_ Then Else { isCorrect $3 (isCorrect $5 $6)}
-Then	:	cBrakOpen_ Statements cBrakClose_ { $2 }
-Else	:	else_ Then { $2 }
-While	:	while_ brakOpen_ Expression brakClose_ cBrakOpen_ FlowStatements cBrakClose_ { isCorrect $3 $6 }
-                | while_ brakOpen_ Expression brakClose_ Statement { isCorrect $3 $5 }
-For	:	for_ brakOpen_ ForInd semicolon_ ForExpression semicolon_ ForExpression brakClose_ cBrakOpen_ FlowStatements cBrakClose_ {isCorrect $3 (isCorrect $5 (isCorrect $7 $10))}
-                | for_ brakOpen_ ForInd semicolon_ ForExpression semicolon_ ForExpression brakClose_ {isCorrect $3 (isCorrect $5 $7) }
-ForInd	:	ForVars { $1 }
-		| { Null }
-ForVars :	ForVar comma_ ForVars { isCorrect $1 $3 }
-		| ForVar { Null}
-ForVar	:	LValue assignOp_ RValue { typeCompare $1 $3 }
-ForExpression : Expression { $1 }
-		| { Null }
+Range		:	Expression range_ Expression	{ CRange $1 $3 }
+		|	Expression range_ 		{ NURange $1 }
+		|	range_ Expression 		{ NLRange $2 }
+		|	range_ 				{ ULRange }
 
-Label	:   label_ { Null }
+Cast		:	cast_ TypeSpec 				{ SCast $2 }
+		|	cast_ MultiDimRange TypeSpec 		{ MCast $2 $3 }
+MultiDimRange	:	bksOpen_ Range MoreRange bksClose_	{ $2 : $3 }
+MoreRange	:	comma_ Range MoreRange			{ $2 : $3}
+	  	|						{ [] }
 
-Arrays	:   Array Arrays { Null }
-	    | { Null }
-Array	:   sBrakOpen_ int_ sBrakClose_ { Null}
-            | sBrakOpen_ sBrakClose_ { Null }
 
-ArrayDef    :	cBrakOpen_ ArrayItems cBrakClose_ { $2 }
-ArrayItems  :	ArrayItem ArrayItemL { typeCompare $1 $2 }
-		| { Null }
-ArrayItemL  :	comma_ ArrayItem ArrayItemL { typeCompare $2 $3 }
-		| { Null }
-ArrayItem   :	RValue { $1 }
+Pointer		:	mul_ 				{ Ptr }
+ListPointer	:	Pointer ListPointer		{ $1 : $2 }
+		|					{ [] }
 
-Pointers    :   Pointer Pointers { Null}
-                | { Null }
-Pointer	    :	mulOp_ {Null}
+LValue		:	Label ListArrayIndex 	{ ArrayLV $1 $2 }
+		|	Label			{ LV $1 }
 
-Expression  :	Expression1 { $1 }
-Expression1 :	Expression1 and_ Expression2 { typeCompare $1 $3  }
-		| Expression1 or_ Expression2 { typeCompare $1 $3}
-		| Expression2 { $1 }
-Expression2 :	negOp_ Expression3 { $2 }
-		| Expression3 { $1 }
-Expression3 :	Expression3 equalsOp_ Expression4 { typeCompare $1 $3 }
-		| Expression3 diffOp_ Expression4 { typeCompare $1 $3 }
-		| Expression3 lessThanOp_ Expression4 { typeCompare $1 $3 }
-		| Expression3 greaterThanOp_ Expression4{ typeCompare $1 $3 }
-		| Expression3 eLessThanOp_ Expression4 { typeCompare $1 $3 }
-		| Expression3 eGreaterThanOp_ Expression4 { typeCompare $1 $3 }
-		| Expression4 { $1 }
-Expression4 :	Expression4 addOp_ Expression5 {typeCompare $1 $3}
-		| Expression4 subOp_ Expression5 {typeCompare $1 $3}
-		| Expression5 { $1 }
-Expression5 :	Expression5 mulOp_ Expression6 { typeCompare $1 $3 }
-		| Expression5 divOp_ Expression6 { typeCompare $1 $3 }
-		| Expression6 { $1 }
-Expression6 :	Expression6 incOp_ { $1 }
-		| Expression6 decOp_ { $1 }
-		| Expression7 { $1 }
-Expression7 :	incOp_ Expression7 { $2 }
-		| decOp_ Expression7 { $2 }
-		| Type {$1}
-		| LValue {$1}
-		| FunctionCall {$1}
-		| brakOpen_ Expression1 brakClose_ {$2}
+RValue		:	Expression	{ SimpleRV $1 }
+		|	NamedAssignment	{ ComplexRV $1 }
 
+ArrayIndex	:	bksOpen_ Expression bksClose_ 	{ $2 }
+ListArrayIndex	:	ArrayIndex ListArrayIndex	{ $1 : $2 }
+		|	ArrayIndex			{ $1 : [] }
+
+ArrayElement	:	bknOpen_ ListValue bknClose_	{ $2 }
+ListValue	:	Value comma_ Value ListValueC	{ $1 : $3 : $4 }
+ListValueC	:	comma_ Value ListValueC		{ $2 : $3}
+		|					{ [] }
+
+WhileDo		:	while_ Expression BlockStatement { WD $2 $3 }
+DoWhile		:	do_ BlockStatement while_ Expression semic_ { DW $2 $4 }
+
+If		:	if_ Expression BlockStatement 				{ IfBlock $2 $3 } 
+		|	if_ Expression BlockStatement else_ BlockStatement	{ IfElseBlock $2 $3 $5} 
+		|	if_ Expression then_ Statement				{ OneLineIf $2 $4}
+
+For		:	for_ Label in_ Range BlockStatement 	{ ForBlk $2 $4 $5 }
+		|	for_ Label in_ Range do_ Statement 	{ ForSmp $2 $4 $6 }
+
+TryCatch	:	try_ Statement catch_ Statement { TrCh $2 $4 }
+
+Expression	:	Expression1				{ $1 }
+Expression1	:	Expression1 and_ Expression2 		{ AndExp $1 $3 }
+		|	Expression1 or_ Expression2 		{ OrExp $1 $3 }
+		|	Expression2				{ $1 }
+Expression2	:	neg_ Expression3 			{ NegExp $2 }
+	    	|	Expression3				{ $1 }
+Expression3	:	Expression3 equals_ Expression4 	{ EqExp $1 $3 }
+		|	Expression3 nequals_ Expression4	{ NEqExp $1 $3 }
+		|	Expression3 lessthan_ Expression4 	{ LTExp $1 $3 }
+		|	Expression3 greatthan_ Expression4 	{ GTExp $1 $3 }
+		|	Expression3 lessthaneq_ Expression4 	{ LETExp $1 $3 }
+		|	Expression3 greatthaneq_ Expression4 	{ GETExp $1 $3 }
+		|	Expression4				{ $1 }
+Expression4	:	Expression4 add_ Expression5 	{ AddExp $1 $3 }
+		|	Expression4 sub_ Expression5 	{ SubExp $1 $3 }
+		|	Expression4 mul_ Expression5 	{ MulExp $1 $3 }
+		|	Expression4 div_ Expression5 	{ DivExp $1 $3 }
+		|	Expression5			{ $1 }
+Expression5	:	sub_ Expression6		{ NegExp $2 }
+	    	|	add_ Expression6		{ PosExp $2 }
+		|	Expression6			{ $1 }
+Expression6	:	mul_ Expression7 		{ DerExp $2 } 
+		|	ref_ Expression7		{ RefExp $2 }
+		|	Expression7			{ $1 }
+Expression7	:	Value 				{ $1 }
+		|	bknOpen_ Expression1 bknClose_	{ $2 }
+
+Value		:	LValue		{ VExp3 $1 }
+		|	Literal 	{ VExp1 $1 }
+		|	FunctionCall 	{ VExp2 $1 }
+       
+Label		:	label_		{ (fst $1) }
+
+TypeSpec	:	typeInt_	{ IntSpec $1 }
+		|	typeReal_	{ RealSpec $1 }
+		|	typeBool_	{ BoolSpec $1 }
+		|	typeString_	{ StringSpec $1 }
+		|	typeChar_	{ CharSpec $1 }
+		|	typeVoid_	{ VoidSpec $1 }
+
+Literal		:	int_ 		{ Int' (fst $1) (snd $1) }
+		|	real_ 		{ Real' (fst $1) (snd $1) }
+		|	char_ 		{ Char' (fst $1) (snd $1) }
+		|	string_ 	{ String' (fst $1) (snd $1) }
+		|	ArrayElement 	{ Array' $1 }
+		|	true_		{ Bool' $1 }
+		|	false_		{ Bool' $1 }
 {
 
 main = do
     s <- getContents
     let tok = alexScanTokens s
-    print $ parseCLike tok
+    putStr "Your Tokens:\n"
     print tok
+    putStr "\n\nYour Program:\n"
+    putStrLn $ readAST $ parseChapel tok
 
---main = getContents >>= print . parseCLike . alexScanTokens
 
-parseError :: [Token] -> a
-parseError (tok:toks) = error ("Parse error: " ++ show tok ++ " at invalid postion.\n\nStack Trace:\n "++ show toks ++ "\n")
-parseError [] = error "casini!"
-parseError _ = error "OhOh!"
-
-isCorrect :: TypeResult -> TypeResult -> TypeResult
-isCorrect x@(Correct a) (Correct b) = x
-isCorrect (Correct _) x@(ReturnT _) = x
-isCorrect x@(ReturnT _) (Correct _) = x
-isCorrect x@(Error _ _) _ = error ("Type error!")
-isCorrect _ x@(Error _ _) = error ("Type error!")
-isCorrect Null x = x
-isCorrect x Null = x
-isCorrect Null Null = Null
-
-instance Monad TypeResult where
-	TypeResult a >>= f = f a
-	return a = (Correct a)
-	fail str = 
-	catch a f = case a of
-		(Correct a) -> (Correct a)
-		(Error a b) -> f a
-
-typeCompare :: TypeResult -> TypeResult -> TypeResult
-typeCompare (Correct a) (Correct b) = tCompare a b
-typeCompare (ReturnT a) (Correct b) = tCompare a b
-typeCompare (Correct a) (ReturnT b)= tCompare a b
-typeCompare x@(Error _ _) _ = x
-typeCompare _ x@(Error _ _) = x
-typeCompare Null x = x
-typeCompare x Null = x
-typeCompare Null Null = Null
-
-tCompare :: Type -> Type -> TypeResult
-tCompare a b = comp (a == b) where
-    comp True = (Correct a)
-    comp False = Error a b
-
-infer x = (Correct x)
-ret x = (ReturnT x)
-
---typeInfer :: Token -> Type
---typeInfer x = case x of
---   		(Int _ _) -> IntType 
---                (Double _ p) -> DoubleType
---                (Char _ p) -> CharType
---                (String _ p) -> StringType
---                (Label _ p) -> NullType
---                (BrakOpen p)-> NullType
---                (BrakClose p) -> NullType
---                (SBrakOpen p) -> NullType
---                (SBrakClose p) -> NullType
---                (CBrakOpen p) -> NullType
---                (CBrakClose p) -> NullType
---                (AssignOp p) -> NullType
---                (EqualsOp p) -> NullType
---                (DiffOp p) -> NullType
---                (LessThanOp p) -> NullType
---                (GreaterThanOp p) -> NullType
---                (ELessThanOp p) -> NullType
---                (EGreaterThanOp p) -> NullType
---                (AddOp p) -> NullType
---                (SubOp p) -> NullType
---                (MulOp p) -> NullType
---                (DivOp p) -> NullType
---                (IncOp p) -> NullType
---                (DecOp p) -> NullType
---                (Comma p) -> NullType
---                (Semicolon p) -> NullType
---                (Dereference p) -> NullType
---                (And p) -> NullType
---                (Or p) -> NullType
---                (NegOp p) -> NullType
---                (Break p) -> NullType
---                (Continue p) -> NullType
---		  (Return p) -> NullType
---                (IntLabel p) -> NullType
---                (FloatLabel p) -> NullType
---                (CharLabel p) -> NullType
---                (StringLabel p) -> NullType
---                (VoidLabel p) -> NullType
---                (ReadIntPF p) -> NullType
---                (WriteIntPF p) -> NullType
---                (ReadFloatPF p) -> NullType
---                (WriteFloatPF p) -> NullType
---                (ReadCharPF p) -> NullType
---                (WriteCharPF p) -> NullType
---                (ReadStringPF p) -> NullType
---                (WriteStringPF p) -> NullType
---                (ValRes p) -> NullType
---                (If p) -> NullType
---                (Else p) -> NullType
---                (While p) -> NullType
---                (For p) -> NullType
- 
+parseError (tok:toks) = error ("Parser Error:" ++ show tok ++ " at invalid position.")
 
 }

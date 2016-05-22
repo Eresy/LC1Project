@@ -1,139 +1,170 @@
 {
+-- STAND ALONE
+--module Main (main) where
 
---module Main(main) where
-
+-- SLAVE 
 module Lexer (alexScanTokens) where
 
-import Data (Token(..), Pos(..))
-
+import Data (Token(..), Pos(..), DualData(..))
 }
 
 %wrapper "posn"
 
-$lett = [a-zA-Z]
+$alp = [a-zA-Z]
 $num = [0-9]
-
+$univ = [\0-\255]
 
 :-
 
-"//" [.]*                           {\x y -> Comment y (getPos x)}
+$white+                                      ;
 
-"/" ([[\0-\255] #\*] | \*+ [[\0-\255] # [\* \/]])* ("*")+"/"                          {\x y -> Comment y (getPos x)}
+"//" [.]*                                    {\x y -> SComment (y,(getPos x))}
 
-$white+                             ;
+"/*" [\0-\255]* "*/"                         {\x y -> MComment (y,(getPos x))}
 
-$num+				    {\x y -> Int y (getPos x)}
+$num+                                        {\x y -> Int (y,(getPos x))}
 
-$num+ ’.’ $num+ (’e’ ’-’? $num+)?   {\x y -> Double y (getPos x)} 
+($num+)? "." $num+ ([Ee] '-'? $num+)?        {\x y -> Real (y,(getPos x))}
 
-int                                 {\x y -> IntLabel (getPos x)}
+int                                          {\x y -> TS_Int (getPos x)}
 
-float                               {\x y -> FloatLabel (getPos x)} 
+real                                         {\x y -> TS_Real (getPos x)}
 
-char                                {\x y -> CharLabel (getPos x)}
+char                                         {\x y -> TS_Char (getPos x)}
 
-String                              {\x y -> StringLabel (getPos x)}
+string                                       {\x y -> TS_String (getPos x)}
 
-void                                {\x y -> VoidLabel (getPos x)}
+void                                         {\x y -> TS_Void (getPos x)}
 
-readInt                             {\x y -> ReadIntPF (getPos x)}
+bool                                         {\x y -> TS_Bool (getPos x)}
 
-writeInt                            {\x y -> WriteIntPF (getPos x)}
+true                                         {\x y -> TSB_True (getPos x)}
 
-readFloat                           {\x y -> ReadFloatPF (getPos x)}
+false                                        {\x y -> TSB_False (getPos x)}
 
-writeFloat                          {\x y -> WriteFloatPF (getPos x)}
+val                                          {\x y -> PM_Value (getPos x)}
 
-readChar                            {\x y -> ReadCharPF (getPos x)}
+ref                                          {\x y -> PM_Reference (getPos x)}
 
-writeChar                           {\x y -> WriteCharPF (getPos x)}
+const                                        {\x y -> PM_Constant (getPos x)}
 
-readString                          {\x y -> ReadStringPF (getPos x)}
+if                                           {\x y -> If (getPos x)}
 
-writeString                         {\x y -> WriteStringPF (getPos x)}
+then                                         {\x y -> Then (getPos x)}
 
-break                               {\x y -> Break (getPos x)}
+else                                         {\x y -> Else (getPos x)}
 
-continue                            {\x y -> Continue (getPos x)}
+for                                          {\x y -> For (getPos x)}
 
-return                              {\x y -> Return (getPos x)}
+in                                           {\x y -> In (getPos x)}
 
-valres                              {\x y -> ValRes (getPos x)}
+while                                        {\x y -> While (getPos x)}
 
-for                                 {\x y -> For (getPos x)}
+do                                           {\x y -> Do (getPos x)}
 
-while                               {\x y -> While (getPos x)}
+break                                        {\x y -> Break (getPos x)}
 
-if                                  {\x y -> If (getPos x)}
+continue                                     {\x y -> Continue (getPos x)}
 
-else                                {\x y -> Else (getPos x)}
+return                                       {\x y -> Return (getPos x)}
 
-’\’’ ($lett | (’\\’ "\n\t")) ’\’’   {\x y -> Char y (getPos x)}
+try                                          {\x y -> Try (getPos x)}
 
-’"’ @string ’"’			            {\x y -> String y (getPos x)}
+catch                                        {\x y -> Catch (getPos x)}
 
-$lett ($lett | $num | ’_’ | ’\’’)*  {\x y -> Label y (getPos x)}
+var                                          {\x y -> CHP_Var (getPos x)}
 
-\( {\x y -> BrakOpen (getPos x)}
+proc                                         {\x y -> CHP_Func (getPos x)}
 
-\) {\x y -> BrakClose (getPos x)}
+\:                                           {\x y -> CHP_Cast (getPos x)}
 
-\[ {\x y -> SBrakOpen (getPos x)}
+readInt                                      {\x y -> PF_readInt (getPos x)}
 
-\] {\x y -> SBrakClose (getPos x)}
+writeInt                                     {\x y -> PF_writeInt (getPos x)}
 
-\{ {\x y -> CBrakOpen (getPos x)}
+readReal                                     {\x y -> PF_readReal (getPos x)}
 
-\} {\x y -> CBrakClose (getPos x)}
+writeReal                                    {\x y -> PF_writeReal (getPos x)}
 
-\= {\x y -> AssignOp (getPos x)}
+readChar                                     {\x y -> PF_readChar (getPos x)}
 
-\=\= {\x y -> EqualsOp (getPos x)}
+writeChar                                    {\x y -> PF_writeChar (getPos x)}
 
-\!\= {\x y -> DiffOp (getPos x) }
+readString                                   {\x y -> PF_readString (getPos x)}
 
-\< {\x y -> LessThanOp (getPos x)}
+writeString                                  {\x y -> PF_writeString (getPos x)}
 
-\> {\x y -> GreaterThanOp (getPos x)}
+\' ($univ #[\"\'\n]) \'                      {\x y -> Char (y,(getPos x))}
 
-\>\= {\x y -> ELessThanOp (getPos x)}
+\" ($univ #[\"\'\n])* \"                     {\x y -> String (y,(getPos x))}
 
-\<\= {\x y -> EGreaterThanOp (getPos x)}
+$alp ($alp | $num | "_" )* \$?               {\x y -> Label (y,(getPos x))} 
 
-\+ {\x y -> AddOp (getPos x)}
+\(                                           {\x y -> BK_NOpen (getPos x)}
 
-\- {\x y -> SubOp (getPos x)}
+\)                                           {\x y -> BK_NClos (getPos x)}
 
-\* {\x y -> MulOp (getPos x)}
+\[                                           {\x y -> BK_SOpen (getPos x)}   
 
-\/ {\x y -> DivOp (getPos x)}
+\]                                           {\x y -> BK_SClos (getPos x)}
 
-\+\+ {\x y -> IncOp (getPos x)}
+\{                                           {\x y -> BK_COpen (getPos x)}
 
-\-\- {\x y -> DecOp (getPos x)}
+\}                                           {\x y -> BK_CClos (getPos x)}
 
-\, {\x y -> Comma (getPos x)}
+\=                                           {\x y -> OP_Assign (getPos x)}
 
-\; {\x y -> Semicolon (getPos x)}
+\=\=                                         {\x y -> OP_Equal (getPos x)}
 
-\& {\x y -> Dereference (getPos x) }
+\!\=                                         {\x y -> OP_NEqual (getPos x) }
 
-\&\& {\x y -> And (getPos x)} 
+\<                                           {\x y -> OP_LesThn (getPos x)}
 
-\|\| {\x y -> Or (getPos x)}
+\>                                           {\x y -> OP_GrtThn (getPos x)}
 
-\! {\x y -> NegOp (getPos x)}
+\>\=                                         {\x y -> OP_GrtThnEq (getPos x)}
+
+\<\=                                         {\x y -> OP_LesThnEq (getPos x)}
+
+\+                                           {\x y -> OP_Add (getPos x)}
+
+\-                                           {\x y -> OP_Sub (getPos x)}
+
+\*                                           {\x y -> OP_Mul (getPos x)}
+
+\/                                           {\x y -> OP_Div (getPos x)}
+
+\+\=                                         {\x y -> OP_AddAssign (getPos x)}
+
+\-\=                                         {\x y -> OP_SubAssign (getPos x)}
+
+\*\=                                         {\x y -> OP_MulAssign (getPos x)}
+
+\/\=                                         {\x y -> OP_DivAssign (getPos x)}
+
+\,                                           {\x y -> Comma (getPos x)}
+
+\;                                           {\x y -> Semicolon (getPos x)}
+
+\&                                           {\x y -> OP_Ref (getPos x) }
+
+\&\&                                         {\x y -> OP_And (getPos x)} 
+
+\|\|                                         {\x y -> OP_Or (getPos x)}
+
+\!                                           {\x y -> OP_Negt (getPos x)}
+
+\.\.                                         {\x y -> CHP_Range (getPos x)}
+
+
 
 . ;
 
 {
-
 getPos :: AlexPosn -> Pos
 getPos (AlexPn _ x y) = (x,y)
 
 --main = do
---    s <- getContents
---    print (alexScanTokens s)
---
+--   s <-getContents
+--   print (alexScanTokens s)
 }
-
