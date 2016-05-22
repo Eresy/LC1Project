@@ -3,7 +3,7 @@
 module Main (main) where
 
 import Lexer (alexScanTokens)
-import Abs 
+import Data
 import AST
 
 }
@@ -67,10 +67,12 @@ import AST
 	sub_			{ OP_Sub $$ }
 	mul_			{ OP_Mul $$ }
 	div_			{ OP_Div $$ }
+	pow_			{ OP_Pow $$ }
 	addassign_		{ OP_AddAssign $$ }
 	subassign_		{ OP_SubAssign $$ }
 	mulassign_		{ OP_MulAssign $$ }
 	divassign_		{ OP_DivAssign $$ } 
+	powassign_		{ OP_PowAssign $$ }
 	ref_			{ OP_Ref $$ }
 	and_			{ OP_And $$ }
 	or_			{ OP_Or $$ }
@@ -160,6 +162,7 @@ AssignOps	:	assign_		{ Assign }
 		|	subassign_	{ SubAssign }
 		|	mulassign_	{ MulAssign }
 		|	divassign_	{ DivAssign }
+		|	powassign_	{ PowAssign }
 
 Range		:	Expression range_ Expression	{ CRange $1 $3 }
 		|	Expression range_ 		{ NURange $1 }
@@ -225,11 +228,14 @@ Expression4	:	Expression4 add_ Expression5 	{ AddExp $1 $3 }
 Expression5	:	sub_ Expression6		{ NegExp $2 }
 	    	|	add_ Expression6		{ PosExp $2 }
 		|	Expression6			{ $1 }
-Expression6	:	mul_ Expression7 		{ DerExp $2 } 
-		|	ref_ Expression7		{ RefExp $2 }
-		|	Expression7			{ $1 }
-Expression7	:	Value 				{ $1 }
+Expression6	:	Expression7			{ $1 }
+	    	|	Expression7 pow_ Expression6	{ PowExp $1 $3}
+Expression7	:	mul_ Expression8 		{ DerExp $2 } 
+		|	ref_ Expression8		{ RefExp $2 }
+		|	Expression8			{ $1 }
+Expression8	:	Value 				{ $1 }
 		|	bknOpen_ Expression1 bknClose_	{ $2 }
+
 
 Value		:	LValue		{ VExp3 $1 }
 		|	Literal 	{ VExp1 $1 }
@@ -256,8 +262,11 @@ Literal		:	int_ 		{ Int' (fst $1) (snd $1) }
 main = do
     s <- getContents
     let tok = alexScanTokens s
+    putStr "Your Tokens:\n"
     print tok
-    print $ parseChapel tok
+    putStr "\n\nYour Program:\n"
+    putStrLn $ readAST $ parseChapel tok
+
 
 parseError (tok:toks) = error ("Parser Error:" ++ show tok ++ " at invalid position.")
 

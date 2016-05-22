@@ -1,14 +1,14 @@
 module AST where
 
-import Abs
-import Data.Char 
+import Data 
+
+{- DATA TYPES -}
 
 data AST = Program [Stmt]
          deriving(Eq, Ord)
 
 instance Show AST where
-   show (Program xs) = "\nprogram starts here: \n" ++ show xs
-
+   show (Program xs) = show xs
 
 
 data Stmt = Stmt1 BlockStmt
@@ -28,9 +28,9 @@ data Stmt = Stmt1 BlockStmt
 
 instance Show Stmt where
    show (Stmt1 x) = show x
-   show (Stmt2 x) = show x
-   show (Stmt3 x) = show x
-   show (Stmt4 x) = show x
+   show (Stmt2 x) = show x ++ ";"
+   show (Stmt3 x) = show x ++ ";"
+   show (Stmt4 x) = show x ++ ";"
    show (Stmt5 x) = show x
    show (Stmt6 x) = show x
    show (Stmt7 x) = show x
@@ -58,8 +58,8 @@ data Rtrn = Ret1 Exp
           deriving(Eq, Ord)
 
 instance Show Rtrn where
-   show (Ret1 x) = "return " ++ show x 
-   show (Ret2 x) = "return " ++ show x 
+   show (Ret1 x) = "return " ++ show x ++ ";"
+   show (Ret2 x) = "return " ++ show x ++ ";"
 
 
 
@@ -68,8 +68,8 @@ data Cmt  = SCmt String
           deriving(Eq, Ord)
 
 instance Show Cmt where
-   show (SCmt x) = "// " ++ x
-   show (MCmt x) = "/* " ++ x ++ "*/"
+   show (SCmt x) = "" --x
+   show (MCmt x) = "" --x 
 
 
 
@@ -85,15 +85,15 @@ data FnCall = FCall String [Exp]
             deriving(Eq, Ord)
 
 instance Show FnCall where 
-   show (FCall x ys) = x ++ "( " ++ show ys ++ " );"
-   show (ReadInt _) = "readInt();"
-   show (WriteInt x _) = "writeInt( " ++ show x ++ " );"
-   show (ReadReal _) = "readReal();"
-   show (WriteReal x _) = "writeReal( " ++ show x ++ " );"
-   show (ReadChar _) = "readChar();"
-   show (WriteChar x _) = "writeChar( " ++ show x ++ " );"
-   show (ReadString _) = "readString();"
-   show (WriteString x _) = "writeString( " ++ show x ++ " );"
+   show (FCall x ys) = x ++ "( " ++ (readExp ys) ++ " )" -- H
+   show (ReadInt _) = "readInt()"
+   show (WriteInt x _) = "writeInt( " ++ show x ++ " )"
+   show (ReadReal _) = "readReal()"
+   show (WriteReal x _) = "writeReal( " ++ show x ++ " )"
+   show (ReadChar _) = "readChar()"
+   show (WriteChar x _) = "writeChar( " ++ show x ++ " )"
+   show (ReadString _) = "readString()"
+   show (WriteString x _) = "writeString( " ++ show x ++ " )"
 
 
 
@@ -104,8 +104,8 @@ data FnDecl  = FullDecl String [FormParam] Cast BlockStmt
              deriving(Eq, Ord)
 
 instance Show FnDecl where
-   show (FullDecl x ys z w) = "proc " ++ x ++ " (" ++ show ys ++ ") " ++ show z ++ show w
-   show (NoCastDecl x ys z) = "proc " ++ x ++ " (" ++ show ys ++ ") " ++ show z
+   show (FullDecl x ys z w) = "proc " ++ x ++ " (" ++ (readFormParam ys) ++ ") " ++ show z ++ show w -- H
+   show (NoCastDecl x ys z) = "proc " ++ x ++ " (" ++ (readFormParam ys) ++ ") " ++ show z -- H
    show (NoParamDecl x y z) = "proc " ++ x ++ show y ++ show z
    show (NakedDecl x y) = "proc " ++ x ++ show y
 
@@ -139,7 +139,7 @@ data Cast   = SCast TypeSpec
 
 instance Show Cast where
    show (SCast x) = ": " ++ show x
-   show (MCast xs y) = ": " ++ show xs ++ " " ++ show y
+   show (MCast xs y) = ": " ++ ( show xs) ++ " " ++ show y -- H
 
 
 
@@ -150,10 +150,10 @@ data Range  = CRange Exp Exp
             deriving(Eq, Ord)
 
 instance Show Range where
-   show (CRange x y) = show x ++ ".." ++ show y
-   show (NURange x) = show x ++ ".."
-   show (NLRange x) = ".." ++ show x
-   show ULRange = ".."
+   show (CRange x y) = show x ++ ".." ++ show y ++ " "
+   show (NURange x) = show x ++ ".. "
+   show (NLRange x) = ".." ++ show x ++ " "
+   show ULRange = ".. "
 
 
 
@@ -163,9 +163,9 @@ data Assign   = SimpleAssign NamedAssign
               deriving(Eq, Ord)
 
 instance Show Assign where
-   show (SimpleAssign x) = show x
-   show (GenericAssign xs y z) = show xs ++ y ++ " = " ++ show z 
-   show (DeclAssign x y) = show x ++ " = " ++ show y 
+   show (SimpleAssign x) = show x -- ++ ";"
+   show (GenericAssign xs y z) = (readPointer xs) ++ y ++ " = " ++ show z -- ++ ";" -- H
+   show (DeclAssign x y) = show x ++ " = " ++ show y -- ++ ";"
 
 
 
@@ -173,7 +173,7 @@ data Declaration  = SimpleDecl [Pointer] String Cast
                   deriving(Eq, Ord)
 
 instance Show Declaration where
-   show (SimpleDecl xs y z) = "var " ++ show xs ++ y ++ show z
+   show (SimpleDecl xs y z) = "var " ++ (readPointer xs) ++ y ++ show z -- ++ ";" --- H
 
 
 
@@ -198,6 +198,7 @@ data AssignOp = Assign
               | SubAssign
               | MulAssign
               | DivAssign
+              | PowAssign
               deriving(Eq, Ord)
 
 instance Show AssignOp where
@@ -206,7 +207,7 @@ instance Show AssignOp where
    show SubAssign = " -= "
    show MulAssign = " *= "
    show DivAssign = " /= "
-
+   show PowAssign = " **= "
 
 
 data WhDo  = WD Exp BlockStmt
@@ -231,7 +232,7 @@ data Iff  = OneLineIf Exp Stmt
           deriving(Eq, Ord)
 
 instance Show Iff where
-   show (OneLineIf x y) = "if (" ++ show x ++") then" ++ show y
+   show (OneLineIf x y) = "if (" ++ show x ++") then " ++ show y
    show (IfBlock x y) = "if (" ++ show x ++ ") " ++ show y
    show (IfElseBlock x y z) = "if (" ++ show x ++ ") " ++ show y ++ "else" ++ show z
 
@@ -251,7 +252,7 @@ data TrCatch  = TrCh Stmt Stmt
               deriving(Eq, Ord)
 
 instance Show TrCatch where
-   show (TrCh x y) = "try {\n" ++ show x ++ "\n} catch {\n" ++ show y ++ "}"
+   show (TrCh x y) = "try " ++ show x ++ " catch " ++ show y
 
 
 
@@ -259,8 +260,8 @@ data Type   = Int' String Pos
             | Real' String Pos 
             | Char' String Pos
             | String' String Pos
-            | Bool' Pos
-            | Array' [Exp]
+            | Bool' String Pos
+            | Array' [Exp] Pos
             | Pointer' Type
             | Void'
             deriving(Eq, Ord)
@@ -270,7 +271,8 @@ instance Show Type where
    show (Real' x _) = x 
    show (Char' x _) = x 
    show (String' x _) = x
-   show (Array' xs) = "( " ++ show xs ++ " )"
+   show (Bool' x _) = "TRUE/FALSE" -- DA FIXARE ASAP!!!!!!!!!!!!!!!!!!!!!
+   show (Array' xs _) = "( " ++ (readExp xs) ++ " )"
    show (Pointer' x) = show x
    show Void' = ""
 
@@ -284,11 +286,12 @@ data TypeSpec = IntSpec Pos
               deriving(Eq, Ord)
 
 instance Show TypeSpec where
-   show (IntSpec _) = "int"
-   show (RealSpec _) = "real"
-   show (CharSpec _) = "char"
-   show (StringSpec _) = "string"
-   show (VoidSpec _) = "void"
+   show (IntSpec _)     = "int"
+   show (RealSpec _)    = "real"
+   show (CharSpec _)    = "char"
+   show (StringSpec _)  = "string"
+   show (BoolSpec _)    = "bool"
+   show (VoidSpec _)    = "void"
 
 
 
@@ -296,49 +299,51 @@ data BlockStmt = Blk [Stmt]
                deriving(Eq, Ord)
 
 instance Show BlockStmt where
-   show (Blk xs) = "{\n " ++ show xs ++ " \n}"
+   show (Blk xs) = "{" ++ show xs ++ "}"
 
 
 
-data Exp   = AddExp Exp Exp
-           | SubExp Exp Exp
-           | MulExp Exp Exp
-           | DivExp Exp Exp
-           | PosExp Exp
-           | NegExp Exp
-           | RefExp Exp
-           | DerExp Exp
-           | EqExp Exp Exp
-           | NEqExp Exp Exp
-           | LTExp Exp Exp
-           | GTExp Exp Exp
-           | LETExp Exp Exp
-           | GETExp Exp Exp
-           | AndExp Exp Exp
-           | OrExp Exp Exp
-           | NotExp Exp
+data Exp   = AddExp Exp Exp Pos
+           | SubExp Exp Exp Pos
+           | MulExp Exp Exp Pos
+           | DivExp Exp Exp Pos
+           | PowExp Exp Exp Pos
+           | PosExp Exp Pos
+           | NegExp Exp Pos
+           | RefExp Exp Pos
+           | DerExp Exp Pos
+           | EqExp Exp Exp Pos
+           | NEqExp Exp Exp Pos
+           | LTExp Exp Exp Pos
+           | GTExp Exp Exp Pos
+           | LETExp Exp Exp Pos
+           | GETExp Exp Exp Pos
+           | AndExp Exp Exp Pos
+           | OrExp Exp Exp Pos
+           | NotExp Exp Pos
            | VExp1 Type 
            | VExp2 FnCall
            | VExp3 LVal
            deriving(Eq, Ord)
 
 instance Show Exp where
-   show (AddExp x y) = show x ++ " + " ++ show y
-   show (SubExp x y) = show x ++ " - " ++ show y
-   show (MulExp x y) = show x ++ " * " ++ show y
-   show (DivExp x y) = show x ++ " / " ++ show y
-   show (PosExp x) = "+" ++ show x
-   show (NegExp x) = "-" ++ show x
-   show (RefExp x) = "&" ++ show x
-   show (EqExp x y) = show x ++ " == " ++ show y
-   show (NEqExp x y) = show x ++ " != " ++ show y
-   show (LTExp x y) = show x ++ " < " ++ show y
-   show (GTExp x y) = show x ++ " > " ++ show y
-   show (LETExp x y) = show x ++ " <= " ++ show y
-   show (GETExp x y) = show x ++ " >= " ++ show y
-   show (AndExp x y) = show x ++ " && " ++ show y
-   show (OrExp x y) = show x ++ " || " ++ show y
-   show (NotExp x) = "!" ++ show x
+   show (AddExp x y _) = show x ++ " + " ++ show y
+   show (SubExp x y _) = show x ++ " - " ++ show y
+   show (MulExp x y _) = show x ++ " * " ++ show y
+   show (DivExp x y _) = show x ++ " / " ++ show y
+   show (PowExp x y _) = show x ++ " ** " ++ show y
+   show (PosExp x _) = "+" ++ show x
+   show (NegExp x _) = "-" ++ show x
+   show (RefExp x _) = "&" ++ show x
+   show (EqExp x y _) = show x ++ " == " ++ show y
+   show (NEqExp x y _) = show x ++ " != " ++ show y
+   show (LTExp x y _) = show x ++ " < " ++ show y
+   show (GTExp x y _) = show x ++ " > " ++ show y
+   show (LETExp x y _) = show x ++ " <= " ++ show y
+   show (GETExp x y _) = show x ++ " >= " ++ show y
+   show (AndExp x y _) = show x ++ " && " ++ show y
+   show (OrExp x y _) = show x ++ " || " ++ show y
+   show (NotExp x _) = "!" ++ show x
    show (VExp1 x) = show x
    show (VExp2 x) = show x
    show (VExp3 x) = show x
@@ -351,7 +356,7 @@ data LVal = LV String
 
 instance Show LVal where
    show (LV x) = x
-   show (ArrayLV x xs) = x ++ " [" ++ show xs ++ "] "
+   show (ArrayLV x xs) = x ++ " [" ++ (readExp xs) ++ "] "
 
 
 
@@ -362,3 +367,65 @@ data RVal = SimpleRV Exp
 instance Show RVal where
    show (SimpleRV x) = show x
    show (ComplexRV x) = show x
+
+
+
+{- FUNCTIONS -}
+readAST :: AST -> String
+readAST (Program lst) = case lst of
+   []     -> ""
+   (x:[]) -> show x ++ ""
+   (x:xs) -> show x ++ "" ++ readAST (Program xs)
+
+readExp :: [Exp] -> String
+readExp lst = case lst of
+   []     -> ""
+   (x:[]) -> show x
+   (x:xs) -> show x ++ readExp xs
+ 
+readStmt :: [Stmt] -> String
+readStmt lst = case lst of
+   []     -> ""
+   (x:[]) -> show x
+   (x:xs) -> show x ++ readStmt xs
+ 
+readFormParam :: [FormParam] -> String
+readFormParam lst = case lst of
+   []     -> ""
+   (x:[]) -> show x
+   (x:xs) -> show x ++ readFormParam xs
+
+readPointer :: [Pointer] -> String
+readPointer lst = case lst of
+   []     -> ""
+   (x:[]) -> show x
+   (x:xs) -> show x ++ readPointer xs
+
+readRange :: [Range] -> String
+readRange lst = case lst of
+   []     -> ""
+   (x:[]) -> show x
+   (x:xs) -> show x ++ readRange xs
+
+-- indentation
+addSpace :: Int -> String
+addSpace 0 = ""
+addSpace n = "   " ++ addSpace (n-1)
+
+indent :: Int -> String -> String
+indent n txt
+   | strlen > 0 = subindent n txt
+   | otherwise  = txt
+   where
+      strlen = length txt
+
+subindent :: Int -> String -> String
+subindent n txt
+   | fs == '{' = (fs : "\n") ++ (addSpace (n+1)) ++ (indent (n+1) (tail txt))
+   | fs == '}' = (fs : "\n") ++ (addSpace (n-1)) ++ (indent (n-1) (tail txt))
+   | fs == ';' && nxt == '}' = (fs : "\n") ++ (addSpace (n-1)) ++ (indent n (tail txt))
+   | fs == ';' = (fs : "\n") ++ (addSpace n) ++ (indent n (tail txt))
+   | otherwise = (fs : "") ++ (indent n (tail txt))
+   where
+      fs = head txt
+      nxt = txt !! 1

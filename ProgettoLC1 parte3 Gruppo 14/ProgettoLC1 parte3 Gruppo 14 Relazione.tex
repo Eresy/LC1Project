@@ -4,14 +4,20 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{standalone}
-\usepackage{pgf}
-\usepackage{tikz}
-\usetikzlibrary{arrows,automata,positioning}
 %use this for direct use of àèìòù
 \usepackage[utf8x]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{listings}
 \usepackage{fancyvrb}
+%
+%let's print BNF production the nice way
+\usepackage{syntax}
+%syntax specific option
+\def\<#1>{\synt{#1}}
+\setlength{\grammarindent}{7em} % increase separation between LHS/RHS 
+\setlength{\grammarparsep}{15pt plus 1pt minus 1pt} % increase separation between rules
+%
+\usepackage{hyperref}
 %
 % fancy footnotes
 \usepackage[perpage, symbol*, stable, multiple]{footmisc}
@@ -49,6 +55,28 @@ Progetto di Linguaggi e Compilatori 1 -- Parte 3 \\ A.A. 2015/16\\%
 \maketitle
 %
 \section*{Assunzioni}
+Nel costruire il nostro linguaggio basato su \href{http://chapel.cray.com}{Chapel} ci siamo basati sulle regole grammaticali esposte nella \href{http://chapel.cray.com/docs/latest/_downloads/chapelLanguageSpec.pdf}{Chapel Language Specification}.
+Tuttavia alcune regole di produzione risultavano in contrasto con le forme incontrate in altri documenti ufficiali quali il \href{http://chapel.cray.com/docs/latest/_downloads/quickReference.pdf}{Quick Reference} e \href{http://chapel.cray.com/papers/BriefOverviewChapel.pdf}{A Brief Overview of Chapel} il che ci ha portato a fare delle semplificazioni sulle specifiche finali del linguaggio.
+Infatti benchè la regola di produzione degli \synt{statements} abbia forma
+\begin{grammar}
+	   <Statements> ::= Statement | Statement Statements
+\end{grammar}
+negli esempi di codice di Chapel gli \synt{Statements} usano il \lit{;} come separatore; per questa ragione abbiamo assunto un uso del separatore \lit{;} simile a quello di C. 
+\par
+Per ragioni di semplificazione si è deciso di ridurre le produzioni di \synt{WhileDo-stmt}, \synt{DoWhile-stmt}, \synt{For-stmt} ed \synt{IF-stmt} dalla grammatica di Chapel alle seguenti regole:
+\begin{grammar}
+<IF_stmt> ::= "if" <Exp> "then" <Stmt>
+	\alt "if" <Exp>  <Block_stmt>
+	\alt "if" <Exp>  <Block_stmt> "else" <Stmt>
 
-\section*{Soluzione}
+<While_stmt> ::= "while" <Exp> <Block_stmt>
+
+<Do_stmt> ::= "do" <Block_Stmt> "while" <Exp>
+
+<For_stmt> ::= "for" <Id> "in" <Range_exp> <Block_stmt>
+\alt "for" <Range_exp> "do" <Stmt>
+\end{grammar}
+
+\section*{Svolgimento}
+
 \end{document}

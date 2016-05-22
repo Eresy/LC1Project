@@ -1,0 +1,6 @@
+proc main (ref input :int){
+input =0;  
+for input in 1..20 {
+input += 1;
+while (input != 19) {return 4;}
+}}

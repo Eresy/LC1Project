@@ -1,0 +1,1314 @@
+ghc Parser.hs
+[4 of 4] Compiling Main             ( Parser.hs, Parser.o )
+
+Parser.hs:1630:42:
+    Couldn't match type ‘Pos -> Type’ with ‘Type’
+    Expected type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     String
+                     TypeSpec
+                     Type
+                   -> HappyAbsSyn
+                        AST
+                        AST
+                        [Stmt]
+                        Stmt
+                        Cmt
+                        BlockStmt
+                        FnCall
+                        FnDecl
+                        [FormParam]
+                        FormParam
+                        [FormParam]
+                        [FormParam]
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        Mode
+                        Declaration
+                        Assign
+                        NamedAssign
+                        AssignOp
+                        Range
+                        Cast
+                        [Range]
+                        [Range]
+                        Pointer
+                        [Pointer]
+                        LVal
+                        RVal
+                        Exp
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        WhDo
+                        DoWh
+                        Iff
+                        Forr
+                        TrCatch
+                        Exp
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        Exp
+                        String
+                        TypeSpec
+                        Type
+      Actual type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     String
+                     TypeSpec
+                     Type
+                   -> HappyAbsSyn
+                        AST
+                        AST
+                        [Stmt]
+                        Stmt
+                        Cmt
+                        BlockStmt
+                        FnCall
+                        FnDecl
+                        [FormParam]
+                        FormParam
+                        [FormParam]
+                        [FormParam]
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        Mode
+                        Declaration
+                        Assign
+                        NamedAssign
+                        AssignOp
+                        Range
+                        Cast
+                        [Range]
+                        [Range]
+                        Pointer
+                        [Pointer]
+                        LVal
+                        RVal
+                        Exp
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        WhDo
+                        DoWh
+                        Iff
+                        Forr
+                        TrCatch
+                        Exp
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        Exp
+                        String
+                        TypeSpec
+                        (Pos -> Type)
+    In the second argument of ‘happySpecReduce_1’, namely
+      ‘happyReduction_135’
+    In the expression: happySpecReduce_1 50# happyReduction_135
+
+Parser.hs:1637:42:
+    Couldn't match type ‘Pos -> Type’ with ‘Type’
+    Expected type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     String
+                     TypeSpec
+                     Type
+                   -> HappyAbsSyn
+                        AST
+                        AST
+                        [Stmt]
+                        Stmt
+                        Cmt
+                        BlockStmt
+                        FnCall
+                        FnDecl
+                        [FormParam]
+                        FormParam
+                        [FormParam]
+                        [FormParam]
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        Mode
+                        Declaration
+                        Assign
+                        NamedAssign
+                        AssignOp
+                        Range
+                        Cast
+                        [Range]
+                        [Range]
+                        Pointer
+                        [Pointer]
+                        LVal
+                        RVal
+                        Exp
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        WhDo
+                        DoWh
+                        Iff
+                        Forr
+                        TrCatch
+                        Exp
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        Exp
+                        String
+                        TypeSpec
+                        Type
+      Actual type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     String
+                     TypeSpec
+                     Type
+                   -> HappyAbsSyn
+                        AST
+                        AST
+                        [Stmt]
+                        Stmt
+                        Cmt
+                        BlockStmt
+                        FnCall
+                        FnDecl
+                        [FormParam]
+                        FormParam
+                        [FormParam]
+                        [FormParam]
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        Mode
+                        Declaration
+                        Assign
+                        NamedAssign
+                        AssignOp
+                        Range
+                        Cast
+                        [Range]
+                        [Range]
+                        Pointer
+                        [Pointer]
+                        LVal
+                        RVal
+                        Exp
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        WhDo
+                        DoWh
+                        Iff
+                        Forr
+                        TrCatch
+                        Exp
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        Exp
+                        String
+                        TypeSpec
+                        (Pos -> Type)
+    In the second argument of ‘happySpecReduce_1’, namely
+      ‘happyReduction_136’
+    In the expression: happySpecReduce_1 50# happyReduction_136
+
+Parser.hs:1641:25:
+    Couldn't match type ‘(Int, Int)’ with ‘[Char]’
+    Expected type: String
+      Actual type: Pos
+    In the first argument of ‘Bool'’, namely ‘happy_var_1’
+    In the first argument of ‘happyIn54’, namely ‘(Bool' happy_var_1)’
+
+Parser.hs:1644:42:
+    Couldn't match type ‘Pos -> Type’ with ‘Type’
+    Expected type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     String
+                     TypeSpec
+                     Type
+                   -> HappyAbsSyn
+                        AST
+                        AST
+                        [Stmt]
+                        Stmt
+                        Cmt
+                        BlockStmt
+                        FnCall
+                        FnDecl
+                        [FormParam]
+                        FormParam
+                        [FormParam]
+                        [FormParam]
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        Mode
+                        Declaration
+                        Assign
+                        NamedAssign
+                        AssignOp
+                        Range
+                        Cast
+                        [Range]
+                        [Range]
+                        Pointer
+                        [Pointer]
+                        LVal
+                        RVal
+                        Exp
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        WhDo
+                        DoWh
+                        Iff
+                        Forr
+                        TrCatch
+                        Exp
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        Exp
+                        String
+                        TypeSpec
+                        Type
+      Actual type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     String
+                     TypeSpec
+                     Type
+                   -> HappyAbsSyn
+                        AST
+                        AST
+                        [Stmt]
+                        Stmt
+                        Cmt
+                        BlockStmt
+                        FnCall
+                        FnDecl
+                        [FormParam]
+                        FormParam
+                        [FormParam]
+                        [FormParam]
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        Mode
+                        Declaration
+                        Assign
+                        NamedAssign
+                        AssignOp
+                        Range
+                        Cast
+                        [Range]
+                        [Range]
+                        Pointer
+                        [Pointer]
+                        LVal
+                        RVal
+                        Exp
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        [Exp]
+                        WhDo
+                        DoWh
+                        Iff
+                        Forr
+                        TrCatch
+                        Exp
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        (Pos -> Exp)
+                        Exp
+                        String
+                        TypeSpec
+                        (Pos -> Type)
+    In the second argument of ‘happySpecReduce_1’, namely
+      ‘happyReduction_137’
+    In the expression: happySpecReduce_1 50# happyReduction_137
+
+Parser.hs:1648:25:
+    Couldn't match type ‘(Int, Int)’ with ‘[Char]’
+    Expected type: String
+      Actual type: Pos
+    In the first argument of ‘Bool'’, namely ‘happy_var_1’
+    In the first argument of ‘happyIn54’, namely ‘(Bool' happy_var_1)’
+
+templates/GenericTemplate.hs:192:19:
+    Couldn't match type ‘Pos -> Exp’ with ‘Exp’
+    Expected type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     String
+                     TypeSpec
+                     Type
+      Actual type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     Exp
+                     String
+                     TypeSpec
+                     Type
+    In the first argument of ‘fn’, namely ‘v1’
+    In the expression: fn v1
+
+templates/GenericTemplate.hs:192:19:
+    Couldn't match type ‘Exp’ with ‘Pos -> Exp’
+    Expected type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     String
+                     TypeSpec
+                     Type
+      Actual type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     Exp
+                     String
+                     TypeSpec
+                     Type
+    In the first argument of ‘fn’, namely ‘v1’
+    In the expression: fn v1
+
+templates/GenericTemplate.hs:198:19:
+    Couldn't match type ‘Pos -> Exp’ with ‘Exp’
+    Expected type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     Exp
+                     (Pos -> Exp)
+                     Exp
+                     Exp
+                     String
+                     TypeSpec
+                     Type
+      Actual type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     Exp
+                     String
+                     TypeSpec
+                     Type
+    In the first argument of ‘fn’, namely ‘v1’
+    In the expression: fn v1 v2
+
+templates/GenericTemplate.hs:198:19:
+    Couldn't match type ‘Exp’ with ‘Pos -> Exp’
+    Expected type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     Exp
+                     (Pos -> Exp)
+                     Exp
+                     Exp
+                     String
+                     TypeSpec
+                     Type
+      Actual type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     Exp
+                     String
+                     TypeSpec
+                     Type
+    In the first argument of ‘fn’, namely ‘v1’
+    In the expression: fn v1 v2
+
+templates/GenericTemplate.hs:204:19:
+    Couldn't match type ‘Pos -> Exp’ with ‘Exp’
+    Expected type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     (Pos -> Exp)
+                     Exp
+                     (Pos -> Exp)
+                     Exp
+                     Exp
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     Exp
+                     String
+                     TypeSpec
+                     Type
+      Actual type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     Exp
+                     String
+                     TypeSpec
+                     Type
+    In the first argument of ‘fn’, namely ‘v1’
+    In the expression: fn v1 v2 v3
+
+templates/GenericTemplate.hs:204:25:
+    Couldn't match type ‘Pos -> Exp’ with ‘Exp’
+    Expected type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     Exp
+                     (Pos -> Exp)
+                     Exp
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     Exp
+                     (Pos -> Exp)
+                     Exp
+                     String
+                     TypeSpec
+                     Type
+      Actual type: HappyAbsSyn
+                     AST
+                     AST
+                     [Stmt]
+                     Stmt
+                     Cmt
+                     BlockStmt
+                     FnCall
+                     FnDecl
+                     [FormParam]
+                     FormParam
+                     [FormParam]
+                     [FormParam]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     Mode
+                     Declaration
+                     Assign
+                     NamedAssign
+                     AssignOp
+                     Range
+                     Cast
+                     [Range]
+                     [Range]
+                     Pointer
+                     [Pointer]
+                     LVal
+                     RVal
+                     Exp
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     [Exp]
+                     WhDo
+                     DoWh
+                     Iff
+                     Forr
+                     TrCatch
+                     Exp
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     (Pos -> Exp)
+                     Exp
+                     String
+                     TypeSpec
+                     Type
+    In the third argument of ‘fn’, namely ‘v3’
+    In the expression: fn v1 v2 v3
+Makefile:9: recipe for target 'all' failed
+make: *** [all] Error 1
