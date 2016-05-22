@@ -87,15 +87,15 @@ data FnCall = FCall String [Exp]
             deriving(Eq, Ord)
 
 instance Show FnCall where 
-   show (FCall x ys) = x ++ "( " ++ (readExp ys) ++ " );"
-   show (ReadInt _) = "readInt();"
-   show (WriteInt x _) = "writeInt( " ++ show x ++ " );"
-   show (ReadReal _) = "readReal();"
-   show (WriteReal x _) = "writeReal( " ++ show x ++ " );"
-   show (ReadChar _) = "readChar();"
-   show (WriteChar x _) = "writeChar( " ++ show x ++ " );"
-   show (ReadString _) = "readString();"
-   show (WriteString x _) = "writeString( " ++ show x ++ " );"
+   show (FCall x ys) = x ++ "( " ++ (readExp ys) ++ " )"
+   show (ReadInt _) = "readInt()"
+   show (WriteInt x _) = "writeInt( " ++ show x ++ " )"
+   show (ReadReal _) = "readReal()"
+   show (WriteReal x _) = "writeReal( " ++ show x ++ " )"
+   show (ReadChar _) = "readChar()"
+   show (WriteChar x _) = "writeChar( " ++ show x ++ " )"
+   show (ReadString _) = "readString()"
+   show (WriteString x _) = "writeString( " ++ show x ++ " )"
 
 
 
@@ -272,7 +272,7 @@ instance Show Type where
    show (Real' x _) = x 
    show (Char' x _) = x 
    show (String' x _) = x
-   show (Bool' x _) = "TRUE/FALSE" -- DA FIXARE ASAP!!!!!!!!!!!!!!!!!!!!!
+   show (Bool' x _) = x
    show (Array' xs _) = "( " ++ (readExp xs) ++ " )"
    show (Pointer' x) = show x
    show Void' = ""
@@ -300,7 +300,7 @@ data BlockStmt = Blk [Stmt]
                deriving(Eq, Ord)
 
 instance Show BlockStmt where
-   show (Blk xs) = "{" ++ show xs ++ "}"
+   show (Blk xs) = "{" ++ (readStmt xs) ++ "}"
 
 
 
@@ -413,7 +413,7 @@ addSpace n = "   " ++ addSpace (n-1)
 
 indent :: Int -> String -> String
 indent n txt
-   | strlen > 0 = subindent n txt
+   | strlen > 1 = subindent n txt
    | otherwise  = txt
    where
       strlen = length txt
@@ -421,6 +421,7 @@ indent n txt
 subindent :: Int -> String -> String
 subindent n txt
    | fs == '{' = (fs : "\n") ++ (addSpace (n+1)) ++ (indent (n+1) (tail txt))
+   | fs == '}' && nxt == '}' = (fs : "\n") ++ (addSpace (n-2)) ++ (indent (n-1) (tail txt))
    | fs == '}' = (fs : "\n") ++ (addSpace (n-1)) ++ (indent (n-1) (tail txt))
    | fs == ';' && nxt == '}' = (fs : "\n") ++ (addSpace (n-1)) ++ (indent n (tail txt))
    | fs == ';' = (fs : "\n") ++ (addSpace n) ++ (indent n (tail txt))
