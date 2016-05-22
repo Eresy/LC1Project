@@ -187,7 +187,7 @@ ArrayIndex	:	bksOpen_ Expression bksClose_ 	{ $2 }
 ListArrayIndex	:	ArrayIndex ListArrayIndex	{ $1 : $2 }
 		|	ArrayIndex			{ $1 : [] }
 
-ArrayElement	:	bknOpen_ ListValue bknClose_	{ $2 }
+ArrayElement	:	bknOpen_ ListValue bknClose_	{ ($2,$1) }
 ListValue	:	Value comma_ Value ListValueC	{ $1 : $3 : $4 }
 ListValueC	:	comma_ Value ListValueC		{ $2 : $3}
 		|					{ [] }
@@ -208,7 +208,7 @@ Expression	:	Expression1				{ $1 }
 Expression1	:	Expression1 and_ Expression2 		{ AndExp $1 $3 $2}
 		|	Expression1 or_ Expression2 		{ OrExp $1 $3 $2}
 		|	Expression2				{ $1 }
-Expression2	:	neg_ Expression3 			{ NotExp $2 $2}
+Expression2	:	neg_ Expression3 			{ NotExp $2 $1}
 	    	|	Expression3				{ $1 }
 Expression3	:	Expression3 equals_ Expression4 	{ EqExp $1 $3 $2}
 		|	Expression3 nequals_ Expression4	{ NEqExp $1 $3 $2}
@@ -248,7 +248,7 @@ Literal		:	int_ 		{ Int' (fst $1) (snd $1) }
 		|	real_ 		{ Real' (fst $1) (snd $1) }
 		|	char_ 		{ Char' (fst $1) (snd $1) }
 		|	string_ 	{ String' (fst $1) (snd $1) }
-		|	ArrayElement 	{ Array' $1 }
+		|	ArrayElement 	{ Array' (fst $1) (snd $1) }
 		|	true_		{ Bool' "true" $1 }
 		|	false_		{ Bool' "false" $1 }
 
@@ -258,7 +258,8 @@ main = do
     s <- getContents
     let tok = alexScanTokens s
     print tok
-    ast <- parseChapel tok
+    let ast = parseChapel tok
+    --putStr $ (indent 0) $ readAST ast
     putStrLn (typeCheck ast)
 
 parseError (tok:toks) = error ("Parser Error:" ++ show tok ++ " at invalid position.")
