@@ -259,34 +259,35 @@ main = do
     let tok = alexScanTokens s
     print tok
     let ast = parseChapel tok
-    --putStr $ (indent 0) $ readAST ast
-    putStrLn (typeCheck ast)
+    putStrLn( checkTypeProgram ast)
+    --putStrLn $ (indent 0) $ readAST ast
+    --putStrLn ( ast)
 
 parseError (tok:toks) = error ("Parser Error:" ++ show tok ++ " at invalid position.")
 
-data TypeCorrect a 	= Correct a 
-			| Error a a
-			| Mismatch a a
-			| Null a
-			| Ret a
+data TypeCorrect	= Correct Type
+			| Error Type Type
+			| Mismatch Type Type
+			| Null Type
+			| Ret Type
 			| Unknown
 			deriving (Eq, Show, Ord)
 
 checkTypeProgram :: AST -> String
-checkTypeProgram (Program lst) =  foldr (++) [] (map (checkTypeStmt . typeCheck) lst)
+checkTypeProgram (Program lst) =  foldr (++) [] (map (evalTypeError . typeCheckStmt) lst)
 
-checkTypeStmt :: TypeCorrect -> String
-checkTypeStmt stmt = case typeCheck stmt of
+--evalTypeError :: TypeCorrect -> String
+evalTypeError x = case x of
 	(Correct a)	->	[]
-	(Mismatch a b)	->	"Type Error: " ++ show a ++ " " ++ show (getPos a) ++ " and " ++ show b ++ " " ++ show (getPos b) ++ "are of incompatible types."
-	(Error a b)	->	"Type Error: at " ++ show (getPos a) ++ " type given: "++ show a ++", expected "++ show b++"."
+	(Mismatch a b)	->	"Type Error: " ++ show a ++ " " ++ show (getTypePos a) ++ " and " ++ show b ++ " " ++ show (getTypePos b) ++ "are of incompatible types.\n"
+	(Error a b)	->	"Type Error: at " ++ show (getTypePos a) ++ " type given: "++ show a ++", expected "++ show b++".\n"
 	(Ret a)		->	[]
 	(Unknown)	->	[]
 	(Null a)	->	[]
 
-typeCheck :: Stmt -> TypeCorrect
-typeCheck a = case a of
-    (Stmt1 x)	        -> foldr (++) [] (map typeCheckStmt x)
+--typeCheckStmt :: Stmt -> TypeCorrect Type
+typeCheckStmt a = case a of
+    (Stmt1 x)	        -> foldr1 (collapse) (map (typeCheckStmt) (getList x))
     (Stmt2 x)           -> typeCheckExp x
     (Stmt3 x)		-> typeCheckAssign x
     (Stmt5 x)		-> typeCheckFnDecl x
@@ -294,19 +295,73 @@ typeCheck a = case a of
     (Stmt7 x)		-> typeCheckDoWh x
     (Stmt8 x)		-> typeCheckIf x
     (Stmt9 x)		-> typeCheckFor x
-    (Stmt10 x)		-> typeCheckTryCatch x
-    (Stmt12 x)		-> (Ret x)
-    _                   -> []
+    (Stmt10 x)		-> typeCheckTrCatch x
+    (Stmt12 x)		-> (getRet x)
+    where 	getList (Blk val) = val
+		
+getRet (Ret1 exp) = typeCheckExp exp
+getRet (Ret2 _) = (Correct Void')
+
+--collapse :: TypeCorrect -> TypeCorrect -> TypeCorrect
+collapse a b = case (a,b) of
+	 ((Error _ _), _)		->	a
+	 (_, (Error _ _))		->	b
+	 ((Mismatch _ _), _)		->	a
+	 (_, (Mismatch _ _))		->	b
+	 _				->	a
+
+typeCheckWhDo (WD exp _) = compareTypeErr exp (Bool' "" (0,0))
+
+typeCheckDoWh (DW _ exp) = compareTypeErr exp (Bool' "" (0,0))
+
+typeCheckIf ifs = case ifs of
+	(OneLineIf exp _)	->	compareTypeErr exp (Bool' "" (0,0))
+	(IfBlock exp _)		->	compareTypeErr exp (Bool' "" (0,0))
+	(IfElseBlock exp _ _)	->	compareTypeErr exp (Bool' "" (0,0))
+
+typeCheckFor for = case for of
+	(ForBlk _ _ block)	->	typeCheckStmt (Stmt1 block)
+	(ForSmp _ _ stm)	->	typeCheckStmt stm
+
+typeCheckTrCatch (TrCh x y) = typeCheckStmt (Stmt1 (Blk [x,y])
+
+--typeCheckFnDecl :: FnDecl -> TypeCorrect Type
+typeCheckFnDecl dcl = case dcl of
+	(FullDecl _ _ cast block)	->	compareTypeMis (typeCheckCast cast) (getReturn block)
 
 
-typeCheckExp :: Exp -> TypeCorrect
+--getReturn :: [Stmt] -> TypeCorrect Type
+getReturn (x:xs) = case x of
+	(Stmt10 x)	->	getRet x
+	_		->	getReturn xs
+getReturn (x:[]) = case x of
+	(Stmt10 x)	->	getRet x
+	_		->	(Ret Void')
+getReturn _ = (Ret Void')
+
+--typeCheckAssign :: Assign -> TypeCorrect Type
+typeCheckAssign assign = case assign of
+	(DeclAssign (SimpleDecl _ _ x) y)	->	compareTypeMis (typeCheckCast x) (typeCheckRVal y)
+	_					->	(Correct Void')
+
+--typeCheckCast :: Cast -> TypeCorrect Type
+typeCheckCast cst = case cst of
+	(SCast x)	->	(Correct x)
+	(MCast _ x)	->	(Correct x)
+
+--typeCheckRVal :: RVal -> TypeCorrect Type
+typeCheckRVal rv =  case rv of
+	(SimpleRV x)	->	typeCheckExp x
+	(ComplexRV x)	->	(Correct Null)
+
+--typeCheckExp :: Exp -> TypeCorrect Type
 typeCheckExp exp = case exp of
 	(AddExp x y _)    ->	compareTypeMis (typeCheckExp x) (typeCheckExp y)	
         (SubExp x y _)    ->	compareTypeMis (typeCheckExp x) (typeCheckExp y)	
         (MulExp x y _)    ->	compareTypeMis (typeCheckExp x) (typeCheckExp y)	
         (DivExp x y _)    ->	compareTypeMis (typeCheckExp x) (typeCheckExp y)	
         (PosExp x _)      ->	compareTypeErr (typeCheckExp x) (Int' "" (0,0))	
-        (NegExp x _)      ->	compareTypeErr (typeCheckExp x) (Int' "" (0,0))	
+	(NegExp x _)      ->	compareTypeErr (typeCheckExp x) (Int' "" (0,0))	
         (RefExp x _)      ->	compareTypeErr (typeCheckExp x) (Pointer' [])	
         (EqExp x y pos)   ->	compareTypeForce (typeCheckExp x) (typeCheckExp y) (Bool' (show exp) pos)	
         (NEqExp x y pos)    ->	compareTypeForce (typeCheckExp x) (typeCheckExp y) (Bool' (show exp) pos)
@@ -321,7 +376,8 @@ typeCheckExp exp = case exp of
         (VExp2 x)         ->	(Unknown)
         (VExp3 x)         ->	(Unknown)
 
-compareTypeMis :: TypeCorrect -> TypeCorrect -> TypeCorrect
+
+--compareTypeMis :: TypeCorrect Type -> TypeCorrect Type -> TypeCorrect Type
 compareTypeMis a b = case (a,b) of
 	(Correct (Int' _ _), Correct (Int' _ _))       	-> Correct a
 	(Correct (Real' _ _), Correct (Real' _ _))     	-> Correct a
@@ -339,19 +395,19 @@ compareTypeMis a b = case (a,b) of
 	(a, Unknown)					-> Correct a
         _                              -> (Mismatch a b)
 
-compareTypeForce a b force = case compareTypes a b of
+compareTypeForce a b force = case compareTypeMis a b of
 	(Correct a)	->	(Correct force)
 	(Mismatch a b)	->	(Mismatch a b)
 	(Error a b)	->	(Error a b)
 	(Unknown)	->	(Unknown)
 
-compareTypeErr a b = case compareTypes a b of
+compareTypeErr a b = case compareTypeMis a b of
 	(Correct a)	->	(Correct a)
 	(Mismatch a b)	->	(Error a b)
 	(Error a b)	->	(Error a b)
 
-compareArrays :: Type -> Type -> TypeCorrect
-compareArrays (Array' (x:xs)) (Array' (y:ys)) = case compareTypes x y of
+--compareArrays :: Type -> Type -> TypeCorrect Type
+compareArrays (Array' (x:xs)) (Array' (y:ys)) = case compareTypeMis x y of
 	(Correct x)	->	compareArrays xs ys
 	(Error a b)	->	(Error a b)
 
