@@ -422,7 +422,9 @@ subindent :: Int -> String -> String
 subindent n txt
    | fs == '{' = (fs : "\n") ++ (addSpace (n+1)) ++ (indent (n+1) (tail txt))
    | fs == '}' = (fs : "\n") ++ (addSpace (n-1)) ++ (indent (n-1) (tail txt))
+   | fs == ';' && nxt == '}' = (fs : "\n") ++ (addSpace (n-1)) ++ (indent n (tail txt))
    | fs == ';' = (fs : "\n") ++ (addSpace n) ++ (indent n (tail txt))
    | otherwise = (fs : "") ++ (indent n (tail txt))
    where
       fs = head txt
+      nxt = txt !! 1
