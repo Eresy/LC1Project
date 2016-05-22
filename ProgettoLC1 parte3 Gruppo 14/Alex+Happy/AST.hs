@@ -1,5 +1,6 @@
 module AST where
 
+
 import Data 
 
 {- DATA TYPES -}
@@ -8,7 +9,8 @@ data AST = Program [Stmt]
          deriving(Eq, Ord)
 
 instance Show AST where
-   show (Program xs) = "\n\nYour program:\n " ++ takeProg( show xs )
+   show (Program xs) = show xs
+
 
 
 data Stmt = Stmt1 BlockStmt
@@ -62,14 +64,14 @@ instance Show Rtrn where
    show (Ret2 x) = "return " ++ show x ++ ";"
 
 
-
+-- Optionally, you can keep the comments
 data Cmt  = SCmt String
           | MCmt String
           deriving(Eq, Ord)
 
 instance Show Cmt where
-   show (SCmt x) = "// " ++ x
-   show (MCmt x) = "/* " ++ x ++ "*/"
+   show (SCmt x) = "" -- OPT: show x ++ ";"
+   show (MCmt x) = "" -- OPT: show x ++ ";"
 
 
 
@@ -85,7 +87,7 @@ data FnCall = FCall String [Exp]
             deriving(Eq, Ord)
 
 instance Show FnCall where 
-   show (FCall x ys) = x ++ "( " ++ show ys ++ " );"
+   show (FCall x ys) = x ++ "( " ++ (readExp ys) ++ " );"
    show (ReadInt _) = "readInt();"
    show (WriteInt x _) = "writeInt( " ++ show x ++ " );"
    show (ReadReal _) = "readReal();"
@@ -104,8 +106,8 @@ data FnDecl  = FullDecl String [FormParam] Cast BlockStmt
              deriving(Eq, Ord)
 
 instance Show FnDecl where
-   show (FullDecl x ys z w) = "proc " ++ x ++ " (" ++ show ys ++ ") " ++ show z ++ show w
-   show (NoCastDecl x ys z) = "proc " ++ x ++ " (" ++ show ys ++ ") " ++ show z
+   show (FullDecl x ys z w) = "proc " ++ x ++ " (" ++ (readFormParam ys) ++ ") " ++ show z ++ show w
+   show (NoCastDecl x ys z) = "proc " ++ x ++ " (" ++ (readFormParam ys) ++ ") " ++ show z
    show (NoParamDecl x y z) = "proc " ++ x ++ show y ++ show z
    show (NakedDecl x y) = "proc " ++ x ++ show y
 
@@ -139,7 +141,7 @@ data Cast   = SCast TypeSpec
 
 instance Show Cast where
    show (SCast x) = ": " ++ show x
-   show (MCast xs y) = ": " ++ show xs ++ " " ++ show y
+   show (MCast xs y) = ": " ++ (readRange xs) ++ " " ++ show y
 
 
 
@@ -150,10 +152,10 @@ data Range  = CRange Exp Exp
             deriving(Eq, Ord)
 
 instance Show Range where
-   show (CRange x y) = show x ++ ".." ++ show y
-   show (NURange x) = show x ++ ".."
+   show (CRange x y) = show x ++ ".." ++ show y ++ " "
+   show (NURange x) = show x ++ ".. "
    show (NLRange x) = ".." ++ show x
-   show ULRange = ".."
+   show ULRange = ".. "
 
 
 
@@ -163,9 +165,9 @@ data Assign   = SimpleAssign NamedAssign
               deriving(Eq, Ord)
 
 instance Show Assign where
-   show (SimpleAssign x) = show x -- ++ ";"
-   show (GenericAssign xs y z) = show xs ++ y ++ " = " ++ show z -- ++ ";"
-   show (DeclAssign x y) = show x ++ " = " ++ show y -- ++ ";"
+   show (SimpleAssign x) = show x 
+   show (GenericAssign xs y z) = (readPointer xs) ++ y ++ " = " ++ show z 
+   show (DeclAssign x y) = show x ++ " = " ++ show y
 
 
 
@@ -173,7 +175,7 @@ data Declaration  = SimpleDecl [Pointer] String Cast
                   deriving(Eq, Ord)
 
 instance Show Declaration where
-   show (SimpleDecl xs y z) = "var " ++ show xs ++ y ++ show z -- ++ ";"
+   show (SimpleDecl xs y z) = "var " ++ (readPointer xs) ++ y ++ show z 
 
 
 
@@ -231,9 +233,9 @@ data Iff  = OneLineIf Exp Stmt
           deriving(Eq, Ord)
 
 instance Show Iff where
-   show (OneLineIf x y) = "if (" ++ show x ++") then" ++ show y
+   show (OneLineIf x y) = "if (" ++ show x ++") then " ++ show y
    show (IfBlock x y) = "if (" ++ show x ++ ") " ++ show y
-   show (IfElseBlock x y z) = "if (" ++ show x ++ ") " ++ show y ++ "else" ++ show z
+   show (IfElseBlock x y z) = "if (" ++ show x ++ ") " ++ show y ++ " else " ++ show z
 
 
 
@@ -251,7 +253,7 @@ data TrCatch  = TrCh Stmt Stmt
               deriving(Eq, Ord)
 
 instance Show TrCatch where
-   show (TrCh x y) = "try {\n" ++ show x ++ "\n} catch {\n" ++ show y ++ "}"
+   show (TrCh x y) = "try " ++ show x ++ " catch " ++ show y
 
 
 
@@ -270,8 +272,8 @@ instance Show Type where
    show (Real' x _) = x 
    show (Char' x _) = x 
    show (String' x _) = x
-   show (Bool' x _) = x
-   show (Array' xs _) = "( " ++ show xs ++ " )"
+   show (Bool' x _) = "TRUE/FALSE" -- DA FIXARE ASAP!!!!!!!!!!!!!!!!!!!!!
+   show (Array' xs _) = "( " ++ (readExp xs) ++ " )"
    show (Pointer' x) = show x
    show Void' = ""
 
@@ -285,11 +287,12 @@ data TypeSpec = IntSpec Pos
               deriving(Eq, Ord)
 
 instance Show TypeSpec where
-   show (IntSpec _) = "int"
-   show (RealSpec _) = "real"
-   show (CharSpec _) = "char"
-   show (StringSpec _) = "string"
-   show (VoidSpec _) = "void"
+   show (IntSpec _)     = "int"
+   show (RealSpec _)    = "real"
+   show (CharSpec _)    = "char"
+   show (StringSpec _)  = "string"
+   show (BoolSpec _)    = "bool"
+   show (VoidSpec _)    = "void"
 
 
 
@@ -297,7 +300,7 @@ data BlockStmt = Blk [Stmt]
                deriving(Eq, Ord)
 
 instance Show BlockStmt where
-   show (Blk xs) = "{\n " ++ show xs ++ " \n}"
+   show (Blk xs) = "{" ++ show xs ++ "}"
 
 
 
@@ -352,7 +355,7 @@ data LVal = LV String
 
 instance Show LVal where
    show (LV x) = x
-   show (ArrayLV x xs) = x ++ " [" ++ show xs ++ "] "
+   show (ArrayLV x xs) = x ++ " [" ++ (readExp xs) ++ "] "
 
 
 
@@ -367,11 +370,59 @@ instance Show RVal where
 
 
 {- FUNCTIONS -}
-takeProg :: String -> String
-takeProg txt = dropFirst $ dropLast txt
+readAST :: AST -> String
+readAST (Program lst) = case lst of
+   []     -> ""
+   (x:[]) -> show x ++ ""
+   (x:xs) -> show x ++ "" ++ readAST (Program xs)
 
-dropFirst :: String -> String
-dropFirst x = drop 1 x
+readExp :: [Exp] -> String
+readExp lst = case lst of
+   []     -> ""
+   (x:[]) -> show x
+   (x:xs) -> show x ++ readExp xs
+ 
+readStmt :: [Stmt] -> String
+readStmt lst = case lst of
+   []     -> ""
+   (x:[]) -> show x
+   (x:xs) -> show x ++ readStmt xs
+ 
+readFormParam :: [FormParam] -> String
+readFormParam lst = case lst of
+   []     -> ""
+   (x:[]) -> show x
+   (x:xs) -> show x ++ readFormParam xs
 
-dropLast :: String -> String
-dropLast x = take ((length x) - 1) x
+readPointer :: [Pointer] -> String
+readPointer lst = case lst of
+   []     -> ""
+   (x:[]) -> show x
+   (x:xs) -> show x ++ readPointer xs
+
+readRange :: [Range] -> String
+readRange lst = case lst of
+   []     -> ""
+   (x:[]) -> show x
+   (x:xs) -> show x ++ readRange xs
+
+-- indentation
+addSpace :: Int -> String
+addSpace 0 = ""
+addSpace n = "   " ++ addSpace (n-1)
+
+indent :: Int -> String -> String
+indent n txt
+   | strlen > 0 = subindent n txt
+   | otherwise  = txt
+   where
+      strlen = length txt
+
+subindent :: Int -> String -> String
+subindent n txt
+   | fs == '{' = (fs : "\n") ++ (addSpace (n+1)) ++ (indent (n+1) (tail txt))
+   | fs == '}' = (fs : "\n") ++ (addSpace (n-1)) ++ (indent (n-1) (tail txt))
+   | fs == ';' = (fs : "\n") ++ (addSpace n) ++ (indent n (tail txt))
+   | otherwise = (fs : "") ++ (indent n (tail txt))
+   where
+      fs = head txt
