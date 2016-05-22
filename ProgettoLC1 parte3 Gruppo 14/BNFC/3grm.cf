@@ -16,7 +16,7 @@ rules Boolean ::= "true" | "false" ;
 
 token LInt digit+;
 
-token LReal (((digit?) '.'digit+)(('e'|'E') ('-')? digit+)?)| (digit+ ('.')?('e'|'E')('-')? digit+);
+token LReal (((digit?) '.'digit+)(('e'|'E') ('-')? digit+)?) | (digit+ ('.')?('e'|'E')('-')? digit+);
 
 rules LString ::= Char | String;
 
@@ -38,11 +38,11 @@ VarDec.		Var_Decl ::= [Id] Type_part;
 TAss.	Type_part ::= ":" TypeSpec;
 Init.	Init_part ::= "=" Exp;
 
-ELiteral.	Exp ::= Literal_exp ;
-ECast.		Exp ::= Cast_exp;
-ELValue.	Exp ::= LValue_exp;
-EUnary.		Exp ::= Unary_exp;
-EBinary.	Exp ::= Binary_exp;
+ELiteral.	Exp3 ::= Literal_exp ;
+ECast.		Exp4 ::= Cast_exp;
+ELValue.	Exp5 ::= LValue_exp;
+EUnary.		Exp  ::= Unary_exp;
+EBinary.	Exp2 ::= Binary_exp;
 
 rules Literal_exp ::= Boolean | LInt | LReal | LString ;
 
