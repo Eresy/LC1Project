@@ -259,12 +259,13 @@ main = do
     let tok = alexScanTokens s
     print tok
     let ast = parseChapel tok
-    putStrLn( checkTypeProgram ast)
     putStrLn "Linearized Tree:\n"
     putStrLn $ (indent 0) $ readAST ast
 
 parseError (tok:toks) = error ("Error " ++ show tok ++ " at invalid position.")
 
+
+{-
 data TypeCorrect	= Correct Type
 			| Error Type Type
 			| Mismatch Type Type
@@ -420,5 +421,5 @@ getTypePos x = case x of
         Array' _ pos	-> show pos
         Pointer' t	-> ""
         Void'		-> ""
-
+-}
 }
