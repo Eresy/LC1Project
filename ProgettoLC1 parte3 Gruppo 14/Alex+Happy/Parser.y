@@ -249,8 +249,8 @@ Literal		:	int_ 		{ Int' (fst $1) (snd $1) }
 		|	char_ 		{ Char' (fst $1) (snd $1) }
 		|	string_ 	{ String' (fst $1) (snd $1) }
 		|	ArrayElement 	{ Array' $1 }
-		|	true_		{ Bool' $1 }
-		|	false_		{ Bool' $1 }
+		|	true_		{ Bool' (fst $1) (snd $1) }
+		|	false_		{ Bool' (fst $1) (snd $1) }
 {
 
 main = do
@@ -314,35 +314,42 @@ data TReturnType = Correct Type | Error Type | Ignore deriving (Eq, Ord, Show)
 expTypeCheck a = let 
 	getOp a = fst $ expTypeCheck a
 	getErr a = snd $ expTypeCheck a
-	result a b type = evaluate (getOp a) (getOp b)
+	result a b = evaluate (getOp a) (getOp b)
 	throwErr a b = errMsg (getOp a) (getOp b)
 		in case a of
-			(AddExp x y)    ->	(result (Int', ), (getErr a) ++ (getErr b) ++ throwErr a b)
-			(SubExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
-			(MulExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
-			(DivExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
-			(PosExp x)      ->
-			(NegExp x)      ->
-			(RefExp x)      ->
-			(EqExp x y)     ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
-			(NEqExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
-			(LTExp x y)     ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
-			(GTExp x y)     ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
-			(LETExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
-			(GETExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
-			(AndExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
-			(OrExp x y)     ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
-			(NotExp x)      ->
-			(VExp1 x)       ->
-			(VExp2 x)       ->
-			(VExp3 x)       ->
-	where evaluate x y type = case compareTypes a b of
-		True	->	force
-		False 	->	()
-		_	->	()
-	      errMsg a b = case compareTypes a b of
-		False	->	"Type Error: "++show a++" has different type from "++show b
-		_	->	[]
+			(AddExp x y _)    ->	(result x y (), concatErrMsg x y)
+			(SubExp x y _)    ->	(result x y (), concatErrMsg x y)
+			(MulExp x y _)    ->	(result x y (), concatErrMsg x y)
+			(DivExp x y _)    ->	(result x y (), concatErrMsg x y)
+			(PosExp x _)      ->	(result x (Bool "" (0,0)) (), concatErrMsg x (Bool' "" (0,0)) $ ++ posErrMsg x )
+			(NegExp x _)      ->
+			(RefExp x _)      ->
+			(EqExp x y pos)   ->	(result x y (Bool' "" pos), )
+			(NEqExp x y _)    ->	(result x y (Bool' "" pos), ) 
+			(LTExp x y _)     ->	(result x y (Bool' "" pos), )	
+			(GTExp x y _)     ->	(result x y (Bool' "" pos), )	
+			(LETExp x y _)    ->	(result x y (Bool' "" pos), )	
+			(GETExp x y _)    ->	(result x y (Bool' "" pos), )	
+			(AndExp x y _)    ->	(result x y (Bool' "" pos), )	
+			(OrExp x y _)     ->	(result x y (Bool' "" pos), )	
+			(NotExp x _)      ->	(result x y (Bool' "" pos), )
+			(VExp1 x)         ->	(x, "")
+			(VExp2 x)         ->	((), "")
+			(VExp3 x)         ->	((), "")
+	where 	evaluate x y type = case compareTypes a b of
+			True	->	retType a b
+			False 	->	()
+			_	->	()
+			where   retType a b type = type
+				retType a b _ = case (a,b) of
+					((Real' _ _ ),(Int' _ _))	->	a
+					((Int' _ _ ),(Real' _ _))	->	b
+					_				->	a
+		errMsg a b = case compareTypes a b of
+			False	->	"Type Error: "++show a++" type is incompatible with "++show b
+			_	->	[]
+		concatErrMsg a b = (getErr a) ++ (getErr b) ++ throwErr a b
+		posErrMsg a b = 
 
 returnCheck cast body = case (compareTypes (inferType cast) (getReturn body)) of
     True -> []
@@ -373,6 +380,6 @@ compareTypes a b = case compare a b of
 	    ((x:_)),(y:_))		   -> compareTypes x y
             _                              -> False
 
-boolCheck a = compareTypes (inferType a) (Bool' (0,0)) 
+boolCheck a = compareTypes (inferType a) (Bool' "" (0,0)) 
 
 }

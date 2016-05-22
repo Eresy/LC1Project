@@ -259,7 +259,7 @@ data Type   = Int' String Pos
             | Real' String Pos 
             | Char' String Pos
             | String' String Pos
-            | Bool' Pos
+            | Bool' String Pos
             | Array' [Exp] Pos
             | Pointer' Type
             | Void'
@@ -270,6 +270,7 @@ instance Show Type where
    show (Real' x _) = x 
    show (Char' x _) = x 
    show (String' x _) = x
+   show (Bool' x _) = x
    show (Array' xs _) = "( " ++ show xs ++ " )"
    show (Pointer' x) = show x
    show Void' = ""

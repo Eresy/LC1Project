@@ -38,9 +38,9 @@ void                                         {\x y -> TS_Void (getPos x)}
 
 bool                                         {\x y -> TS_Bool (getPos x)}
 
-true                                         {\x y -> TSB_True (getPos x)}
+true                                         {\x y -> TSB_True (y, (getPos x))}
 
-false                                        {\x y -> TSB_False (getPos x)}
+false                                        {\x y -> TSB_False (y, (getPos x))}
 
 val                                          {\x y -> PM_Value (getPos x)}
 
