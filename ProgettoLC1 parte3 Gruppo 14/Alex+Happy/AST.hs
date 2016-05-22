@@ -87,7 +87,7 @@ data FnCall = FCall String [Exp]
             deriving(Eq, Ord)
 
 instance Show FnCall where 
-   show (FCall x ys) = x ++ "( " ++ (readExp ys) ++ " );"
+   show (FCall x ys) = x ++ "( " ++ (readExp ys) ++ " )"
    show (ReadInt _) = "readInt()"
    show (WriteInt x _) = "writeInt( " ++ show x ++ " )"
    show (ReadReal _) = "readReal()"
