@@ -205,28 +205,28 @@ For		:	for_ Label in_ Range BlockStatement 	{ ForBlk $2 $4 $5 }
 TryCatch	:	try_ Statement catch_ Statement { TrCh $2 $4 }
 
 Expression	:	Expression1				{ $1 }
-Expression1	:	Expression1 and_ Expression2 		{ AndExp $1 $3 }
-		|	Expression1 or_ Expression2 		{ OrExp $1 $3 }
+Expression1	:	Expression1 and_ Expression2 		{ AndExp $1 $3 $2}
+		|	Expression1 or_ Expression2 		{ OrExp $1 $3 $2}
 		|	Expression2				{ $1 }
-Expression2	:	neg_ Expression3 			{ NegExp $2 }
+Expression2	:	neg_ Expression3 			{ NotExp $2 $2}
 	    	|	Expression3				{ $1 }
-Expression3	:	Expression3 equals_ Expression4 	{ EqExp $1 $3 }
-		|	Expression3 nequals_ Expression4	{ NEqExp $1 $3 }
-		|	Expression3 lessthan_ Expression4 	{ LTExp $1 $3 }
-		|	Expression3 greatthan_ Expression4 	{ GTExp $1 $3 }
-		|	Expression3 lessthaneq_ Expression4 	{ LETExp $1 $3 }
-		|	Expression3 greatthaneq_ Expression4 	{ GETExp $1 $3 }
+Expression3	:	Expression3 equals_ Expression4 	{ EqExp $1 $3 $2}
+		|	Expression3 nequals_ Expression4	{ NEqExp $1 $3 $2}
+		|	Expression3 lessthan_ Expression4 	{ LTExp $1 $3 $2}
+		|	Expression3 greatthan_ Expression4 	{ GTExp $1 $3 $2}
+		|	Expression3 lessthaneq_ Expression4 	{ LETExp $1 $3 $2}
+		|	Expression3 greatthaneq_ Expression4 	{ GETExp $1 $3 $2}
 		|	Expression4				{ $1 }
-Expression4	:	Expression4 add_ Expression5 	{ AddExp $1 $3 }
-		|	Expression4 sub_ Expression5 	{ SubExp $1 $3 }
-		|	Expression4 mul_ Expression5 	{ MulExp $1 $3 }
-		|	Expression4 div_ Expression5 	{ DivExp $1 $3 }
+Expression4	:	Expression4 add_ Expression5 	{ AddExp $1 $3 $2}
+		|	Expression4 sub_ Expression5 	{ SubExp $1 $3 $2}
+		|	Expression4 mul_ Expression5 	{ MulExp $1 $3 $2}
+		|	Expression4 div_ Expression5 	{ DivExp $1 $3 $2}
 		|	Expression5			{ $1 }
-Expression5	:	sub_ Expression6		{ NegExp $2 }
-	    	|	add_ Expression6		{ PosExp $2 }
+Expression5	:	sub_ Expression6		{ NegExp $2 $1}
+	    	|	add_ Expression6		{ PosExp $2 $1}
 		|	Expression6			{ $1 }
-Expression6	:	mul_ Expression7 		{ DerExp $2 } 
-		|	ref_ Expression7		{ RefExp $2 }
+Expression6	:	mul_ Expression7 		{ DerExp $2 $1} 
+		|	ref_ Expression7		{ RefExp $2 $1}
 		|	Expression7			{ $1 }
 Expression7	:	Value 				{ $1 }
 		|	bknOpen_ Expression1 bknClose_	{ $2 }
@@ -257,8 +257,122 @@ main = do
     s <- getContents
     let tok = alexScanTokens s
     print tok
-    print $ parseChapel tok
+    ast <- parseChapel tok
+    putStrLn (typeCheck ast)
 
 parseError (tok:toks) = error ("Parser Error:" ++ show tok ++ " at invalid position.")
+
+typeCheck a = case a of
+    (Program x) 	-> foldr (++) [] (map typeCheck x)
+    (Stmt1 x)	        -> foldr (++) [] (map typeCheck x)
+    (Stmt2 x)           -> expTypeCheck x 
+    (Stmt3 x)		-> typeCheck x
+    (Stmt5 x)		-> typeCheck x
+    (Stmt6 x)		-> typeCheck x
+    (Stmt7 x)		-> typeCheck x
+    (Stmt8 x)		-> typeCheck x
+    (Stmt9 x)		-> typeCheck x
+    (Stmt10 x)		-> typeCheck x
+    (FullDecl _ param cast body)	-> (returnCheck cast body) ++ "\n" ++ (typeCheck body)
+    (NoCastDecl _ _ body)		-> (typeCheck body)
+    (NoParamDecl _ cast body)	-> returnCheck cast body
+    (NakedDecl _ body)		-> typeCheck body
+    (DeclAssign decl lval)	-> compareTypes (inferType decl) (inferType lval)
+    (WD condition body)		-> (boolCheck condition) ++ (typeCheck body)
+    (DW body condition)		-> (boolCheck condition) ++ (typeCheck body)
+    (OneLineIf condition stm)	-> (boolCheck condition) ++ (typeCheck stm) 
+    (IfBlock condition blk)	-> (boolCheck condition) ++ (typeCheck blk) 
+    (IfElseBlock condition blkThen blkElse)	-> (boolCheck condition) ++ (typeCheck blkThen) ++ (typeCheck blkElse)
+    (ForBlk _ _ block)		-> (typeCheck block)
+    (ForSmp _ _ stmt)		-> (typeCheck stmt)
+    (TrCh stmt1 stmt2)		-> (typeCheck stmt1) ++ (typeCheck stmt2)
+    _                           -> []
+
+inferType a = case a of
+    (AddExp x y)    ->  
+    (SubExp x y)    ->
+    (MulExp x y)    ->
+    (DivExp x y)    ->
+    (PosExp x)      ->
+    (NegExp x)      ->
+    (RefExp x)      ->
+    (EqExp x y)     ->
+    (NEqExp x y)    ->
+    (LTExp x y)     ->
+    (GTExp x y)     ->
+    (LETExp x y)    ->
+    (GETExp x y)    ->
+    (AndExp x y)    ->
+    (OrExp x y)     ->
+    (NotExp x)      ->
+    (VExp1 x)       -> 
+    (VExp2 x)       -> inferType x
+    (VExp3 x)       -> inferType x
+
+data TReturnType = Correct Type | Error Type | Ignore deriving (Eq, Ord, Show)
+
+expTypeCheck a = let 
+	getOp a = fst $ expTypeCheck a
+	getErr a = snd $ expTypeCheck a
+	result a b type = evaluate (getOp a) (getOp b)
+	throwErr a b = errMsg (getOp a) (getOp b)
+		in case a of
+			(AddExp x y)    ->	(result (Int', ), (getErr a) ++ (getErr b) ++ throwErr a b)
+			(SubExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
+			(MulExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
+			(DivExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
+			(PosExp x)      ->
+			(NegExp x)      ->
+			(RefExp x)      ->
+			(EqExp x y)     ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
+			(NEqExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
+			(LTExp x y)     ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
+			(GTExp x y)     ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
+			(LETExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
+			(GETExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
+			(AndExp x y)    ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
+			(OrExp x y)     ->	(result, (getErr a) ++ (getErr b) ++ throwErr a b)
+			(NotExp x)      ->
+			(VExp1 x)       ->
+			(VExp2 x)       ->
+			(VExp3 x)       ->
+	where evaluate x y type = case compareTypes a b of
+		True	->	force
+		False 	->	()
+		_	->	()
+	      errMsg a b = case compareTypes a b of
+		False	->	"Type Error: "++show a++" has different type from "++show b
+		_	->	[]
+
+returnCheck cast body = case (compareTypes (inferType cast) (getReturn body)) of
+    True -> []
+    False -> "Type Error: Return YOYO"
+    where getReturn b = case b of
+                        (a@(Ret1 x),_)  -> inferType a
+                        (a@(Ret2 x),_)  -> inferType a
+                        (_,x)           -> getReturn x
+                        _       	-> Void' 
+
+compareTypes a b = case compare a b of
+    True -> []
+    False -> "SADASDASD"
+    where compare a b = case (a,b) of
+            ((Int' _ _), (Int' _ _))       -> True
+            ((Real' _ _), (Real' _ _))     -> True
+            ((Char' _ _), (Char' _ _))     -> True
+            ((String' _ _), (String' _ _)) -> True
+            ((Bool' _ _), (Bool' _ _))     -> True
+            ((Array' lst1), (Array' lst2)) -> compareTypes lst1 lst2
+            ((Pointer' t), (Pointer' d))   -> compareTypes t d
+            ((Void'), (Void'))             -> True
+            ((Int' _ _), (Real' _ _))      -> True
+            ((Real' _ _), (Int' _ _))      -> True
+	    ((),_)			   -> True
+	    (-,())			   -> True
+	    ((x:xs),(y:ys))		   -> (compareTypes x y) && (compareTypes xs ys)
+	    ((x:_)),(y:_))		   -> compareTypes x y
+            _                              -> False
+
+boolCheck a = compareTypes (inferType a) (Bool' (0,0)) 
 
 }

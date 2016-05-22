@@ -260,7 +260,7 @@ data Type   = Int' String Pos
             | Char' String Pos
             | String' String Pos
             | Bool' Pos
-            | Array' [Exp]
+            | Array' [Exp] Pos
             | Pointer' Type
             | Void'
             deriving(Eq, Ord)
@@ -270,7 +270,7 @@ instance Show Type where
    show (Real' x _) = x 
    show (Char' x _) = x 
    show (String' x _) = x
-   show (Array' xs) = "( " ++ show xs ++ " )"
+   show (Array' xs _) = "( " ++ show xs ++ " )"
    show (Pointer' x) = show x
    show Void' = ""
 
@@ -300,48 +300,48 @@ instance Show BlockStmt where
 
 
 
-data Exp   = AddExp Exp Exp
-           | SubExp Exp Exp
-           | MulExp Exp Exp
-           | DivExp Exp Exp
-           | PosExp Exp
-           | NegExp Exp
-           | RefExp Exp
-           | DerExp Exp
-           | EqExp Exp Exp
-           | NEqExp Exp Exp
-           | LTExp Exp Exp
-           | GTExp Exp Exp
-           | LETExp Exp Exp
-           | GETExp Exp Exp
-           | AndExp Exp Exp
-           | OrExp Exp Exp
-           | NotExp Exp
+data Exp   = AddExp Exp Exp Pos
+           | SubExp Exp Exp Pos
+           | MulExp Exp Exp Pos
+           | DivExp Exp Exp Pos
+           | PosExp Exp Pos
+           | NegExp Exp Pos
+           | RefExp Exp Pos
+           | DerExp Exp Pos
+           | EqExp Exp Exp Pos
+           | NEqExp Exp Exp Pos
+           | LTExp Exp Exp Pos
+           | GTExp Exp Exp Pos
+           | LETExp Exp Exp Pos
+           | GETExp Exp Exp Pos
+           | AndExp Exp Exp Pos
+           | OrExp Exp Exp Pos
+           | NotExp Exp Pos
            | VExp1 Type 
            | VExp2 FnCall
            | VExp3 LVal
            deriving(Eq, Ord)
 
 instance Show Exp where
-   show (AddExp x y) = show x ++ " + " ++ show y
-   show (SubExp x y) = show x ++ " - " ++ show y
-   show (MulExp x y) = show x ++ " * " ++ show y
-   show (DivExp x y) = show x ++ " / " ++ show y
-   show (PosExp x) = "+" ++ show x
-   show (NegExp x) = "-" ++ show x
-   show (RefExp x) = "&" ++ show x
-   show (EqExp x y) = show x ++ " == " ++ show y
-   show (NEqExp x y) = show x ++ " != " ++ show y
-   show (LTExp x y) = show x ++ " < " ++ show y
-   show (GTExp x y) = show x ++ " > " ++ show y
-   show (LETExp x y) = show x ++ " <= " ++ show y
-   show (GETExp x y) = show x ++ " >= " ++ show y
-   show (AndExp x y) = show x ++ " && " ++ show y
-   show (OrExp x y) = show x ++ " || " ++ show y
-   show (NotExp x) = "!" ++ show x
-   show (VExp1 x) = show x
-   show (VExp2 x) = show x
-   show (VExp3 x) = show x
+   show (AddExp x y _) = show x ++ " + " ++ show y
+   show (SubExp x y _) = show x ++ " - " ++ show y
+   show (MulExp x y _) = show x ++ " * " ++ show y
+   show (DivExp x y _) = show x ++ " / " ++ show y
+   show (PosExp x _) = "+" ++ show x
+   show (NegExp x _) = "-" ++ show x
+   show (RefExp x _) = "&" ++ show x
+   show (EqExp x y _) = show x ++ " == " ++ show y
+   show (NEqExp x y _) = show x ++ " != " ++ show y
+   show (LTExp x y _) = show x ++ " < " ++ show y
+   show (GTExp x y _) = show x ++ " > " ++ show y
+   show (LETExp x y _) = show x ++ " <= " ++ show y
+   show (GETExp x y _) = show x ++ " >= " ++ show y
+   show (AndExp x y _) = show x ++ " && " ++ show y
+   show (OrExp x y _) = show x ++ " || " ++ show y
+   show (NotExp x _) = "!" ++ show x
+   show (VExp1 x _) = show x
+   show (VExp2 x _) = show x
+   show (VExp3 x _) = show x
 
 
 
