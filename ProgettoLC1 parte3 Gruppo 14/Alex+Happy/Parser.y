@@ -249,8 +249,8 @@ Literal		:	int_ 		{ Int' (fst $1) (snd $1) }
 		|	char_ 		{ Char' (fst $1) (snd $1) }
 		|	string_ 	{ String' (fst $1) (snd $1) }
 		|	ArrayElement 	{ Array' $1 }
-		|	true_		{ Bool' (fst $1) (snd $1) }
-		|	false_		{ Bool' (fst $1) (snd $1) }
+		|	true_		{ Bool' "true" $1 }
+		|	false_		{ Bool' "false" $1 }
 {
 
 main = do
