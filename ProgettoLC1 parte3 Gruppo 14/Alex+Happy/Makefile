@@ -6,13 +6,13 @@ SRC= $(patsubst %.y,%.hs,$(wildcard *.y)) $(patsubst %.x,%.hs,$(wildcard *.x))
 
 
 all: $(SRC)
-	$(GHC) Parser.hs
+	$(GHC) Parser.hs -o subChapel
+SubC: all
 
-#testsymm: Lexer.hs ParserI.hs TestSymm.hs
-#	$(GHC) -w -main-is TestSymm --make TestSymm.hs
-
-#demo: testsymm
-#	cat ./examples.txt | ./TestSymm
+demo: SubC
+	for i in ./test/* ; do \
+		./subChapel < $$i; \
+	done
 
 %.hs: %.x
 	$(ALEX)  $<
@@ -25,6 +25,6 @@ clean :
 
 distclean : clean
 	echo cleaning all
-	-rm -f $(SRC) 
+	-rm -f $(SRC) subChapel 
 
 .PHONY: all clean distclean demo
